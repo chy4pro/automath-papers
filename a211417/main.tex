@@ -1,0 +1,1862 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[T1]{fontenc}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+% Numbered variant, for the remarks that are cross-referenced: an unnumbered
+% environment would make \ref pick up the enclosing counter and print a
+% misleading number that collides with a theorem.
+\newtheorem{nremark}[theorem]{Remark}
+
+\newtheorem*{theoremA}{Theorem A}
+\newtheorem*{theoremB}{Theorem B}
+\newtheorem*{theoremC}{Theorem C}
+
+\numberwithin{equation}{section}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Lr}{L_r}
+\DeclareMathOperator{\lcm}{lcm}
+
+% Each numbered statement carries an explicit record of how it was checked.
+\newcommand{\vstatus}[1]{%
+  \par\vspace{3pt}\noindent
+  {\small\textsc{Verification status.}\enspace #1}\par\vspace{3pt}}
+
+\title{Bala's $D(r)$ Divisibility Conjecture for A211417:\\
+a Proof with an Explicit Constant}
+
+\author{AutoMath Collaboration\\
+{\small (Claude Fable 5, GPT-5.6, Qwen3.8-Max, operated autonomously)}%
+\thanks{%
+Disclosure of the production pipeline. Every mathematical step reported in this paper was
+produced by automated systems; no human supplied a definition, a lemma, a proof idea, or a
+correction. The proof of Theorem~\ref{thm:main} --- the step function, the three lemmas, and the
+prime-power stratification --- was found by Claude (Fable 5). It was then submitted, in separate
+sessions and without the solver's reasoning trace, to two adversarial reviewers from different
+vendors: OpenAI GPT-5.6 through the \texttt{codex} command-line interface, and Qwen3.8-Max
+through its web interface. Both returned \textsc{valid} for the main theorem and located no
+critical error in Lemmas~\ref{lem:A},~\ref{lem:B},~\ref{lem:C} or in
+Theorem~\ref{thm:main}; both returned \textsc{valid-with-gaps} for the document as a whole, and
+every gap they reported is either repaired below or recorded, unrepaired, in
+Section~\ref{sec:limitations}. The repairs were then put through a second, targeted review round,
+which returned \textsc{valid} on all five items nominated to it. Two items in this paper originate with the reviewers rather than
+the solver and are attributed in place: the lower bound of Corollary~\ref{cor:growth}
+(GPT-5.6/\texttt{codex}), which refuted a false asymptotic claim in the first draft, and the
+demand for an explicit impossibility argument that became
+Proposition~\ref{prop:impossible}. The Lean~4 development of
+Section~\ref{sec:formal} was written by Claude (Fable 5); the Lean compiler is the final arbiter
+of the statements listed there. Orchestration --- problem selection, freshness auditing, review
+scheduling, and the drafting of this paper --- was likewise automated. Responsibility for what
+follows rests with the reader who checks the argument and the Lean file.}}
+
+\date{17 August 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Let $a(n) = (30n)!\,n!/\bigl((15n)!\,(10n)!\,(6n)!\bigr)$, entry A211417 of the OEIS and one of
+Vasyunin's $52$ sporadic integral factorial ratio sequences of height~$1$. Peter Bala
+conjectured on 28 August 2025 that for every $r \ge 1$ there is a constant $D(r)$ such that
+$D(r)\,a(n)$ is divisible by $\prod_{i \le r,\ \gcd(i,30)=1}(30n-i)$ for all $n \ge 0$; the case
+$r=1$, that $(30n-1) \mid a(n)$, was proved in 2026 by DeepMind's AlphaProof/Nexus system, and
+the general case was carried as \texttt{research open} in the \texttt{formal-conjectures} corpus.
+We prove the conjecture for all $r \ge 1$, with the explicit and computable constant
+\[
+  D(r) \;=\; \prod_{\substack{p \le r\\ \gcd(p,30)=1}} p^{\,E(p,r)},
+  \qquad
+  E(p,r) \;=\; \sum_{k \ge 1,\ p^k \le r}\ \max_{c \bmod p^k}\
+  \#\{\, i \in L_r : i \equiv c \ (\mathrm{mod}\ p^k)\,\},
+\]
+where $L_r = \{i \le r : \gcd(i,30)=1\}$,
+so that $D(1) = \cdots = D(6) = 1$, $D(13) = 1001$, $D(23) = 81800719$. The proof has three
+steps: a rigidity lemma stating that the Landau step function of the ratio takes the value $1$ on
+every residue class coprime to $30$; a local lemma promoting this to every $i$ with
+$\gcd(i,30)=1$, which generalises the mechanism used for $r=1$; and a prime-power stratification
+lemma showing that all layers $p^k > r$ are paid for, one for one and without loss, by distinct
+Legendre summands of $\nu_p(a(n))$, so that only the finitely many layers $p^k \le r$ need a
+constant at all. We prove $\log D(r) = \Theta(r \log r)$ for this constant. The same method
+proves Bala's companion $C(k,r)$ family for $k \in \{2,3,5\}$ in general $r$, and we show that
+the sign in $30n - i$ is not a typographical accident: no nonzero constant $D$ makes
+$(30n+i) \mid D\,a(n)$ hold identically. A Lean~4 development, verified against \texttt{mathlib}
+and depending only on \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}, proves
+the conjecture in the strengthened form $\exists D > 0$; as a by-product it exhibits a three-line
+proof that the corpus's literal statement, which quantifies over $D \in \Z$ without excluding
+$D=0$, is vacuous. We record that the existence claim was independently announced, without a
+public proof text, in \texttt{formal-conjectures} issue \#4923 one day before this paper was
+completed; we make no priority claim, and we show that the constant announced there,
+$\lcm(1,\dots,r)^{|L_r|}$, is a multiple of ours.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{An integral factorial ratio and Bala's conjectures}
+
+A \emph{factorial ratio sequence} is a sequence of the shape
+\begin{equation}
+  u(n) \;=\; \frac{\prod_{s=1}^{S} (A_s n)!}{\prod_{t=1}^{T} (B_t n)!},
+  \qquad A_s, B_t \in \Z_{\ge 1}, \qquad \sum_s A_s = \sum_t B_t ,
+  \label{eq:ratio}
+\end{equation}
+and it is called \emph{integral} if $u(n) \in \Z$ for every $n \ge 0$. The classification of
+integral factorial ratios is a classical problem going back to Chebyshev's use of
+$(30n)!\,n!/\bigl((15n)!\,(10n)!\,(6n)!\bigr)$ in his work on $\pi(x)$, and was brought to a
+sharp form by Rodriguez-Villegas, Vasyunin, Bober and Soundararajan
+\cite{bober,rodriguezvillegas}: in the \emph{height} $T-S = 1$ case the integral ratios consist of
+a handful of infinite parametric families together with a sporadic list, catalogued by Vasyunin,
+of $52$ sequences, recorded in the OEIS as A295431. The sequence
+\begin{equation}
+  a(n) \;=\; \frac{(30n)!\; n!}{(15n)!\;(10n)!\;(6n)!},
+  \qquad
+  a(0),a(1),a(2) \;=\; 1,\ 77636318760,\ 53837289804317953893960,
+  \label{eq:a}
+\end{equation}
+is OEIS A211417 \cite{oeis}, Chebyshev's own ratio, and is the most famous of the $52$.
+
+On 28 August 2025 Peter Bala contributed to A211417 a group of divisibility observations
+\cite{bala}. Five of them are explicit:
+\[
+  \frac{a(n)}{30n-1},\qquad
+  \frac{7\,a(n)}{2n+1},\qquad
+  \frac{a(n)}{3n+1},\qquad
+  \frac{a(n)}{5n+1},\qquad
+  \frac{42\,a(n)}{(2n+1)(3n+1)(5n+1)}
+\]
+are all integers for every $n$ (checked to $n = 1000$). The last one is a genuinely different kind
+of statement, because a single constant has to serve a \emph{product} of linear forms which are
+not pairwise coprime as $n$ varies --- for instance $\gcd(2n+1,5n+1) = 3$ at $n=1$. Bala then
+stated the general form, which is the subject of this paper:
+
+\begin{quote}
+``More generally, for $r \ge 1$, we conjecture that there exists a constant $D(r)$ such that
+$D(r) \cdot a(n) / \prod_{i=1..r,\; i \text{ coprime to } 30}(30n-i)$ is integral for all $n$.''
+\hfill --- Peter Bala, 28 August 2025
+\end{quote}
+
+Throughout we write
+\begin{equation}
+  \Lr \;=\; \{\, i \in \Z : 1 \le i \le r,\ \gcd(i,30) = 1 \,\},
+  \qquad
+  P_r(n) \;=\; \prod_{i \in \Lr} (30n - i),
+  \label{eq:Lr}
+\end{equation}
+so that the conjecture asks for a constant $D(r) \ne 0$ with $P_r(n) \mid D(r)\,a(n)$ for all
+$n \ge 0$. Bala's comment closes with the remark that ``similar results may hold for all the $52$
+sporadic integral factorial ratio sequences listed in A295431''; Section~\ref{sec:sporadic}
+extracts from our proof a finitely checkable sufficient criterion for exactly that.
+
+\subsection{What was known}
+
+The case $r = 1$ is $\Lr = \{1\}$, $P_1(n) = 30n-1$, and the assertion is $(30n-1) \mid a(n)$
+with $D(1) = 1$. This was proved in 2026 by DeepMind's AlphaProof/Nexus system \cite{nexus} and
+is recorded as solved both in the OEIS entry (comment of R.~Stephan, 30 June 2026) and in the
+\texttt{formal-conjectures} corpus \cite{formalconjectures}, whose file
+\texttt{FormalConjectures/OEIS/211417.lean} carries the machine statement. The four $r=1$
+statements for $2n+1$, $3n+1$, $5n+1$ and the $42$-product were formalised in Lean by the
+GitHub user KitaKen1 and marked solved in that corpus on 16 August 2026.
+
+The general statement was not known. In the same corpus file it is carried as
+\begin{quote}\ttfamily\small
+@[category research open, AMS 11]\\
+theorem general\_divisibility (r : $\N$) (hr : 1 $\le$ r) :\\
+\hspace*{2em}$\exists$ D : $\Z$, $\forall$ n : $\N$, (divisorProduct n r) $\mid$ (D * (a n : $\Z$)) := by\\
+\hspace*{2em}sorry
+\end{quote}
+and a freshness audit carried out on 17 August 2026 --- reading the corpus source directly, the
+\texttt{alphaproof-nexus-results} repository file list, the live OEIS page, and an arXiv
+abstract search --- found no public proof. The one competing announcement that audit did find,
+made one day before this paper was completed, is discussed in full in
+Section~\ref{sec:priority}; we do not claim to be first.
+
+\subsection{Results}
+
+Our main theorem proves the conjecture and, beyond mere existence, exhibits a constant in closed
+form.
+
+\begin{theoremA}[= Theorem~\ref{thm:main}]
+For $r \ge 1$ put
+\[
+  E(p,r) \;=\; \sum_{k \ge 1,\ p^k \le r}\ \max_{c \bmod p^k}\
+    \#\{\, i \in \Lr : i \equiv c \ (\mathrm{mod}\ p^k) \,\},
+  \qquad
+  D(r) \;=\; \prod_{\substack{p \le r \\ \gcd(p,30)=1}} p^{\,E(p,r)} .
+\]
+Then $P_r(n) \mid D(r)\, a(n)$ in $\Z$ for every $n \ge 0$.
+\end{theoremA}
+
+The constant is small: $D(r) = 1$ for $1 \le r \le 6$, $D(7) = 7$, $D(13) = 1001$,
+$D(23) = 81800719$, and $\log D(r) = \Theta(r \log r)$ (Corollary~\ref{cor:growth}). For
+$r \le 19$ it is exactly the empirically minimal constant; the first slack appears at $r = 23$
+(Section~\ref{sec:values}).
+
+The same three lemmas prove Bala's companion family in general $r$, of which his statements for
+$2n+1$, $3n+1$ and $5n+1$ are the cases $r=1$.
+
+\begin{theoremB}[= Theorem~\ref{thm:Ckr}]
+Let $k \in \{2,3,5\}$, $m = 30/k$ and $L^{(k)}_r = \{ i \le r : \gcd(i,k) = 1\}$. Then
+\[
+  \prod_{i \in L^{(k)}_r} (kn + i) \ \Big|\ C(k,r)\cdot a(n)
+  \qquad (n \ge 0),
+  \qquad
+  C(k,r) = \prod_{\substack{p \le mr\\ p \nmid k}} p^{\,E_k(p,r)},
+\]
+where $E_k(p,r) = \sum_{j \ge 1,\ p^j \le mr} \max_c \#\{ i \in L^{(k)}_r : i \equiv c \
+(\mathrm{mod}\ p^j)\}$.
+\end{theoremB}
+
+Bala writes $30n - i$ with a minus sign but $kn + i$ with a plus sign. That asymmetry is forced:
+
+\begin{theoremC}[= Proposition~\ref{prop:impossible}]
+Let $\gcd(i,30) = 1$. There is no constant $D \ne 0$ with $(30n + i) \mid D\,a(n)$ for all
+$n \ge 0$.
+\end{theoremC}
+
+Finally, Section~\ref{sec:formal} reports a Lean~4 development which proves the conjecture in the
+strengthened, non-vacuous form $\exists D > 0$, recovers the AlphaProof/Nexus $r=1$ theorem as a
+corollary of the general machinery, and exhibits a three-line proof that the corpus's literal
+existential statement is vacuous as written.
+
+\subsection{The method in one paragraph}
+
+Write $\Delta(x) = \lfloor 30x\rfloor + \lfloor x\rfloor - \lfloor 15x\rfloor - \lfloor 10x
+\rfloor - \lfloor 6x\rfloor$, the Landau step function of \eqref{eq:a}. Legendre's formula gives
+$\nu_p(a(n)) = \sum_{k \ge 1} \Delta(n/p^k)$, and $\Delta$ takes only the values $0$ and $1$;
+so $\nu_p(a(n))$ \emph{counts the layers $k$ at which $\Delta(n/p^k) = 1$}. Lemma~\ref{lem:A}
+says $\Delta$ equals $1$ on every residue class $c$ with $\gcd(c,30)=1$;
+Lemma~\ref{lem:B} converts this into the statement that a single divisibility $p^k \mid 30n - i$
+with $p^k > i$ \emph{buys} the layer $k$, i.e.\ forces $\Delta(n/p^k) = 1$. The difficulty of the
+conjecture is entirely in the product: two indices $i \ne i'$ can share a prime, and a shared
+prime would be counted twice on the left of the desired inequality while the corresponding layer
+can only be counted once on the right. Lemma~\ref{lem:C} resolves this by \emph{stratifying by
+the power rather than by the index}: at every layer $k$ with $p^k > r$ the witness is unique,
+because two witnesses would force $p^k \mid i - i'$ with $0 < |i-i'| < r < p^k$. Hence all high
+layers are paid for exactly, one for one, and the constant is needed only for the finitely many
+low layers $p^k \le r$, where the crude but $n$-independent bound ``size of the largest residue
+class of $\Lr$ modulo $p^k$'' applies. Summing that bound over $k$ is the definition of
+$E(p,r)$.
+
+\subsection{Verification protocol, and how to read this paper}
+
+Every numbered statement below carries a \textsc{verification status} line recording exactly how
+it was checked. Three kinds of evidence appear, and they are not interchangeable.
+
+\emph{Adversarial review.} The complete argument was submitted, in separate sessions and without
+the solver's reasoning trace, to two reviewers from vendors other than the solver's:
+GPT-5.6 through \texttt{codex}, and Qwen3.8-Max. Both were instructed to classify each objection
+as \textsc{critical error} or \textsc{justification gap} and to return a verdict. Both returned
+\textsc{valid} for Theorem~\ref{thm:main} and for the three lemmas, and \textsc{valid-with-gaps}
+for the document as a whole. This gate did real work: it destroyed a false asymptotic corollary
+of the first draft (see Corollary~\ref{cor:growth}, whose lower bound is the reviewer's own
+construction), and it correctly refused an impossibility claim that had been asserted on the
+strength of a local computation, which is why Proposition~\ref{prop:impossible} exists. The two
+reviews are consistent with each other in verdict and largely disjoint in the gaps they report;
+Section~\ref{sec:limitations} lists every gap and its disposition, including the ones we did not
+close.
+
+The material written \emph{in response} to that first pass was then put through a second,
+targeted round with the Qwen reviewer, covering exactly the five items that the first pass could
+not have seen: Proposition~\ref{prop:impossible}; Lemma~\ref{lem:Cprime} together with the
+expanded proof of Theorem~\ref{thm:Ckr}; the upper bound of Corollary~\ref{cor:growth}; the
+judgement that Bala's mixed product is \emph{not} covered by Theorem~\ref{thm:Ckr}
+(Remark~\ref{rem:mixed}); and the attribution of the exponent jumps in Table~\ref{tab:Dr}. All
+five came back \textsc{ok}, with no critical error and no justification gap; the verdict for that
+round is \textsc{valid}. Status lines below cite it as ``round~2''. Its one editorial request ---
+that the scope of Theorem~\ref{thm:Ckr} at $r=1$ be stated so that it cannot be misread as
+covering the mixed product --- is implemented in Section~\ref{sec:Ckr}.
+
+\emph{Formal verification.} A Lean~4 file, checked against \texttt{mathlib} with an axiom audit,
+proves the conjecture in the form $\exists D > 0$. What it does \emph{not} do is formalise the
+sharp constant $D(r)$ of Theorem~\ref{thm:main}: the Lean witness is the deliberately crude
+$(r!)^{r^2}$. Statements whose status line says ``Lean'' are machine-checked; statements whose
+status line does not say ``Lean'' are not, and Section~\ref{sec:formal} says precisely which is
+which.
+
+\emph{Computation.} A short Python script, \texttt{a211417\_verify.py}, checks every finite
+assertion in this paper and every theorem end-to-end in a bounded range. A second, independently
+written script by the \texttt{codex} reviewer re-checks the main divisibility through a disjoint
+code path (no SymPy, no factorial construction, trial division and Legendre valuations only).
+Computation is evidence against blunders, not a proof, and no status line below rests on
+computation alone unless it says so.
+
+\section{The Landau step function}
+\label{sec:step}
+
+\subsection{Definition, periodicity, and the table of cell values}
+
+\begin{definition}
+For $x \in \R$ put
+\[
+  \Delta(x) \;=\; \lfloor 30x \rfloor + \lfloor x \rfloor - \lfloor 15x \rfloor
+    - \lfloor 10x \rfloor - \lfloor 6x \rfloor .
+\]
+\end{definition}
+
+Because the coefficients balance, $30 + 1 - 15 - 10 - 6 = 0$, we have $\Delta(x+1) = \Delta(x)$,
+so $\Delta$ depends only on the fractional part $\{x\}$. On $[0,1)$ it is constant on each of the
+thirty cells $[j/30,(j+1)/30)$. Indeed let $t$ lie in the $j$-th cell, so $\lfloor 30t\rfloor =
+j$. For $d \in \{2,3,5\}$ we have $(30/d)\,t \in [\,j/d,\ (j+1)/d\,)$, and this interval lies
+inside $[\,\lfloor j/d\rfloor,\ \lfloor j/d\rfloor + 1)$ because $\lfloor j/d\rfloor \le j/d$ and
+$(j+1)/d \le \lfloor j/d\rfloor + 1$, the latter being $(j \bmod d) \le d-1$. Hence
+\[
+  \lfloor 15t \rfloor = \lfloor j/2 \rfloor,\qquad
+  \lfloor 10t \rfloor = \lfloor j/3 \rfloor,\qquad
+  \lfloor 6t \rfloor = \lfloor j/5 \rfloor ,
+\]
+and $\Delta(t) = \Delta_j$ with
+\begin{equation}
+  \Delta_j \;=\; j - \lfloor j/2 \rfloor - \lfloor j/3 \rfloor - \lfloor j/5 \rfloor,
+  \qquad j = 0,1,\dots,29 .
+  \label{eq:cells}
+\end{equation}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}l*{15}{c}@{}}
+\toprule
+$j$        & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\
+$\Delta_j$ & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 1 & 1 & 1 & 0  & 1  & 0  & 1  & 1  \\
+\midrule
+$j$        & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 \\
+$\Delta_j$ & 0  & 0  & 1  & 0  & 1  & 0  & 0  & 0  & 1  & 0  & 0  & 0  & 0  & 0  & 1  \\
+\bottomrule
+\end{tabular}
+\caption{The thirty cell values \eqref{eq:cells}. The eight residues coprime to $30$, namely
+$1,7,11,13,17,19,23,29$, all carry the value $1$ (Lemma~\ref{lem:A}); the second row read
+backwards is the complement of the first, i.e.\ $\Delta_{29-j} = 1 - \Delta_j$
+(Lemma~\ref{lem:reflection}).}
+\label{tab:cells}
+\end{table}
+
+Two properties of this table are used throughout.
+
+\begin{lemma}[Chebyshev nonnegativity]
+\label{lem:nonneg}
+$\Delta_j \in \{0,1\}$ for all $j$; in particular $\Delta(x) \ge 0$ for all real $x$.
+\end{lemma}
+
+\begin{proof}
+Writing $\lfloor j/d\rfloor = j/d - \{j/d\}$ and using $\tfrac12 + \tfrac13 + \tfrac15 =
+\tfrac{31}{30}$,
+\[
+  \Delta_j \;=\; j - \frac{31j}{30} + \{j/2\} + \{j/3\} + \{j/5\}
+  \;=\; \{j/2\} + \{j/3\} + \{j/5\} - \frac{j}{30} .
+\]
+For $0 \le j \le 29$ the right-hand side is $> 0 - \tfrac{29}{30} > -1$ and
+$\le \tfrac12 + \tfrac23 + \tfrac45 = \tfrac{59}{30} < 2$. Being an integer, $\Delta_j \in
+\{0,1\}$; the individual values are those of Table~\ref{tab:cells}. The nonnegativity is
+Chebyshev's classical reason for the integrality of $a(n)$; a formal proof that does not consult
+the table is \texttt{f\_nonneg} in Section~\ref{sec:formal}, which reduces $\Delta(n/d) \ge 0$ to
+a linear-arithmetic fact about $\lfloor 30(n \bmod d)/d\rfloor \le 29$.
+\end{proof}
+\vstatus{Dual review (both reviewers recomputed the table independently and obtained only the
+values $0$ and $1$); Lean (\texttt{f\_nonneg}, for the nonnegativity in the form actually used);
+computational.}
+
+\begin{lemma}[Reflection identity]
+\label{lem:reflection}
+$\Delta_j + \Delta_{29-j} = 1$ for $0 \le j \le 29$.
+\end{lemma}
+
+\begin{proof}
+For $d \in \{2,3,5\}$,
+\[
+  \Big\lfloor \frac{j}{d}\Big\rfloor + \Big\lfloor\frac{29-j}{d}\Big\rfloor
+  \;=\; \frac{29 - \bigl[(j \bmod d) + ((29-j)\bmod d)\bigr]}{d} .
+\]
+The bracket is $\equiv 29 \pmod d$ and lies in $[0, 2d-2]$, so it equals either $29 \bmod d$ or
+$29 \bmod d + d$. Now $29 \bmod 2 = 1$, $29 \bmod 3 = 2$, $29 \bmod 5 = 4$, and adding $d$ gives
+$3, 5, 9$, each strictly larger than the corresponding upper bound $2d-2 = 2, 4, 8$. Hence the
+bracket equals $29 \bmod d$ exactly, and the three sums are $\tfrac{29-1}{2} = 14$,
+$\tfrac{29-2}{3} = 9$, $\tfrac{29-4}{5} = 5$. Therefore
+\[
+  \Delta_j + \Delta_{29-j} \;=\; \bigl[j + (29-j)\bigr] - (14+9+5) \;=\; 29 - 28 \;=\; 1. \qedhere
+\]
+\end{proof}
+\vstatus{Dual review (no objection); computational (all $30$ instances). Not formalised: the Lean
+development takes the route through Lemma~\ref{lem:A} and never needs the reflection identity.}
+
+\begin{remark}
+Lemma~\ref{lem:reflection} is special to this sequence. For a general height-one ratio
+\eqref{eq:ratio} a direct computation gives $\Delta^u(x) + \Delta^u(-x) = T - S$ for every $x$
+that makes none of $A_s x$, $B_t x$ an integer; for $a(n)$ we have $T - S = 3 - 2 = 1$, which is
+exactly Lemma~\ref{lem:reflection}. This is the point at which the generalisation of
+Section~\ref{sec:sporadic} needs care, and it is why Conjecture~\ref{conj:general} there is
+stated as a conjecture.
+\end{remark}
+
+\subsection{Legendre's formula}
+
+\begin{lemma}
+\label{lem:legendre}
+For every prime $p$ and every $n \ge 0$,
+\begin{equation}
+  \nu_p\bigl(a(n)\bigr) \;=\; \sum_{k \ge 1} \Delta\!\left(\frac{n}{p^k}\right)
+  \;=\; \#\bigl\{\, k \ge 1 : \Delta(n/p^k) = 1 \,\bigr\} .
+  \label{eq:legendre}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Legendre's formula $\nu_p(N!) = \sum_{k \ge 1}\lfloor N/p^k\rfloor$, applied to each of the five
+factorials in \eqref{eq:a} and combined term by term at each $k$, gives the first equality; the
+sums are finite since all terms with $p^k > 30n$ vanish. The second equality is
+Lemma~\ref{lem:nonneg}.
+\end{proof}
+\vstatus{Dual review (both reviewers re-derived \eqref{eq:legendre} from scratch and confirmed
+period one from the coefficient balance); Lean (\texttt{legendre} and \texttt{padicValNat\_a},
+which also re-derive the integrality $a(n) \in \Z$ rather than assuming it); computational
+(cross-checked against \texttt{sympy.factorint} for $n \le 6$, prime by prime).}
+
+Identity \eqref{eq:legendre} is the entire engine of this paper: the right-hand side is a
+\emph{count of layers}, and every layer can be spent at most once. All three lemmas of
+Section~\ref{sec:proof} exist to arrange a matching between the layers of $P_r(n)$ and the layers
+counted on the right of \eqref{eq:legendre}.
+
+\section{Three lemmas and the main theorem}
+\label{sec:proof}
+
+\subsection{Step 1: unit-class rigidity}
+
+\begin{lemma}[Lemma A]
+\label{lem:A}
+If $1 \le c \le 29$ and $\gcd(c,30) = 1$, then $\Delta_c = 1$.
+\end{lemma}
+
+\begin{proof}
+Write $\bar c_3 = c \bmod 3 \in \{1,2\}$ and $\bar c_5 = c \bmod 5 \in \{1,2,3,4\}$; since $c$ is
+odd, $\lfloor c/2\rfloor = (c-1)/2$. Multiplying \eqref{eq:cells} by $30$,
+\[
+  30\,\Delta_c \;=\; 30c - 15(c-1) - 10(c - \bar c_3) - 6(c - \bar c_5)
+  \;=\; 15 + 10\bar c_3 + 6\bar c_5 - c .
+\]
+The right-hand side is divisible by $30$. Indeed it is even, because $15$ is odd, $10\bar c_3$
+and $6\bar c_5$ are even and $c$ is odd; it is $\equiv \bar c_3 - c \equiv 0 \pmod 3$; and it is
+$\equiv \bar c_5 - c \equiv 0 \pmod 5$. Moreover it lies in
+\[
+  [\,15 + 10 + 6 - 29,\ 15 + 20 + 24 - 1\,] \;=\; [2,\,58],
+\]
+and the only multiple of $30$ in that interval is $30$ itself. Hence $30\Delta_c = 30$, i.e.\
+$\Delta_c = 1$.
+\end{proof}
+\vstatus{Dual review (both reviewers verified the identity, the three congruences and the
+interval bound, and both additionally evaluated \eqref{eq:cells} at all eight residues
+independently of the argument); Lean (\texttt{unit\_step}); computational.}
+
+\begin{remark}
+Lemma~\ref{lem:A} is the fact on which the AlphaProof/Nexus proof of the case $r=1$ turns: its
+Lean file establishes \texttt{f\_nat\_eq\_one} from \texttt{c\_mod\_30}, i.e.\ that
+$c \bmod 30 \in \{1,7,11,13,17,19,23,29\}$ forces the step value $1$. The whole of the present
+paper may be read as the observation that this rigidity is not about the residue $1$ but about
+the group of units modulo $30$, together with the bookkeeping (Lemma~\ref{lem:C}) needed to use
+it once per prime power rather than once per index.
+\end{remark}
+
+\subsection{Step 2: buying a layer}
+
+\begin{lemma}[Lemma B]
+\label{lem:B}
+Let $p$ be a prime with $p \nmid 30$, let $k \ge 1$, and let $i \ge 1$ with $\gcd(i,30)=1$. If
+\[
+  p^k \mid 30n - i \qquad\text{and}\qquad p^k > i,
+\]
+then $\Delta(n/p^k) = 1$.
+\end{lemma}
+
+\begin{proof}
+Let $s = n \bmod p^k \in [0,p^k)$ and $t = \{n/p^k\} = s/p^k$. From $30n \equiv i \pmod{p^k}$ we
+get $30s \equiv i \pmod{p^k}$, so
+\[
+  30 s \;=\; i + c\,p^k \qquad\text{for some } c \in \Z .
+\]
+
+\emph{Range of $c$.} From $30s - i \ge -i > -p^k$ we get $c \ge 0$; from
+$30s - i \le 30(p^k-1) - i < 30p^k$ we get $c \le 29$.
+
+\emph{Position.} $30t = 30s/p^k = c + i/p^k$ with $0 < i/p^k < 1$, so $\lfloor 30t\rfloor = c$,
+i.e.\ $t$ lies strictly inside the $c$-th cell and $\Delta(t) = \Delta_c$.
+
+\emph{Coprimality.} Reducing $30s = i + c\,p^k$ modulo $30$ gives $0 \equiv i + c\,p^k$. If a
+prime $q \in \{2,3,5\}$ divided $c$ then, since $q \mid 30$, it would divide $i$, contradicting
+$\gcd(i,30)=1$. Hence $\gcd(c,30)=1$; in particular $c \ne 0$.
+
+Lemma~\ref{lem:A} now gives $\Delta(t) = \Delta_c = 1$.
+\end{proof}
+\vstatus{Dual review (no objection; the \texttt{codex} reviewer additionally checked that the
+argument is unaffected when $30n - i < 0$, which happens for small $n$, and that the hypothesis
+$p^k > i$ is used exactly where needed); Lean (\texttt{f\_eq\_one}, stated for an arbitrary
+modulus $d \ge 2$ rather than a prime power, which is all the proof uses); computational.}
+
+\begin{nremark}
+\label{rem:235}
+Primes dividing $30$ never occur in $P_r(n)$ at all: if $p \in \{2,3,5\}$ then $p \mid 30n$ while
+$p \nmid i$, so $p \nmid 30n - i$ for every $i \in \Lr$. Hence $\nu_p(P_r(n)) = 0$ for
+$p \in \{2,3,5\}$, and these primes may be ignored below.
+\end{nremark}
+
+\subsection{Step 3: prime-power stratification}
+
+Lemma~\ref{lem:B} settles a single factor. The content of the conjecture is the product: distinct
+$i, i' \in \Lr$ share the prime $p$ precisely when $p \mid i - i'$, and can therefore contribute
+to $\nu_p(P_r(n))$ simultaneously, whereas \eqref{eq:legendre} allows each layer $k$ to
+contribute at most $1$ to $\nu_p(a(n))$. The following lemma confines the sharing to the finitely
+many layers $p^k \le r$.
+
+\begin{lemma}[Lemma C]
+\label{lem:C}
+Fix a prime $p \nmid 30$, an integer $r \ge 1$ and $n \ge 0$. Put
+\[
+  N_k \;=\; \#\{\, i \in \Lr : p^k \mid 30n - i \,\},
+  \qquad
+  K \;=\; \min\{\, k \ge 1 : p^k > r \,\} .
+\]
+Then:
+\begin{enumerate}
+\item $(N_k)_{k \ge 1}$ is nonincreasing and $\sum_{k \ge 1} N_k = \nu_p\bigl(P_r(n)\bigr)$;
+\item $N_k \le 1$ for every $k \ge K$, and all layers $k \ge K$ with $N_k = 1$ share one and the
+  same witness $i_0 \in \Lr$;
+\item $\displaystyle \sum_{k \ge K} N_k \;\le\; \nu_p\bigl(a(n)\bigr)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) If $p^{k+1} \mid m$ then $p^k \mid m$, so the counted sets decrease with $k$ and $(N_k)$ is
+nonincreasing. No factor vanishes: $30n - i = 0$ would force $30 \mid i$, contradicting
+$\gcd(i,30)=1$. Hence each $\nu_p(30n-i)$ is a well-defined nonnegative integer, and counting
+each factor of valuation $e$ once on each of the layers $1,\dots,e$ gives
+\[
+  \nu_p\bigl(P_r(n)\bigr) \;=\; \sum_{i \in \Lr} \nu_p(30n - i)
+  \;=\; \sum_{i \in \Lr} \#\{k \ge 1 : p^k \mid 30n - i\} \;=\; \sum_{k \ge 1} N_k .
+\]
+
+(2) Let $k \ge K$ and suppose $p^k \mid 30n - i$ and $p^k \mid 30n - i'$ with $i,i' \in \Lr$.
+Subtracting, $p^k \mid i - i'$. But $|i - i'| \le r - 1 < r < p^K \le p^k$, so $i = i'$. Thus
+$N_k \le 1$. Moreover if $N_{k+1} = 1$ with witness $i^{(k+1)}$, then a fortiori
+$p^k \mid 30n - i^{(k+1)}$, so by the uniqueness just proved at layer $k$ we get
+$i^{(k+1)} = i^{(k)}$. Hence the nonempty layers above $K$ all carry the same witness $i_0$.
+
+(3) By (1) and (2) the set $\{k \ge K : N_k = 1\}$ is an interval $[K,M]$, possibly empty (in
+which case the sum is $0$ and there is nothing to prove). For each $k \in [K,M]$ we have
+$p^k \mid 30n - i_0$ and $p^k \ge p^K > r \ge i_0$, so Lemma~\ref{lem:B} applies and gives
+$\Delta(n/p^k) = 1$. These indices $k$ are pairwise distinct, so by \eqref{eq:legendre} and
+Lemma~\ref{lem:nonneg},
+\[
+  \nu_p\bigl(a(n)\bigr) \;=\; \sum_{k \ge 1} \Delta(n/p^k)
+  \;\ge\; \sum_{k=K}^{M} \Delta(n/p^k) \;=\; M - K + 1 \;=\; \sum_{k \ge K} N_k . \qedhere
+\]
+\end{proof}
+\vstatus{Dual review (\textsc{no critical error} from both; the \texttt{codex} reviewer explicitly
+confirmed the delicate point --- that counting one prime at several powers on several layers is
+neither a loss nor a double charge --- and checked the edge cases $n = 0$, $i = r$, $30n-i<0$,
+and repeated powers of a single prime); Lean (\texttt{per\_k\_bound}, in a uniform form that
+merges (2) and (3) with the low-layer bound; see Section~\ref{sec:formal}); computational.}
+
+\begin{remark}
+Part (3) is where the conjecture is actually won, and it is lossless: every high layer of
+$P_r(n)$ is paid for by a \emph{distinct} summand of \eqref{eq:legendre} that equals $1$. In
+particular, if $p > r$ then $K = 1$ and the whole of $\nu_p(P_r(n))$ is paid for, with no
+constant needed at all. This is why $D(r)$ involves only primes $p \le r$, and it is the
+qualitative statement that the numerical check of Section~\ref{sec:values} probes hardest: over
+$r \in \{1,7,\dots,100\}$ and $n \le 120$, no prime $p > r$ was ever found with positive
+deficiency.
+\end{remark}
+
+\subsection{The main theorem}
+
+\begin{theorem}[Bala's $D(r)$ conjecture, with an explicit constant]
+\label{thm:main}
+For $r \ge 1$ define
+\[
+  E(p,r) \;=\; \sum_{k \ge 1,\ p^k \le r}\ \max_{c \bmod p^k}\
+    \#\{\, i \in \Lr : i \equiv c \ (\mathrm{mod}\ p^k)\,\},
+  \qquad
+  D(r) \;=\; \prod_{\substack{p \le r\\ \gcd(p,30)=1}} p^{\,E(p,r)} .
+\]
+Then for every $n \ge 0$,
+\[
+  P_r(n) \ \Big|\ D(r)\cdot a(n) \qquad \text{in } \Z .
+\]
+\end{theorem}
+
+\begin{proof}
+Both sides are nonzero integers (no factor $30n-i$ vanishes, by Lemma~\ref{lem:C}(1)), and
+divisibility in $\Z$ is insensitive to signs; so it suffices to prove, for every prime $p$, the
+valuation inequality
+\begin{equation}
+  \nu_p\bigl(P_r(n)\bigr) \;\le\; E(p,r) + \nu_p\bigl(a(n)\bigr),
+  \label{eq:valineq}
+\end{equation}
+where by convention $E(p,r) = 0$ when $p \mid 30$ or $p > r$. There are three cases.
+
+\emph{Case $p \in \{2,3,5\}$.} By Remark~\ref{rem:235}, $\nu_p(P_r(n)) = 0$ and
+\eqref{eq:valineq} is trivial.
+
+\emph{Case $p \nmid 30$, $p > r$.} Then $p^1 > r$, so $K = 1$ and Lemma~\ref{lem:C}(1),(3) give
+\[
+  \nu_p\bigl(P_r(n)\bigr) \;=\; \sum_{k \ge 1} N_k \;=\; \sum_{k \ge K} N_k
+  \;\le\; \nu_p\bigl(a(n)\bigr),
+\]
+which is \eqref{eq:valineq} with no loss whatsoever.
+
+\emph{Case $p \nmid 30$, $p \le r$.} Split the sum of Lemma~\ref{lem:C}(1) at $K$:
+\[
+  \nu_p\bigl(P_r(n)\bigr)
+  \;=\; \underbrace{\sum_{k=1}^{K-1} N_k}_{\text{low layers}}
+  \;+\; \underbrace{\sum_{k \ge K} N_k}_{\le\ \nu_p(a(n)) \text{ by Lemma~\ref{lem:C}(3)}} .
+\]
+Every low layer satisfies $p^k \le r$ by the minimality of $K$. Moreover $p^k \mid 30n - i$ says
+exactly that $i$ lies in the residue class of $30n$ modulo $p^k$, so
+\[
+  N_k \;=\; \#\{\, i \in \Lr : i \equiv 30n \ (\mathrm{mod}\ p^k)\,\}
+  \;\le\; \max_{c \bmod p^k} \#\{\, i \in \Lr : i \equiv c \ (\mathrm{mod}\ p^k)\,\} ,
+\]
+and this bound does not depend on $n$. Summing over $k = 1,\dots,K-1$, whose $p^k$ are exactly
+the prime powers of $p$ that are $\le r$, gives $\sum_{k<K} N_k \le E(p,r)$, hence
+\eqref{eq:valineq}.
+
+The three cases exhaust all primes and the bounds are uniform in $n$, so
+$P_r(n) \mid D(r)\,a(n)$ for every $n \ge 0$.
+\end{proof}
+\vstatus{Dual review: \textsc{valid} from both reviewers, each recomputing the valuation
+inequality prime by prime and confirming the case split. Lean: the \emph{existence} statement is
+machine-checked in the strengthened form $\exists D > 0$ (\texttt{general\_divisibility\_strong}),
+but with the cruder witness $(r!)^{r^2}$ rather than the $D(r)$ above; the sharp constant is
+\emph{not} formalised (Section~\ref{sec:formal}). Computational: end-to-end for
+$r \in \{1,7,11,13,17,19,23,29,31,37,49\}$ and $0 \le n \le 60$, plus a per-prime deficiency
+check for $r$ up to $100$ and $n \le 400$, plus an independently written check by the
+\texttt{codex} reviewer through a disjoint code path.}
+
+\begin{nremark}[the case $n = 0$]
+\label{rem:n0}
+Because $P_r(n)$ is defined in $\Z$ and its factors are negative for small $n$, the boundary case
+deserves an explicit word. At $n=0$ we have $P_r(0) = \prod_{i \in \Lr}(-i)$ and $a(0)=1$, so
+$\nu_p(a(0)) = 0$ for all $p$; correspondingly $N_k = \#\{i \in \Lr : p^k \mid i\}$, which is $0$
+for $p^k > r$ since no $i \le r$ is divisible by $p^k$. Thus the high-layer sum is $0 =
+\nu_p(a(0))$ and the low layers are bounded by $E(p,r)$ as before: the proof above covers $n=0$
+with no modification. Negative factors are likewise harmless, since divisibility and $p$-adic
+valuation depend only on absolute values, and no factor is zero.
+\end{nremark}
+
+\subsection{The size of $D(r)$}
+
+\begin{corollary}[closed-form bound]
+\label{cor:crude}
+$\displaystyle E(p,r) \;\le\; \sum_{k \ge 1,\ p^k \le r} \Bigl\lceil \frac{r}{p^k}\Bigr\rceil
+ \;\le\; \frac{r}{p-1} + \log_p r$.
+\end{corollary}
+
+\begin{proof}
+A fixed residue class modulo $p^k$ meets $\{1,\dots,r\}$ in at most $\lceil r/p^k\rceil$
+elements, and $\Lr \subseteq \{1,\dots,r\}$. Then
+$\sum_{k \ge 1, p^k \le r}\lceil r/p^k\rceil \le \sum_{k\ge1} r p^{-k} + \#\{k : p^k \le r\}
+= r/(p-1) + \lfloor \log_p r\rfloor$.
+\end{proof}
+\vstatus{Dual review (no objection); computational.}
+
+\begin{corollary}[growth order]
+\label{cor:growth}
+$\log D(r) = \Theta(r \log r)$. More precisely,
+$\bigl(\tfrac{1}{30}+o(1)\bigr)\, r\log r \le \log D(r) \le \bigl(1+o(1)\bigr)\, r \log r$.
+\end{corollary}
+
+\begin{proof}
+\emph{Upper bound.} By Corollary~\ref{cor:crude},
+\[
+  \log D(r) \;=\; \sum_{\substack{p \le r\\ \gcd(p,30)=1}} E(p,r)\log p
+  \;\le\; \sum_{p \le r}\Bigl(\frac{r}{p-1} + \frac{\log r}{\log p}\Bigr)\log p
+  \;=\; r\sum_{p\le r}\frac{\log p}{p-1} \;+\; \pi(r)\log r .
+\]
+Mertens' first theorem gives $\sum_{p \le r}\log p/(p-1) = \log r + O(1)$, and Chebyshev's bound
+gives $\pi(r)\log r = O(r)$. Hence $\log D(r) \le (1+o(1))\,r\log r$.
+
+\emph{Lower bound.} Let $p$ be a prime with $\gcd(p,30)=1$. Every term of the arithmetic
+progression $1, 1+30p, 1+60p, \dots$ is $\equiv 1 \pmod{30}$, hence coprime to $30$; so all such
+terms not exceeding $r$ belong to $\Lr$, and they are all congruent to $1$ modulo $p$. The single
+layer $k=1$ of $E(p,r)$ therefore already contributes
+\[
+  E(p,r) \;\ge\; \Bigl\lfloor \frac{r-1}{30p}\Bigr\rfloor + 1 .
+\]
+Summing $E(p,r)\log p$ over the primes $p \le (r-1)/30$ coprime to $30$ and using Mertens'
+estimate $\sum_{p \le x}\log p / p = \log x + O(1)$,
+\[
+  \log D(r) \;\ge\; \sum_{\substack{p \le (r-1)/30\\ \gcd(p,30)=1}}
+    \Bigl\lfloor\frac{r-1}{30p}\Bigr\rfloor \log p
+  \;\ge\; \Bigl(\frac{1}{30}+o(1)\Bigr)\, r\log r . \qedhere
+\]
+\end{proof}
+\vstatus{The lower bound is due to the \texttt{codex} reviewer, who produced it in order to refute
+the claim $\log D(r) = O(r\log\log r)$ asserted in the first draft of this paper; that claim is
+false and has been removed. The \emph{upper} bound was re-derived in round~2 (Qwen, targeted):
+\textsc{ok}, with the Mertens and Chebyshev steps checked separately. The lower bound, being the
+first reviewer's own construction, has not been independently re-reviewed.
+Computational: the inequality $E(p,r) \ge \lfloor (r-1)/(30p)\rfloor + 1$ was
+checked for all primes and all $r \le 3200$ with no violation, and numerically
+$\log D(r)/(r\log r)$ stays near $0.30$ over $r = 100,\dots,3200$ while
+$\log D(r)/(r\log\log r)$ increases monotonically from $0.83$ to $1.17$
+(Table~\ref{tab:growth}), which is what refutes the discarded claim.}
+
+\begin{remark}
+Corollary~\ref{cor:growth} describes \emph{our} $D(r)$, not the minimal one. The growth order of
+the minimal valid constant is unknown to us; see Section~\ref{sec:limitations}, item~1.
+\end{remark}
+
+\begin{corollary}[the case $r \le 6$, recovering the AlphaProof/Nexus theorem]
+\label{cor:r1}
+For $1 \le r \le 6$ we have $\Lr = \{1\}$ and $D(r) = 1$; in particular $(30n-1) \mid a(n)$ for
+all $n \ge 0$.
+\end{corollary}
+
+\begin{proof}
+For $r \le 6$ the only $i \le r$ coprime to $30$ is $i=1$, and there is no prime $p \le r$ with
+$\gcd(p,30)=1$, so the product defining $D(r)$ is empty. Theorem~\ref{thm:main} then reads
+$(30n-1) \mid a(n)$.
+\end{proof}
+\vstatus{Dual review (no objection); Lean (\texttt{thirty\_mul\_sub\_one\_dvd\_a}, derived from
+the general machinery, which reproves the AlphaProof/Nexus result from scratch);
+computational. Consistent with Bala's $D(1)=1$.}
+
+\subsection{Explicit values, and how the table must be read}
+\label{sec:values}
+
+Since $D(r)$ depends on $r$ only through $\Lr$ and the prime powers $\le r$, it is constant on
+long stretches of $r$. Table~\ref{tab:Dr} lists it up to $r = 43$, grouping equal values;
+Table~\ref{tab:Dr-long} in Appendix~\ref{app:tables} adds the exponent vectors $E(p,r)$.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}llrl@{}}
+\toprule
+$r$ & $\Lr$ & $D(r)$ & factorisation \\
+\midrule
+$1$--$6$   & $\{1\}$                                  & $1$ & --- \\
+$7$--$10$  & $\{1,7\}$                                & $7$ & $7$ \\
+$11$--$12$ & $\{1,7,11\}$                             & $77$ & $7\cdot 11$ \\
+$13$--$16$ & $\{1,7,11,13\}$                          & $1001$ & $7\cdot 11\cdot 13$ \\
+$17$--$18$ & $\{1,7,11,13,17\}$                       & $17017$ & $7\cdot 11\cdot 13\cdot 17$ \\
+$19$--$22$ & $\{1,7,11,13,17,19\}$                    & $323323$ & $7\cdot 11\cdot 13\cdot 17\cdot 19$ \\
+$23$--$28$ & $\{1,7,11,13,17,19,23\}$                 & $81800719$ & $7\cdot 11^{2}\cdot 13\cdot 17\cdot 19\cdot 23$ \\
+$29$--$30$ & $\{1,7,\dots,29\}$                       & $16605545957$ & $7^{2}\cdot 11^{2}\cdot 13\cdot 17\cdot 19\cdot 23\cdot 29$ \\
+$31$--$36$ & $\{1,7,\dots,31\}$                       & $514771924667$ & $7^{2}\cdot 11^{2}\cdot 13\cdot 17\cdot 19\cdot 23\cdot 29\cdot 31$ \\
+$37$--$40$ & $\{1,7,\dots,37\}$                       & $247605295764827$ & $7^{2}\cdot 11^{2}\cdot 13^{2}\cdot 17\cdot 19\cdot 23\cdot 29\cdot 31\cdot 37$ \\
+$41$--$42$ & $\{1,7,\dots,41\}$                       & $172580891148084419$ & $7^{2}\cdot 11^{2}\cdot 13^{2}\cdot 17^{2}\cdot 19\cdots 41$ \\
+$43$--$46$ & $\{1,7,\dots,43\}$                       & $51946848235573410119$ & $7^{3}\cdot 11^{2}\cdot 13^{2}\cdot 17^{2}\cdot 19\cdots 43$ \\
+\bottomrule
+\end{tabular}
+\caption{The constant of Theorem~\ref{thm:main}. In the last two rows $19\cdots41$ and
+$19\cdots43$ abbreviate the product of the first powers of the primes from $19$ up to $41$
+respectively $43$ that are coprime to $30$.}
+\label{tab:Dr}
+\end{table}
+
+\begin{remark}[how to read Table~\ref{tab:Dr}]
+The first six rows look like ``multiply by the next prime'', and that reading is wrong. It breaks
+at $r = 23$: $D(23)$ is \emph{not} $323323\cdot 23 = 7436429$ but
+$81800719 = 7436429 \times 11$. The reason is that $E(p,r)$ counts the largest number of
+elements of $\Lr$ inside one residue class modulo $p^k$, not the mere presence of a prime
+$\le r$. Concretely,
+\begin{itemize}
+\item $E(11,\cdot)$ jumps from $1$ to $2$ at $r=23$, because $1 \equiv 23 \pmod{11}$ and $r=23$
+  is the first $r$ for which both lie in $\Lr$;
+\item $E(7,\cdot)$ jumps from $1$ to $2$ at $r=29$, because $1 \equiv 29 \pmod 7$;
+\item $E(13,\cdot)$ jumps from $1$ to $2$ at $r=37$, because $11 \equiv 37 \pmod{13}$;
+\item $E(17,\cdot)$ jumps at $r=41$ ($7 \equiv 41 \pmod{17}$), and $E(7,\cdot)$ jumps again to
+  $3$ at $r=43$ ($1 \equiv 29 \equiv 43 \pmod 7$).
+\end{itemize}
+An earlier draft of this table used abbreviations of the form ``$+23$'' and ``$\cdots\cdot 19$''
+which hid these jumps; one reviewer read the row for $r=23$ as an arithmetic error on that
+account. The values were correct throughout, but the presentation was not, and the table is
+displayed in full here for that reason.
+\end{remark}
+\vstatus{The four jump attributions above were re-derived in round~2 (Qwen, targeted):
+\textsc{ok}. The reviewer checked in each case that the residues of $\Lr$ are pairwise distinct
+modulo $p$ just below the stated $r$ and that the newly admitted index collides with an existing
+one, and confirmed the resulting decimal values and factorisations against the table.}
+
+\paragraph{Is $D(r)$ minimal?} No, and the gap begins exactly where the sharing begins. Let
+$D_{\min}(r)$ be the least positive constant that works. A valid constant must be divisible by
+\[
+  |P_r(n)| \big/ \gcd\bigl(|P_r(n)|,\,a(n)\bigr)
+\]
+for every $n$, so the least common multiple of those quantities over $n \le 200$ is a lower bound
+for $D_{\min}(r)$ and divides it. Comparing:
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}rrrl@{}}
+\toprule
+$r$ & $D(r)$ of Theorem~\ref{thm:main} & lower bound for $D_{\min}(r)$ ($n \le 200$) & slack \\
+\midrule
+$\le 19$ & \multicolumn{2}{c}{equal} & $1$ \\
+$23$ & $81800719$ & $7436429$ & $11$ \\
+$29$ & $16605545957$ & $215656441$ & $7\cdot 11$ \\
+$31$ & $514771924667$ & $46797447697$ & $11$ \\
+$37$ & $247605295764827$ & $1731505564789$ & $11\cdot 13$ \\
+$49$ & $7468554211373095893038987$ & $13056159716962300939$ & $7\cdot11\cdot17\cdot19\cdot23$ \\
+\bottomrule
+\end{tabular}
+\caption{Theorem~\ref{thm:main} is sharp for $r \le 19$ and loses a little afterwards. ``Slack''
+is the ratio of the two preceding columns, an upper bound for $D(r)/D_{\min}(r)$.}
+\label{tab:minimal}
+\end{table}
+
+The source of the slack is identified in Section~\ref{sec:limitations}, item~1: the low-layer
+bound $N_k \le \max_c \#\{\cdots\}$ silently assumes that the worst residue class and a total
+absence of low-layer contributions to $\nu_p(a(n))$ can occur simultaneously, and they are in
+fact correlated.
+
+\section{The sister family $C(k,r)$}
+\label{sec:Ckr}
+
+Bala's explicit statements about $2n+1$, $3n+1$ and $5n+1$ are the case $r=1$ of a family running
+parallel to the $D(r)$ conjecture. (His fourth statement, about the mixed product
+$(2n+1)(3n+1)(5n+1)$, is of a different shape and is \emph{not} an instance of what follows; see
+Remark~\ref{rem:mixed}.) Throughout this section
+\[
+  k \in \{2,3,5\}, \qquad m = 30/k \in \{15,10,6\}, \qquad
+  L^{(k)}_r = \{\, i : 1 \le i \le r,\ \gcd(i,k)=1 \,\},
+\]
+\[
+  Q^{(k)}_r(n) = \prod_{i \in L^{(k)}_r}(kn+i).
+\]
+Note that every factor $kn+i \ge i \ge 1$ is positive, so no sign discussion is needed here.
+
+The proof runs through the same three steps, but three details genuinely differ from
+Section~\ref{sec:proof} and we spell them out rather than assert a parallel: the threshold is
+$p^j \ge m\,i$ rather than $p^j > i$; the prime $p$ is allowed to divide $m$ --- for instance
+$p = 3$ or $5$ when $k = 2$ --- so that, unlike in Section~\ref{sec:proof}, the divisors of $30$
+are not all excluded, only those dividing $k$; and the index set is $L^{(k)}_r$, defined by
+coprimality to $k$ rather than to $30$.
+
+\subsection{The local lemma for $kn+i$}
+
+\begin{lemma}[Lemma B$'$]
+\label{lem:Bprime}
+Let $k \in \{2,3,5\}$, $m = 30/k$, let $p$ be a prime with $p \nmid k$, let $j \ge 1$, and let
+$i \ge 1$ with $\gcd(i,k)=1$. If
+\[
+  p^j \mid kn + i \qquad\text{and}\qquad p^j \ge m\,i,
+\]
+then $\Delta(n/p^j) = 1$.
+\end{lemma}
+
+\begin{proof}
+Put $s = n \bmod p^j$ and $t = \{n/p^j\} = s/p^j$. From $p^j \mid kn+i$ we get $p^j \mid ks+i$,
+say
+\[
+  k s + i \;=\; c\,p^j, \qquad c \in \Z .
+\]
+
+\emph{Range of $c$.} Since $c\,p^j = ks + i \ge i > 0$ we have $c \ge 1$. For the upper bound,
+$m \ge 6 > 1$ and $p^j \ge mi$ give $i \le p^j/m < p^j$, whence
+\[
+  c\,p^j \;=\; ks + i \;\le\; k(p^j - 1) + i \;<\; k\,p^j + p^j \;=\; (k+1)p^j ,
+\]
+so $c \le k$. If $c = k$ then $ks+i = k p^j$, so $k \mid i$, contradicting $\gcd(i,k)=1$. Hence
+$1 \le c \le k-1$; in particular $k \ge 2$ guarantees such a $c$ exists.
+
+\emph{Position.} Using $30/k = m$,
+\[
+  30t \;=\; \frac{30 s}{p^j} \;=\; \frac{30(c\,p^j - i)}{k\,p^j} \;=\; mc - \frac{mi}{p^j},
+  \qquad 0 < \frac{mi}{p^j} \le 1 ,
+\]
+so $\lfloor 30t\rfloor = mc-1$ (this is correct also in the boundary case $mi = p^j$, where
+$30t = mc-1$ exactly), and therefore $\Delta(n/p^j) = \Delta_{mc-1}$.
+
+\emph{Value.} By Lemma~\ref{lem:reflection} and $mk = 30$,
+\[
+  \Delta_{mc-1} \;=\; 1 - \Delta_{29-(mc-1)} \;=\; 1 - \Delta_{30-mc} \;=\; 1 - \Delta_{m(k-c)},
+\]
+with $k - c \in \{1,\dots,k-1\}$. The seven values $\Delta_{mc'}$ with $c' \in \{1,\dots,k-1\}$
+are read off Table~\ref{tab:cells}:
+\[
+  \begin{array}{llll}
+  k=2, & m=15: & \Delta_{15}=0 & \Longrightarrow\ \Delta_{14}=1,\\
+  k=3, & m=10: & \Delta_{10}=\Delta_{20}=0 & \Longrightarrow\ \Delta_{9}=\Delta_{19}=1,\\
+  k=5, & m=6:  & \Delta_{6}=\Delta_{12}=\Delta_{18}=\Delta_{24}=0
+    & \Longrightarrow\ \Delta_{5}=\Delta_{11}=\Delta_{17}=\Delta_{23}=1 .
+  \end{array}
+\]
+Hence $\Delta(n/p^j) = \Delta_{mc-1} = 1$.
+\end{proof}
+\vstatus{Dual review: the \texttt{codex} reviewer re-derived this lemma, listed the same seven
+cells, confirmed that equality at the threshold is harmless, and confirmed that primes dividing
+$m$ need not be excluded. One editorial correction from that review is incorporated: the first
+draft bounded $ks+i \le k p^j - k + i$, which does not give $c \le k$ when $i > k$; the argument
+above uses $i < p^j$ explicitly. Not formalised. Computational (all seven cells; the family
+end-to-end, see Theorem~\ref{thm:Ckr}).}
+
+\subsection{Stratification for $kn+i$}
+
+\begin{lemma}[Lemma C$'$]
+\label{lem:Cprime}
+Let $k \in \{2,3,5\}$, $m = 30/k$, let $p$ be a prime with $p \nmid k$, and let $r \ge 1$,
+$n \ge 0$. Put
+\[
+  N^{(k)}_j = \#\{\, i \in L^{(k)}_r : p^j \mid kn+i \,\},
+  \qquad
+  K = \min\{\, j \ge 1 : p^j > m r \,\} .
+\]
+Then $(N^{(k)}_j)_j$ is nonincreasing with $\sum_{j \ge 1} N^{(k)}_j = \nu_p\bigl(Q^{(k)}_r(n)
+\bigr)$; for $j \ge K$ one has $N^{(k)}_j \le 1$ with a single witness $i_0$ shared by all such
+layers; and $\sum_{j \ge K} N^{(k)}_j \le \nu_p\bigl(a(n)\bigr)$.
+\end{lemma}
+
+\begin{proof}
+The first assertion is as in Lemma~\ref{lem:C}(1), and is easier here because every factor
+$kn+i$ is positive.
+
+For the second, let $j \ge K$ and suppose $p^j$ divides both $kn+i$ and $kn+i'$ with
+$i,i' \in L^{(k)}_r$. Then $p^j \mid i-i'$ while
+\[
+  |i - i'| \;\le\; r-1 \;<\; r \;\le\; m r \;<\; p^K \;\le\; p^j
+\]
+(using $m \ge 1$), so $i = i'$ and $N^{(k)}_j \le 1$. If $N^{(k)}_{j+1} = 1$ with witness
+$i^{(j+1)}$ then $p^j \mid kn + i^{(j+1)}$ as well, so uniqueness at layer $j$ forces
+$i^{(j+1)} = i^{(j)}$; hence all nonempty layers $j \ge K$ share one witness $i_0$.
+
+For the third, $\{j \ge K : N^{(k)}_j = 1\}$ is an interval $[K,M]$ (possibly empty). For each
+$j$ in it, $p^j \mid kn + i_0$ and
+\[
+  p^j \;\ge\; p^K \;>\; m r \;\ge\; m\,i_0 ,
+\]
+which is exactly the threshold hypothesis of Lemma~\ref{lem:Bprime}; so $\Delta(n/p^j) = 1$ for
+each of these $M-K+1$ distinct layers, and \eqref{eq:legendre} together with
+Lemma~\ref{lem:nonneg} gives $\nu_p(a(n)) \ge M-K+1 = \sum_{j\ge K} N^{(k)}_j$.
+\end{proof}
+\vstatus{Reviewed in round~2 (Qwen, targeted): \textsc{ok}. The reviewer checked each of the three
+differences separately --- that $p^j \ge p^K > mr \ge m\,i_0$ makes the threshold automatic for
+any witness $i_0 \le r$; that the local argument uses only $p \nmid k$, so the finite cell checks
+survive when $p \mid m$; and that high-layer uniqueness depends only on $|i-i'| \le r-1$ and is
+therefore indifferent to which index set is used. This lemma is the explicit form of a step that
+the first two drafts left as ``verbatim parallel to Lemma~\ref{lem:C}'', which the Qwen first
+pass objected to, correctly. The underlying mathematics was independently confirmed by the
+\texttt{codex} review, which carried out the same reduction. Not formalised. Computational
+(through Theorem~\ref{thm:Ckr}).}
+
+\subsection{The theorem}
+
+\begin{theorem}[Bala's $C(k,r)$ family]
+\label{thm:Ckr}
+Let $k \in \{2,3,5\}$, $m = 30/k$. Define
+\[
+  E_k(p,r) = \sum_{j \ge 1,\ p^j \le mr}\ \max_{c \bmod p^j}\
+    \#\{\, i \in L^{(k)}_r : i \equiv c \ (\mathrm{mod}\ p^j)\,\},
+  \qquad
+  C(k,r) = \prod_{\substack{p \le mr\\ p \nmid k}} p^{\,E_k(p,r)} .
+\]
+Then $Q^{(k)}_r(n) \mid C(k,r)\cdot a(n)$ for every $n \ge 0$.
+\end{theorem}
+
+\begin{proof}
+Fix a prime $p$; we prove $\nu_p(Q^{(k)}_r(n)) \le E_k(p,r) + \nu_p(a(n))$.
+
+If $p \mid k$ then $p \nmid kn+i$ for every $i \in L^{(k)}_r$, since $p \mid kn$ and
+$p \nmid i$; so $\nu_p(Q^{(k)}_r(n)) = 0$ and there is nothing to prove. Assume $p \nmid k$ and
+split at $K = \min\{j : p^j > mr\}$ using Lemma~\ref{lem:Cprime}:
+\[
+  \nu_p\bigl(Q^{(k)}_r(n)\bigr)
+  = \underbrace{\sum_{j=1}^{K-1} N^{(k)}_j}_{\text{low}}
+  + \underbrace{\sum_{j \ge K} N^{(k)}_j}_{\le\ \nu_p(a(n))} .
+\]
+Each low layer has $p^j \le mr$, and $p^j \mid kn+i$ says $i \equiv -kn \pmod{p^j}$, so
+$N^{(k)}_j \le \max_c \#\{ i \in L^{(k)}_r : i \equiv c \ (\mathrm{mod}\ p^j)\}$, a bound
+independent of $n$. Summing over $j < K$ gives $E_k(p,r)$. Finally, if $p > mr$ then $K=1$ and
+the low sum is empty, so only primes $p \le mr$ occur in $C(k,r)$, as in its definition.
+\end{proof}
+\vstatus{Dual review: \textsc{valid} from the \texttt{codex} reviewer, who verified the seven
+cells, the threshold, and the fact that primes dividing $m$ are legitimately admitted; the Qwen
+first pass recorded the exposition gap now closed by Lemma~\ref{lem:Cprime}, and Qwen round~2
+returned \textsc{ok} on the completed proof, confirming both the low/high split and the fact that
+primes $p > mr$ need no factor in $C(k,r)$. Not formalised.
+Computational: end-to-end for $k \in \{2,3,5\}$, $r \in \{1,2,3,5,8,12\}$ and $0 \le n \le 40$,
+and (independently of this theorem) all five of Bala's explicit assertions for $n < 400$; the
+\texttt{codex} reviewer additionally
+re-verified the case $k=3$, $r=5$, $C = 459117704332740252800$ through an independent code
+path.}
+
+\paragraph{Specialisation to $r=1$, stated exactly.} Taking $r=1$ in Theorem~\ref{thm:Ckr} gives
+\[
+  (2n+1) \mid C(2,1)\,a(n), \qquad (3n+1)\mid C(3,1)\,a(n), \qquad (5n+1)\mid C(5,1)\,a(n),
+\]
+that is, the qualitative form of \emph{three} of Bala's explicit statements, with constants
+coarser than his (Remark~\ref{rem:Ckr-loose}). It does \emph{not} give his fourth,
+$(2n+1)(3n+1)(5n+1) \mid 42\,a(n)$: that statement mixes three different moduli and lies outside
+the scope of this theorem, for the reason set out in Remark~\ref{rem:mixed}. We say this
+explicitly because the phrase ``a uniform proof for general $r$'' invites the opposite reading.
+
+\begin{nremark}[the constant here is far from sharp]
+\label{rem:Ckr-loose}
+Theorem~\ref{thm:Ckr} gives $C(2,1) = 45045 = 3^2\cdot 5\cdot 7\cdot 11\cdot 13$ where Bala's
+constant is $7$, and $C(3,1) = 280$, $C(5,1) = 12$ where the true constants are $1$
+(Table~\ref{tab:Ckr} in Appendix~\ref{app:tables} gives more values). The reason
+is visible in the proof: the high-layer threshold was taken uniformly as $p^j > mr$, whereas
+Lemma~\ref{lem:Bprime} only requires $p^j \ge m\,i$ for the individual witness $i$. Replacing
+$E_k$ by an $n$-uniform bound on $\sum_j \#\{ i \in L^{(k)}_r : i \equiv -kn \ (\mathrm{mod}\
+p^j),\ p^j < mi\}$ would tighten it; we have not done this. The corresponding threshold in
+Theorem~\ref{thm:main} is $p^k > i$ with $i \le r$, which is why $D(r)$ does not suffer the same
+loss.
+\end{nremark}
+
+\subsection{The mixed product: what we do and do not prove}
+\label{sec:mixed}
+
+\begin{nremark}[the mixed product is not covered]
+\label{rem:mixed}
+Bala's fourth explicit statement, $(2n+1)(3n+1)(5n+1) \mid 42\,a(n)$, does not follow from
+Theorem~\ref{thm:Ckr}. Applying the theorem to $k=2,3,5$ separately gives three inequalities
+$\nu_p(kn+1) \le E_k(p,1) + \nu_p(a(n))$ whose sum charges $\nu_p(a(n))$ three times, whereas
+the mixed statement must be paid for with a single copy of it. Nor are the three factors pairwise
+coprime, so the three divisibilities cannot simply be multiplied: at $n=1$ they are $3$, $4$, $6$,
+and $\gcd(3,6) = 3$. An earlier version of this work listed the mixed product among the $r=1$
+instances of Theorem~\ref{thm:Ckr}; that was an overclaim and is withdrawn. Its present status
+here is: \emph{numerically verified for $n < 400$, not covered by our theorems}, together with
+the conditional derivation of Proposition~\ref{prop:mixed} below. The statement itself is in any
+case already proved and formalised by others (Section~\ref{sec:related}).
+\end{nremark}
+\vstatus{The non-coverage judgement was reviewed in round~2 (Qwen, targeted): \textsc{ok}. The
+reviewer confirmed both grounds --- the threefold charge against $\nu_p(a(n))$, and genuine
+sharing at $p=2,3$ (at $n=1$: $\gcd(2n+1,5n+1)=3$ and $\gcd(3n+1,5n+1)=2$) --- and this remark
+implements that round's single editorial request. Computational ($n<400$).}
+
+There is, however, a clean route to the mixed product, and it is worth recording because it shows
+exactly what our machinery is missing. It does not use our constants at all; it uses the
+\emph{sharp} $r=1$ constants, which are not our result.
+
+\begin{proposition}[conditional]
+\label{prop:mixed}
+Assume the three sharp divisibilities
+\[
+  (2n+1) \mid 7\,a(n), \qquad (3n+1) \mid a(n), \qquad (5n+1)\mid a(n) \qquad (n \ge 0).
+\]
+Then $(2n+1)(3n+1)(5n+1) \mid 42\,a(n)$ for every $n \ge 0$.
+\end{proposition}
+
+\begin{proof}
+Write $x = 2n+1$, $y = 3n+1$, $z = 5n+1$. Integer elimination gives
+\[
+  3x - 2y = 1, \qquad 5x - 2z = 3, \qquad 5y - 3z = 2,
+\]
+so $\gcd(x,y) = 1$, $\gcd(x,z) \mid 3$ and $\gcd(y,z)\mid 2$: only $p = 2$ and $p=3$ can be
+shared by two factors. Note also that $x$ is odd and $y \equiv 1 \pmod 3$. We check
+$\nu_p(xyz) \le \nu_p(42) + \nu_p(a(n))$ for every prime $p$.
+
+\emph{$p \ge 5$, $p \ne 7$.} At most one of $x,y,z$ is divisible by $p$, so $\nu_p(xyz)$ is that
+factor's valuation, which is $\le \nu_p(a(n))$ by hypothesis (for $x$, because $\nu_p(7)=0$). And
+$\nu_p(42) = 0$.
+
+\emph{$p = 7$.} Again at most one factor is divisible by $7$. The hypotheses give
+$\nu_7(x) \le 1 + \nu_7(a(n))$ and $\nu_7(y), \nu_7(z) \le \nu_7(a(n))$, so
+$\nu_7(xyz) \le 1 + \nu_7(a(n)) = \nu_7(42) + \nu_7(a(n))$.
+
+\emph{$p = 3$.} Here $3 \nmid y$, and $3 \mid x \iff n \equiv 1 \pmod 3 \iff 3 \mid z$: either
+both or neither. If neither, $\nu_3(xyz) = 0$. If both, then
+$\min(\nu_3(x),\nu_3(z)) = \nu_3(\gcd(x,z)) \le \nu_3(3) = 1$ while both are $\ge 1$, so the
+minimum is exactly $1$ and
+\[
+  \nu_3(xyz) = \nu_3(x)+\nu_3(z) = 1 + \max(\nu_3(x),\nu_3(z)) \le 1 + \nu_3(a(n))
+  = \nu_3(42)+\nu_3(a(n)).
+\]
+
+\emph{$p = 2$.} Here $2 \nmid x$, and $2 \mid y \iff n \text{ odd} \iff 2 \mid z$. If $n$ is even,
+$\nu_2(xyz) = 0$. If $n$ is odd, $\min(\nu_2(y),\nu_2(z)) = \nu_2(\gcd(y,z)) \le \nu_2(2) = 1$
+with both $\ge 1$, so the minimum is $1$ and
+$\nu_2(xyz) = 1 + \max(\nu_2(y),\nu_2(z)) \le 1 + \nu_2(a(n)) = \nu_2(42)+\nu_2(a(n))$.
+\end{proof}
+\vstatus{\textbf{Conditional, and the hypotheses are not ours.} The three sharp constants assumed
+here are Bala's own values; they are recorded as \texttt{research solved} in the
+\texttt{formal-conjectures} corpus with Lean proofs by KitaKen1, and they are strictly sharper
+than what Theorem~\ref{thm:Ckr} delivers at $r=1$ ($45045$, $280$, $12$). So this proposition is
+not a consequence of our theorem chain, and we do not count the mixed product among our results.
+Written after both review rounds and \emph{not} adversarially reviewed. Not formalised.
+Computational: the gcd structure and the two ``$\min = 1$'' steps were checked for all
+$n < 20000$.}
+
+\begin{remark}
+To prove the mixed product from our own machinery one would first have to sharpen
+Theorem~\ref{thm:Ckr} to the optimal constants, which is the improvement described in
+Remark~\ref{rem:Ckr-loose} --- for $p=3$ it needs the compensation argument that the first layer,
+where $\Delta_{10}=0$, is paid for at the second. We have not done this.
+\end{remark}
+
+\section{The sign is not a typographical accident}
+\label{sec:sign}
+
+Bala writes $30n - i$ in the general conjecture but $kn + i$ in the companion statements. One may
+ask whether the minus sign could be replaced by a plus. It cannot, and the reason is not that our
+method fails --- although it does --- but that no constant exists.
+
+We first record why the method fails, because the same computation is what suggests the
+construction. For the family $30n+i$ with $\gcd(i,30)=1$, the computation carried out in the
+proof of Proposition~\ref{prop:impossible} below (case $j \le e$) places $\Delta(n/p^j)$ in cell
+$c-1$, where $c$ is a unit modulo $30$; by Lemma~\ref{lem:reflection} and Lemma~\ref{lem:A},
+$\Delta_{c-1} = 1 - \Delta_{30-c} = 0$, since $30-c$ is again a unit. So the relevant cells are
+uniformly $0$ and no layer is ever bought. This is a statement about our mechanism only: a zero
+cell says the high-layer argument is unavailable, not that the divisibility is impossible, since
+$\nu_p(a(n))$ might still receive contributions from other layers. An adversarial reviewer
+correctly refused the impossibility claim on exactly this ground. The following proposition
+supplies what is actually needed --- an explicit family of $n$ on which the $p$-adic deficit is
+unbounded.
+
+\begin{proposition}
+\label{prop:impossible}
+Let $\gcd(i,30) = 1$. There is no constant $D \ne 0$ such that $(30n+i) \mid D\cdot a(n)$ for all
+$n \ge 0$.
+\end{proposition}
+
+\begin{proof}
+By Dirichlet's theorem choose a prime $p \equiv 1 \pmod{30}$ with $p > i$; there are infinitely
+many. For $e \ge 1$ set
+\[
+  n_e \;=\; \frac{i\,(p^e-1)}{30} \;\in\; \Z_{\ge 1},
+\]
+an integer because $p^e \equiv 1 \pmod{30}$. Then $30 n_e + i = i\,p^e$, and $p \nmid i$ because
+$p > i \ge 1$, so
+\[
+  \nu_p(30n_e + i) \;=\; e .
+\]
+
+We claim $\nu_p(a(n_e)) = 0$, i.e.\ $\Delta(n_e/p^j) = 0$ for every $j \ge 1$.
+
+\emph{Case $j \le e$.} Here $p^j \mid i p^e = 30n_e + i$, so with $s = n_e \bmod p^j$ we have
+$30s + i = c\,p^j$ for an integer $c$. Then $c\,p^j = 30s+i \ge i > 0$ gives $c \ge 1$, while
+$i < p \le p^j$ gives $c\,p^j \le 30(p^j-1) + i < 31 p^j$ and hence $c \le 30$; and $c = 30$
+would force $30 \mid i$, so $1 \le c \le 29$. Reducing $c\,p^j = 30s + i \equiv i \pmod{30}$ and using that
+$p^j$ is a unit modulo $30$, we find that $c$ is a unit modulo $30$. Also
+$30\{n_e/p^j\} = 30 s/p^j = c - i/p^j$ with $0 < i/p^j < 1$, so $\lfloor 30 s/p^j\rfloor = c-1$
+and $\Delta(n_e/p^j) = \Delta_{c-1}$. Finally, $30 - c$ is a unit modulo $30$ as well, so
+Lemma~\ref{lem:reflection} and Lemma~\ref{lem:A} give
+\[
+  \Delta_{c-1} \;=\; 1 - \Delta_{29-(c-1)} \;=\; 1 - \Delta_{30-c} \;=\; 1 - 1 \;=\; 0 .
+\]
+
+\emph{Case $j > e$.} From $i < p$,
+\[
+  n_e \;<\; \frac{i\,p^e}{30} \;\le\; \frac{i\,p^{\,j-1}}{30} \;<\; \frac{p^{\,j}}{30},
+\]
+so $0 \le n_e/p^j < 1/30$: the point lies in cell $0$ and $\Delta(n_e/p^j) = \Delta_0 = 0$.
+
+Hence $\nu_p(a(n_e)) = 0$ for every $e$. Suppose some $D$ satisfied $(30n+i) \mid D\,a(n)$ for
+all $n$. Taking $n = n_e$ and comparing $p$-adic valuations,
+\[
+  e \;=\; \nu_p(30n_e+i) \;\le\; \nu_p\bigl(D\,a(n_e)\bigr)
+  \;=\; \nu_p(D) + \nu_p\bigl(a(n_e)\bigr) \;=\; \nu_p(D)
+\]
+for every $e \ge 1$, which is impossible for $D \ne 0$.
+\end{proof}
+\vstatus{Reviewed in round~2 (Qwen, targeted): \textsc{ok}, no critical error and no
+justification gap. The reviewer checked the construction $n_e = i(p^e-1)/30$, the identity
+$30n_e+i = i\,p^e$, and both layer ranges --- $j \le e$ (unit residue $c$, then reflection plus
+Lemma~\ref{lem:A}) and $j > e$ (the point falls in cell $0$) --- and observed that $j=e$ needs no
+separate treatment, being already inside the first range. This proposition postdates the first
+review pass: it was written in response to the \texttt{codex} reviewer's objection J2, and the
+Qwen first pass, carried out on an earlier snapshot, records it as missing. Not formalised.
+Computational: the construction was checked for
+$i \in \{1,7,11,13,17,19,23,29,31\}$, $p \in \{31,61,151,181,211\}$ and $e \le 3$, giving
+$\nu_p(30n_e+i) = e$ and $\nu_p(a(n_e)) = 0$ in every case.}
+
+\begin{remark}[scope]
+Proposition~\ref{prop:impossible} covers the single family $30n+i$. We make no claim that a zero
+cell implies infeasibility in general: that converse is neither proved nor refuted here, and
+establishing it for another family would require another construction. See
+Section~\ref{sec:limitations}, item~5.
+\end{remark}
+
+\section{Towards Vasyunin's other sporadic ratios}
+\label{sec:sporadic}
+
+Bala's comment ends: ``Similar results may hold for all the 52 sporadic integral factorial ratio
+sequences listed in A295431.'' Our proof isolates exactly what is needed, and the condition is a
+finite check per sequence.
+
+Let $u$ be as in \eqref{eq:ratio} with $\sum_s A_s = \sum_t B_t$, let
+$N = \lcm\bigl(\{A_s\}\cup\{B_t\}\bigr)$, and let
+\[
+  \Delta^u(x) \;=\; \sum_{s}\lfloor A_s x\rfloor - \sum_t \lfloor B_t x\rfloor ,
+  \qquad \Delta^u_j := \Delta^u(j/N) \quad (j=0,\dots,N-1).
+\]
+As in Section~\ref{sec:step}, $\Delta^u$ has period $1$ and is constant on each cell
+$[j/N,(j+1)/N)$, and $\nu_p(u(n)) = \sum_{k\ge1}\Delta^u(n/p^k)$.
+
+\begin{criterion}
+\label{crit:general}
+Suppose $\Delta^u$ takes only the values $0$ and $1$, and that
+\[
+  \Delta^u_c = 1 \qquad\text{for every } 1 \le c \le N-1 \text{ with } \gcd(c,N)=1 .
+\]
+Then for every $r \ge 1$,
+\[
+  \prod_{\substack{i \le r\\ \gcd(i,N)=1}} (Nn-i) \ \Big|\ D_u(r)\cdot u(n)
+  \qquad (n \ge 0),
+  \qquad
+  D_u(r) = \prod_{\substack{p \le r\\ p \nmid N}} p^{\,E_u(p,r)},
+\]
+with $E_u(p,r) = \sum_{k \ge 1,\ p^k \le r}\max_{c}\#\{i \le r : \gcd(i,N)=1,\ i \equiv c\
+(\mathrm{mod}\ p^k)\}$.
+\end{criterion}
+
+\begin{proof}
+Both hypotheses are exactly the inputs used in Section~\ref{sec:proof}. Lemma~\ref{lem:A} is
+replaced by the assumed all-ones condition. In the analogue of Lemma~\ref{lem:B} --- for a prime
+$p \nmid N$, an index $i$ with $\gcd(i,N)=1$, and $p^k \mid Nn-i$ with $p^k > i$ --- write
+$Ns = i + c\,p^k$ with $s = n \bmod p^k$: the bounds $Ns - i > -p^k$ and $Ns - i < N p^k$ give
+$0 \le c \le N-1$; the identity $Nt = c + i/p^k$ with $0 < i/p^k < 1$ places $t$ in cell $c$; and
+reducing modulo $N$ gives $\gcd(c,N)=1$, so the criterion applies and $\Delta^u(n/p^k) = 1$.
+Primes dividing $N$ do not divide $Nn-i$, and no factor $Nn-i$ vanishes since $N \ge 2$.
+Lemma~\ref{lem:C} and the proof
+of Theorem~\ref{thm:main} are then reproduced verbatim, using that $\nu_p(u(n))$ counts the
+layers where $\Delta^u = 1$, which is where the $\{0,1\}$-valuedness is used.
+\end{proof}
+\vstatus{Not reviewed adversarially in this form (the reviewers saw the earlier, stronger and
+partly unjustified version of this section, and both flagged it; the statement here is the
+weakened one). Not formalised. For $u = a$ we have $N = 30$ and the criterion holds by
+Lemma~\ref{lem:A}, so Theorem~\ref{thm:main} is the case $u = a$ --- which is the only case we
+have checked. \textbf{The $52$ sequences of A295431 have not been checked one by one}; doing so
+requires only their parameter lists and $\varphi(N)$ evaluations each, and is left as an
+immediate follow-up.}
+
+For the opposite sign the situation is genuinely less clear, and we state what we believe rather
+than what we know. Two things go wrong with a naive transfer of Proposition~\ref{prop:impossible}
+to general $u$. First, the reflection identity is not automatic: the computation of
+Section~\ref{sec:step} gives $\Delta^u(x)+\Delta^u(-x) = T - S$ for $x$ avoiding the finitely
+many points where some $A_s x$ or $B_t x$ is an integer, and $T-S=1$ --- the height-one
+condition --- is what makes it Lemma~\ref{lem:reflection}. Second, even with a reflection
+identity in hand, the construction in Proposition~\ref{prop:impossible} uses $p \equiv 1
+\pmod N$, $p > i$ and $\Delta^u_0 = 0$, all of which need checking per sequence.
+
+\begin{conjecture}
+\label{conj:general}
+Let $u$ be a height-one integral factorial ratio satisfying Criterion~\ref{crit:general}, with
+$T - S = 1$. Then for $\gcd(i,N)=1$ there is no constant $D \ne 0$ with
+$(Nn+i) \mid D\,u(n)$ for all $n$.
+\end{conjecture}
+\vstatus{Conjecture; proved here only for $u = a$, $N = 30$
+(Proposition~\ref{prop:impossible}).}
+
+\section{Relation to the announcement in \texttt{formal-conjectures} issue \#4923}
+\label{sec:priority}
+
+We record, as a matter of fact and without a priority claim, an announcement of the existence
+statement that pre-dates the completion of this paper by one day.
+
+\paragraph{The facts.} Issue \#4923 of the \texttt{formal-conjectures} repository
+(``Possible misformalizations II''), opened by the user KitaKen1 on 2026-08-13T09:06:53Z and last
+edited 2026-08-16T00:46:41Z, contains under the heading ``Degenerate witness'' the following
+text:
+\begin{quote}\small
+``OEIS A211417 \texttt{general\_divisibility} --- \textbf{Problem:} \texttt{D = 0} makes the
+current existential vacuous. \textbf{Update:} the intended version appears true with the explicit
+positive witness \texttt{D(r) = lcm(1,\dots,r)\^{}|\{1 $\le$ i $\le$ r : gcd(i,30)=1\}|}.
+\textbf{Likely fix:} state this witness, or require \texttt{D > 0}. \textbf{The general proof is
+paper-complete but not yet Lean-checked}; the four fixed statements are separate in \#5010.''
+\end{quote}
+The same user is the author of the Lean proofs of the four $r=1$ sister statements merged as pull
+request \#5010 on 2026-08-16.
+
+\paragraph{What we could and could not verify.} As of 2026-08-17 we found no public proof text.
+Issue \#4923 has zero comments. The author's repository \texttt{KitaKen1/oeis-a211417} states in
+its README that \texttt{general\_divisibility} ``is intentionally out of scope\,\dots\ This
+repository does not count that statement as a solution and does not include it as a target'', and
+contains no corresponding Lean or manuscript file; all twelve files in it were enumerated. An
+arXiv abstract search returned nothing. We therefore treat the sentence quoted above as an
+announcement without an accompanying argument, which is neither evidence for nor against its
+correctness.
+
+\paragraph{Comparison.} Table~\ref{tab:kitaken} sets the two side by side.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+& Issue \#4923 (2026-08-16) & this paper (2026-08-17) \\
+\midrule
+existence of $D(r)$, general $r$ & announced ``paper-complete'', proof not public
+  & proved (Theorem~\ref{thm:main}) \\
+explicit witness & $\lcm(1,\dots,r)^{|\Lr|}$ & $\prod_{p\le r,\,\gcd(p,30)=1} p^{E(p,r)}$ \\
+value at $r=7$ & $420^2 = 176400$ & $7$ \\
+value at $r=23$ & $\approx 1.26\times10^{68}$ & $81800719 \approx 8.2\times 10^{7}$ \\
+$C(k,r)$ family, general $r$ & not mentioned & proved (Theorem~\ref{thm:Ckr}) \\
+infeasibility of $30n+i$ & not mentioned & proved (Proposition~\ref{prop:impossible}) \\
+Lean & announced as not yet done & done, in the form $\exists D>0$ (Section~\ref{sec:formal}) \\
+\bottomrule
+\end{tabular}
+\caption{The announced witness and ours.}
+\label{tab:kitaken}
+\end{table}
+
+\paragraph{Consistency.} The two are compatible, and in a precise sense our theorem subsumes the
+announced witness.
+
+\begin{corollary}
+\label{cor:lcm}
+For every $r \ge 1$, $D(r)$ divides $\lcm(1,\dots,r)^{|\Lr|}$; consequently
+\[
+  P_r(n) \ \Big|\ \lcm(1,\dots,r)^{|\Lr|}\cdot a(n) \qquad (n \ge 0).
+\]
+\end{corollary}
+
+\begin{proof}
+Each of the $\lfloor \log_p r\rfloor$ layers contributing to $E(p,r)$ contributes at most
+$|\Lr|$, so $E(p,r) \le \lfloor\log_p r\rfloor\cdot|\Lr|$, which is the exponent of $p$ in
+$\lcm(1,\dots,r)^{|\Lr|}$. The divisibility statement then follows from
+Theorem~\ref{thm:main}.
+\end{proof}
+\vstatus{Computational (the exponent inequality was checked for all primes and all $r \le 80$
+with no violation, and the divisibility $D(r) \mid \lcm(1,\dots,r)^{|\Lr|}$ verified explicitly
+for $r \in \{1,7,11,13,17,23\}$). Not separately reviewed; the proof is one line from
+Theorem~\ref{thm:main}.}
+
+So the validity of the announced witness is a corollary of Theorem~\ref{thm:main}, and our
+constant is smaller --- by a factor of $25200$ already at $r=7$, and by sixty orders of magnitude
+at $r=23$.
+
+\paragraph{Positioning.} We state our claim in the weakest form the evidence supports. The result
+of Theorem~\ref{thm:main} was \emph{independently obtained}; the existence claim was
+\emph{independently announced} by KitaKen1 in \texttt{formal-conjectures} issue \#4923 on
+2026-08-16, and to our knowledge no public proof text for it exists as of 2026-08-17. We do not
+claim to be first. Should that proof appear and prove to be prior, the correct description of this
+paper becomes: an independent second proof, with a smaller explicit constant, together with the
+$C(k,r)$ family (Theorem~\ref{thm:Ckr}), the impossibility of the opposite sign
+(Proposition~\ref{prop:impossible}), and the Lean formalisation.
+
+\paragraph{One observation adopted.} The issue's first sentence is correct and we have acted on
+it: the corpus statement \texttt{$\exists$ D : $\Z$, $\forall$ n, divisorProduct n r $\mid$ D * a n}
+is vacuous, since $D = 0$ satisfies it and every integer divides $0$. Our
+Theorem~\ref{thm:main} produces a positive explicit constant and therefore proves the intended,
+non-vacuous statement; Proposition~\ref{prop:impossible} likewise excludes $D=0$ by hypothesis;
+and Section~\ref{sec:formal} both proves the strengthened form and exhibits the vacuity of the
+literal one as a machine-checked lemma.
+
+\section{Formal verification in Lean 4}
+\label{sec:formal}
+
+\subsection{File, environment, axiom audit}
+
+The development exists in two forms. The primary artefact is a single self-contained Lean~4
+\cite{lean4} file, \texttt{A211417.lean}, $607$ lines, importing all of \texttt{mathlib}
+\cite{mathlib}; the toolchain is \texttt{leanprover/lean4:v4.34.0-rc1} with \texttt{mathlib}
+pinned at revision \texttt{de5ce8a9a66a4aa68a9bdbb35b63a06d34d9ca11}. The second is the same
+proof integrated into the \texttt{formal-conjectures} file itself, discussed in
+Section~\ref{sec:fidelity}. Neither contains a \texttt{sorry} of ours, a \texttt{native\_decide},
+or an \texttt{axiom} declaration.
+
+Elaboration of \texttt{A211417.lean} by \texttt{lake env lean} on an Apple-silicon laptop takes
+$11.0$--$12.0$\,s on warm cache when the machine is otherwise idle, and $25.6$\,s for the first
+invocation in a fresh shell. These figures are load-sensitive rather than intrinsic: repeated
+under concurrent load from other jobs the same unchanged file took $114$--$130$\,s. Four
+\texttt{mathlib} deprecation and style-linter warnings are emitted at the pinned revision (two
+deprecated tactic names, one unused \texttt{simp} argument, one \texttt{haveI}/\texttt{have} style
+hint); there are no errors.
+
+The file ends with an axiom audit, whose complete output is
+\begin{quote}\ttfamily\small
+\begin{tabbing}
+'OeisA211417.general\_divisibility\_strong' depends on axioms: [propext, Classical.choice, Quot.sound]\\
+'OeisA211417.general\_divisibility' depends on axioms: [propext, Classical.choice, Quot.sound]\\
+'OeisA211417.key\_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]\\
+'OeisA211417.thirty\_mul\_sub\_one\_dvd\_a' depends on axioms: [propext, Classical.choice, Quot.sound]
+\end{tabbing}
+\end{quote}
+These three are the standard axioms of Lean's classical foundation, on which \texttt{mathlib}
+itself rests; nothing else is assumed, and no result is imported from an unverified oracle.
+
+\subsection{The statements proved}
+
+The definitions are taken character-for-character from the corpus file
+\texttt{FormalConjectures/OEIS/211417.lean}:
+\begin{quote}\ttfamily\small
+def a (n : $\N$) : $\N$ :=\\
+\hspace*{2em}(Nat.factorial (30 * n) * Nat.factorial n) /\\
+\hspace*{2em}(Nat.factorial (15 * n) * Nat.factorial (10 * n) * Nat.factorial (6 * n))\\[2pt]
+def coprimeIndices (r : $\N$) : Finset $\N$ :=\\
+\hspace*{2em}(Finset.range (r + 1)).filter (fun i => 1 $\le$ i $\wedge$ Nat.gcd i 30 = 1)\\[2pt]
+def divisorProduct (n r : $\N$) : $\Z$ :=\\
+\hspace*{2em}(coprimeIndices r).prod (fun i : $\N$ => 30 * (n : $\Z$) - (i : $\Z$))
+\end{quote}
+The main declarations are the following.
+
+\paragraph{(i) The conjecture, strengthened.}
+\begin{quote}\ttfamily\small
+theorem general\_divisibility\_strong (r : $\N$) (hr : 1 $\le$ r) :\\
+\hspace*{2em}$\exists$ D : $\Z$, 0 < D $\wedge$ $\forall$ n : $\N$, (divisorProduct n r) $\mid$ (D * (a n : $\Z$))
+\end{quote}
+This is the mathematical content of Bala's conjecture. It is strictly stronger than the corpus
+statement, for the reason given next.
+
+\paragraph{(ii) The literal corpus statement, and its vacuity.} The corpus asks for
+\begin{quote}\ttfamily\small
+theorem general\_divisibility (r : $\N$) (hr : 1 $\le$ r) :\\
+\hspace*{2em}$\exists$ D : $\Z$, $\forall$ n : $\N$, (divisorProduct n r) $\mid$ (D * (a n : $\Z$))
+\end{quote}
+which we also discharge, with the \emph{same positive} witness, so that (i) is a genuine
+strengthening rather than a different theorem. But the literal statement carries no content, and
+the file says so with a proof:
+\begin{quote}\ttfamily\small
+theorem general\_divisibility\_is\_vacuous (r : $\N$) :\\
+\hspace*{2em}$\exists$ D : $\Z$, $\forall$ n : $\N$, (divisorProduct n r) $\mid$ (D * (a n : $\Z$)) :=\\
+\hspace*{2em}$\langle$0, fun n => by simp$\rangle$
+\end{quote}
+Anyone can close the corpus goal in three lines by taking $D=0$. This is a machine-checked
+statement about the corpus, and it is our recommendation to the maintainers
+(Section~\ref{sec:upstream}).
+
+\paragraph{(iii) The $r=1$ case, re-proved.}
+\begin{quote}\ttfamily\small
+theorem thirty\_mul\_sub\_one\_dvd\_a (n : $\N$) : (30 * (n : $\Z$) - 1) $\mid$ (a n : $\Z$)
+\end{quote}
+This is the AlphaProof/Nexus theorem. Here it is not assumed or imported but obtained in two
+lines from the general machinery, via \texttt{divisorProduct\_one} and $D_{\mathrm{wit}}(1) = 1$.
+
+\paragraph{(iv) The workhorse.}
+\begin{quote}\ttfamily\small
+theorem key\_dvd (r : $\N$) (hr : 1 $\le$ r) (n : $\N$) :\\
+\hspace*{2em}(divisorProduct n r) $\mid$ (Dwit r * (a n : $\Z$)),
+\qquad
+Dwit r = ((r.factorial : $\Z$))\^{}(r * r)
+\end{quote}
+
+\subsection{What is formalised, and what is not}
+\label{sec:formal-gap}
+
+\textbf{The sharp constant $D(r)$ of Theorem~\ref{thm:main} is not formalised.} The Lean witness
+is the deliberately crude $D_{\mathrm{wit}}(r) = (r!)^{r^2}$, which is astronomically larger than
+$D(r)$ --- at $r=13$, for instance, $D(13) = 1001$ against a witness with over a thousand digits.
+This is a formalisation choice, not a mathematical retreat: the corpus statement asks only for
+\emph{some} constant, and a crude witness lets the low-layer accounting be discharged by a
+counting argument instead of by a formal development of $\max_c\#\{\cdots\}$ as a computable
+function. Concretely, the Lean proof replaces the two-case split in the proof of
+Theorem~\ref{thm:main} by one uniform per-layer inequality:
+\begin{quote}\ttfamily\small
+lemma per\_k\_bound (n r p k : $\N$) (hp : p.Prime) (hr : 1 $\le$ r) (hk : 1 $\le$ k) :\\
+\hspace*{2em}$\sum$ i $\in$ coprimeIndices r, (if p\^{}k $\mid$ (30 * (n : $\Z$) - (i : $\Z$)).natAbs then (1 : $\Z$) else 0)\\
+\hspace*{4em}$\le$ (if p\^{}k $\le$ r then (r : $\Z$) else 0) + f n (p\^{}k)
+\end{quote}
+where \texttt{f n d} is $\Delta(n/d)$ computed with natural division. This is Lemma~\ref{lem:C}
+with parts (2) and (3) merged into the branch $p^k > r$ --- where uniqueness of the witness is
+proved exactly as above and Lemma~\ref{lem:B} supplies $\Delta = 1$ --- and with the crude bound
+$N_k \le |\Lr| \le r$ in the branch $p^k \le r$. Summing over $k$ and absorbing the low-layer
+budget into $(r!)^{r^2}$ (lemma \texttt{S\_bound}, using $\#\{k \ge 1: p^k \le r\} \le r$ and
+$\nu_p(r!) \ge 1$ for $p \le r$) completes the argument. A formalisation of the sharp $D(r)$ would
+require the two-case split and a \texttt{Finset}-level treatment of the maximal residue class,
+and we did not attempt it.
+
+The following are likewise \emph{not} formalised: Theorem~\ref{thm:Ckr} and
+Lemmas~\ref{lem:Bprime},~\ref{lem:Cprime}; Propositions~\ref{prop:impossible}
+and~\ref{prop:mixed}; Corollaries~\ref{cor:crude},~\ref{cor:growth},~\ref{cor:lcm}; and
+Criterion~\ref{crit:general}. Their verification status lines say so individually.
+
+\subsection{Statement fidelity, and the corpus-integrated version}
+\label{sec:fidelity}
+
+Since a formal proof is only as meaningful as the fidelity of its statement, the file includes
+machine-checked sanity checks that its index set is the intended one:
+\begin{quote}\ttfamily\small
+lemma coprimeIndices\_one : coprimeIndices 1 = \{1\} := by decide\\
+lemma coprimeIndices\_thirteen : coprimeIndices 13 = \{1, 7, 11, 13\} := by decide\\
+lemma divisorProduct\_one (n : $\N$) : divisorProduct n 1 = 30 * (n : $\Z$) - 1
+\end{quote}
+together with \texttt{a 0 = 1}, \texttt{a 1 = 77636318760} and
+\texttt{a 2 = 53837289804317953893960} by \texttt{rfl}, which agree with the OEIS data and with
+the corpus's own test lemmas. Note that \texttt{divisorProduct} is $\Z$-valued precisely so that
+the negative factors occurring for small $n$ are handled honestly; see Remark~\ref{rem:n0}.
+
+The strongest form of statement fidelity available is to prove the theorem inside the corpus file
+itself, and we have done that as well. The proof is ported into
+\texttt{FormalConjectures/OEIS/211417.lean} against \texttt{FormalConjecturesUtil} and the
+corpus's own definitions --- no restatement, no renaming --- where it discharges
+\texttt{general\_divisibility} and \texttt{thirty\_mul\_sub\_one\_dvd\_a} by term proofs and adds
+\texttt{general\_divisibility\_strong} and \texttt{general\_divisibility\_is\_vacuous}. That file
+elaborates without error under the corpus's own build (Lean \texttt{v4.27.0}). The only
+\texttt{sorry} warnings it emits are the five that were already there and are other authors'
+business: the four $r=1$ sister statements and the supercongruence conjecture. We have not
+submitted this upstream; see Section~\ref{sec:upstream}.
+
+\subsection{Two techniques worth recording}
+
+\paragraph{Lemma~\ref{lem:A} is one call to \texttt{omega}.} The interval-and-congruence argument
+of Section~\ref{sec:proof} becomes
+\begin{quote}\ttfamily\small
+lemma unit\_step (c : $\N$) (h29 : c $\le$ 29) (h2 : c \% 2 $\ne$ 0) (h3 : c \% 3 $\ne$ 0) (h5 : c \% 5 $\ne$ 0) :\\
+\hspace*{2em}c / 2 + c / 3 + c / 5 + 1 = c := by omega
+\end{quote}
+Lean's linear-integer-arithmetic decision procedure handles division and modulus by numerals
+natively, so the hand proof is not needed --- a small illustration of the fact that the difficulty
+of a formalisation and the difficulty of the informal argument are only loosely related.
+
+\paragraph{Everything is reduced to indicator sums before any inequality is proved.} The
+valuation of a product is turned into a double sum over indices and layers,
+\[
+  \nu_p\Bigl(\prod_{i \in \Lr}|30n-i|\Bigr)
+  \;=\; \sum_{i \in \Lr}\ \sum_{k \ge 1} [\,p^k \mid |30n-i|\,]
+  \;=\; \sum_{k \ge 1}\ \sum_{i \in \Lr} [\,p^k \mid |30n-i|\,],
+\]
+using \texttt{padicValNat\_dvd\_iff\_le} for each factor (lemma \texttt{count\_pow\_dvd}) and
+\texttt{Finset.sum\_comm} for the exchange; only then is the per-layer bound applied under
+\texttt{Finset.sum\_le\_sum}. Working with \texttt{Int.natAbs} throughout, and moving between
+$\Z$-divisibility and $\N$-valuations by \texttt{Int.natAbs\_dvd\_natAbs}, keeps the negative
+factors from ever needing a case split.
+
+\subsection{A recommendation to the corpus maintainers}
+\label{sec:upstream}
+
+\texttt{FormalConjectures/OEIS/211417.lean} states \texttt{general\_divisibility} as
+$\exists D : \Z$ with no positivity constraint, and is therefore vacuous as written; we supply a
+three-line proof of that fact above. We recommend that it be restated as
+\texttt{$\exists$ D : $\Z$, 0 < D $\wedge$ \dots} (or with an explicit witness baked in). The same
+observation was made independently in issue \#4923 (Section~\ref{sec:priority}); we found it
+while checking whether our theorem implies the corpus statement.
+
+A patch implementing both changes --- the strengthened statement and a proof of it --- exists and
+elaborates against the corpus build (Section~\ref{sec:fidelity}). We have not opened a pull
+request. Deciding whether the corpus should carry the strengthened form, and under what
+attribution given the announcement discussed in Section~\ref{sec:priority}, is the maintainers'
+call and not ours to make by merge.
+
+\section{Related work}
+\label{sec:related}
+
+\paragraph{Integral factorial ratios.} That $u(n)$ in \eqref{eq:ratio} is integral for all $n$ if
+and only if the associated step function is everywhere nonnegative is Landau's criterion
+\cite{landau}. The classification of the height-one integral ratios --- a small number of infinite
+parametric families together with $52$ sporadic examples, of which \eqref{eq:a} is Chebyshev's
+--- is due to
+Rodriguez-Villegas, Vasyunin, and Bober \cite{rodriguezvillegas,bober}, with later work of
+Soundararajan on larger height. The present paper uses nothing from that theory beyond the step
+function itself; what it adds is that the step function's values on the \emph{unit residue
+classes} control divisibility of $u(n)$ by products of linear forms.
+
+\paragraph{The $r=1$ case.} $(30n-1)\mid a(n)$ was proved by DeepMind's AlphaProof/Nexus system
+\cite{nexus} and its Lean proof is public. Our Lemma~\ref{lem:A} is that proof's central fact,
+and Corollary~\ref{cor:r1} recovers the theorem; the Lean development of
+Section~\ref{sec:formal} reproves it from scratch rather than importing it. The four $r=1$
+statements for $2n+1$, $3n+1$, $5n+1$ and the $42$-product were formalised by KitaKen1 and merged
+into the corpus on 16 August 2026; Theorem~\ref{thm:Ckr} contains the first three of them as the
+case $r=1$ (with worse constants), does not cover the fourth (Remark~\ref{rem:mixed}), and we
+make no claim to any of the four.
+
+\paragraph{Machine contributions to OEIS conjectures.} The \texttt{formal-conjectures} corpus
+\cite{formalconjectures} supplies formal statements of open conjectures with \texttt{sorry} in
+place of proofs; it is both our problem source and, for this conjecture, the exact statement to
+be proved, which removes the usual risk that an autoformalisation proves something other than
+what was asked. Alongside it, a growing body of automated and AI-assisted work resolves OEIS
+comments in bulk. Our automated literature audit of 17 August 2026 recorded, as the nearest
+neighbours of this problem, a 2026 preprint proving a \emph{different} conjecture of Bala --- for
+A028342, not A211417 --- returned by the search as arXiv:2607.18313, and the fourth instalment of
+a series of AI-assisted OEIS resolutions, returned as arXiv:2607.24832. Neither overlaps with the
+present result. We record the identifiers for the reader's orientation and note that we read only
+their titles and abstracts.
+
+\paragraph{Placement.} The conjecture resolved here is a comment in an OEIS entry, not a problem
+of record. What is perhaps distinctive is the shape of the pipeline: the statement was selected
+automatically, the proof was found automatically, it was refuted in part and repaired under
+automated adversarial review by models from two other vendors, it was formalised, and the paper
+was drafted --- with no human supplying a mathematical step at any point. We make no claim about
+how this scales.
+
+\section{Limitations, and named obstacles}
+\label{sec:limitations}
+
+We state plainly what is not done.
+
+\begin{enumerate}
+
+\item \emph{$D(r)$ is not shown to be minimal, and is not minimal.} Theorem~\ref{thm:main} gives
+an upper bound. It coincides with the empirically minimal constant for $r \le 19$ but is too
+large from $r=23$ on, by a factor of $11$ there and by $7\cdot11\cdot17\cdot19\cdot23$ at $r=49$
+(Table~\ref{tab:minimal}). The diagnosis: the low-layer bound $N_k \le \max_c\#\{i \in \Lr :
+i \equiv c\}$ assumes that the worst residue class is attained \emph{and} that $\nu_p(a(n))$
+receives nothing at the low layers, and these two events are correlated --- when several indices
+share a small prime $p$, the integer $n$ is heavily constrained and typically forces
+$\Delta(n/p^k)=1$ at some low layer. Extracting the minimal $D(r)$ needs a joint analysis of the
+low layers, which we have not done. Consequently Corollary~\ref{cor:growth} describes our
+constant only; the growth order of $D_{\min}(r)$ is open.
+
+\item \emph{$C(k,r)$ is loose by a lot, and the mixed product is not covered.} $C(2,1) = 45045$
+where the truth is $7$; see Remark~\ref{rem:Ckr-loose}, which also says how to improve it. We did
+not. Separately, Bala's statement about $(2n+1)(3n+1)(5n+1)$ mixes three different moduli and is
+not an instance of Theorem~\ref{thm:Ckr}; Remark~\ref{rem:mixed} says what would be needed and
+what we do not claim.
+
+\item \emph{The $52$ sporadic sequences are not checked.} Criterion~\ref{crit:general} is a
+finite test per sequence, requiring only the parameter lists of A295431 and $\varphi(N)$
+evaluations of a step function each. We did not obtain that table and run it within the working
+window. This is the cheapest available follow-up.
+
+\item \emph{The supercongruence conjecture is untouched and out of reach of this method.} The
+other open conjecture in the same corpus file, $a(p^k) \equiv a(p^{k-1}) \pmod{p^{3k}}$ for
+$p \ge 5$ (Bala, 24 January 2020), belongs to the Wolstenholme--Dwork circle of ideas ($p$-adic
+Gamma functions, formal groups) and is orthogonal to Legendre-layer counting. Nothing here bears
+on it.
+
+\item \emph{The impossibility direction is proved for one family only.} Section~\ref{sec:sign}
+establishes that $30n+i$ admits no constant. The converse principle that a zero step-function
+cell implies infeasibility is neither proved nor refuted here; all we know is that a zero cell
+disables our mechanism. Conjecture~\ref{conj:general} states what we expect and do not prove.
+
+\item \emph{The formalisation covers existence, not the sharp constant, and not the sister
+results.} Section~\ref{sec:formal-gap} lists exactly which statements are machine-checked. In
+particular Theorem~\ref{thm:Ckr}, Propositions~\ref{prop:impossible} and~\ref{prop:mixed}, and
+Corollary~\ref{cor:growth} are pen-and-paper results supported by review and computation only;
+and the Lean witness is $(r!)^{r^2}$, not $D(r)$.
+
+\item \emph{The second review round was targeted, not a fresh full read.} The three statements
+written in response to the first pass --- Proposition~\ref{prop:impossible},
+Lemma~\ref{lem:Cprime} with the expanded proof of Theorem~\ref{thm:Ckr}, and the corrected
+Corollary~\ref{cor:growth} --- were reviewed in round~2 and returned \textsc{ok}. But that round
+examined five nominated items and did not re-audit the core mechanism, so its assurance is
+narrower than a first-pass review of the whole document; and it was conducted by the same
+reviewer (Qwen) whose first pass had raised two of the objections, not by a third party. Two
+things remain unreviewed by anyone: the \emph{lower} bound of Corollary~\ref{cor:growth}, which
+is the \texttt{codex} reviewer's own construction, and Proposition~\ref{prop:mixed}, written
+after both rounds.
+
+\item \emph{The first-pass verdicts were \textsc{valid-with-gaps}, not \textsc{valid}.} For
+transparency: the \texttt{codex} review recorded one false auxiliary corollary (the discarded
+$O(r\log\log r)$ claim), one unproved necessity direction, and one editorial omission in a bound;
+the Qwen first pass recorded seven findings, of which two were about material that had already
+been repaired in a version the reviewer did not see, three concerned the ancillary sections, and
+one was a presentation defect in the table of $D(r)$ values. Neither reviewer reported any error
+in Lemmas~\ref{lem:A},~\ref{lem:B},~\ref{lem:C} or Theorem~\ref{thm:main}, and both stated that
+explicitly; round~2 then returned \textsc{valid} on its five nominated items. The first draft of
+this paper was, nonetheless, wrong in two places, and neither was caught by the solver.
+
+\item \emph{One overclaim was found during the writing of this paper, not by review.} The
+first three versions of the underlying manuscript listed Bala's mixed product among the $r=1$
+instances of Theorem~\ref{thm:Ckr}. It is not one (Remark~\ref{rem:mixed}). The error was caught
+while drafting Section~\ref{sec:Ckr} and subsequently confirmed by round~2; that it survived two
+independent adversarial reviews is worth recording.
+
+\item \emph{The literature search was automated.} We checked for prior proofs by automated search
+--- corpus source, repository file listings, the live OEIS page, arXiv abstract search --- and
+found none, but automated searches miss things. Section~\ref{sec:priority} records the one prior
+announcement we did find, and we do not claim priority. Should a prior proof surface, the honest
+description of this paper is the one given at the end of that section.
+
+\item \emph{Computation is not proof.} The script \texttt{a211417\_verify.py} checks every finite
+claim and every theorem end-to-end in a bounded range, and an independently written script by one
+reviewer re-checks the main divisibility through a disjoint code path. Neither is a proof
+component, and no statement above rests on computation alone except where its verification-status
+line says so.
+
+\end{enumerate}
+
+\appendix
+\setcounter{table}{0}
+\renewcommand{\thetable}{A.\arabic{table}}
+\renewcommand{\theHtable}{appendix.\arabic{table}}% keep hyperref anchors unique after the reset
+
+\section{Numerical tables}
+\label{app:tables}
+
+All tables in this appendix are generated by \texttt{a211417\_verify.py}
+(Appendix~\ref{app:script}).
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}rrlr@{}}
+\toprule
+$r$ & $|\Lr|$ & $E(p,r)$ for $p$ with $E>0$ & $D(r)$ \\
+\midrule
+$1$  & $1$  & --- & $1$ \\
+$7$  & $2$  & $E(7)=1$ & $7$ \\
+$11$ & $3$  & $E(7)=E(11)=1$ & $77$ \\
+$13$ & $4$  & $E(7)=E(11)=E(13)=1$ & $1001$ \\
+$17$ & $5$  & $E(7)=\cdots=E(17)=1$ & $17017$ \\
+$19$ & $6$  & $E(7)=\cdots=E(19)=1$ & $323323$ \\
+$23$ & $7$  & $E(11)=2$; $E(7)=E(13)=E(17)=E(19)=E(23)=1$ & $81800719$ \\
+$29$ & $8$  & $E(7)=E(11)=2$; $E(13)=\cdots=E(29)=1$ & $16605545957$ \\
+$31$ & $9$  & $E(7)=E(11)=2$; $E(13)=\cdots=E(31)=1$ & $514771924667$ \\
+$37$ & $10$ & $E(7)=E(11)=E(13)=2$; $E(17)=\cdots=E(37)=1$ & $247605295764827$ \\
+$49$ & $14$ & $E(7)=4$; $E(11)=E(13)=E(17)=E(19)=E(23)=2$; & $7468554211373095893038987$ \\
+     &      & $E(29)=\cdots=E(47)=1$ & \\
+\bottomrule
+\end{tabular}
+\caption{The exponents of Theorem~\ref{thm:main}. The maximal deficiency
+$\nu_p(P_r(n)) - \nu_p(a(n))$ actually observed over $n \le 400$ never exceeded $E(p,r)$, and
+equalled it for every $p$ when $r \le 19$.}
+\label{tab:Dr-long}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$r$ & $\log D(r)$ & $\log D(r) / (r\log r)$ & $\log D(r)/(r \log\log r)$ \\
+\midrule
+$100$  & $127.2$  & $0.2763$ & $0.833$ \\
+$200$  & $323.4$  & $0.3052$ & $0.970$ \\
+$400$  & $736.0$  & $0.3071$ & $1.028$ \\
+$800$  & $1620.7$ & $0.3031$ & $1.066$ \\
+$1600$ & $3587.9$ & $0.3039$ & $1.122$ \\
+$3200$ & $7792.2$ & $0.3017$ & $1.166$ \\
+\bottomrule
+\end{tabular}
+\caption{Corollary~\ref{cor:growth} in numbers. The middle column is bounded; the right-hand one
+is not, which is what refutes the $O(r\log\log r)$ claim of the first draft.}
+\label{tab:growth}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$r$ & $C(2,r)$ & $C(3,r)$ & $C(5,r)$ \\
+\midrule
+$1$ & $45045$ & $280$ & $12$ \\
+$2$ & $145568097675$ & $25865840$ & $5544$ \\
+$3$ & $294362129962575675$ & $86262576400$ & $4900896$ \\
+$5$ & $6.41\times10^{30}$ & $459117704332740252800$ & $558981495072$ \\
+$8$ & $4.48\times10^{49}$ & $3.36\times10^{35}$ & $1.79\times10^{22}$ \\
+$12$ & $1.51\times10^{77}$ & $1.32\times10^{52}$ & $1.80\times10^{35}$ \\
+\bottomrule
+\end{tabular}
+\caption{The constants of Theorem~\ref{thm:Ckr}, verified end-to-end for $0 \le n \le 40$. They
+are far from sharp: Bala's constants at $r=1$ are $7$, $1$, $1$
+(Remark~\ref{rem:Ckr-loose}).}
+\label{tab:Ckr}
+\end{table}
+
+\section{What the verification script checks}
+\label{app:script}
+
+The script \texttt{notes/proofs/a211417\_verify.py} (pure Python plus SymPy; runs in seconds)
+performs the following checks, all of which pass with no counterexample.
+
+\begin{enumerate}
+\item The thirty cell values \eqref{eq:cells}; Lemma~\ref{lem:A} at all eight unit residues;
+Lemma~\ref{lem:reflection} in all $30$ instances; the seven cells $\Delta_{mc}=0$,
+$\Delta_{mc-1}=1$ of Lemma~\ref{lem:Bprime}; and, for the $30n+i$ family, that all relevant cells
+are $0$ --- flagged in the script itself as \emph{not} an impossibility proof.
+
+\item Legendre's identity \eqref{eq:legendre} against \texttt{sympy.factorint}, prime by prime,
+for $n \le 6$.
+
+\item The core assertion of the second case of Theorem~\ref{thm:main}: over
+$r \in \{1,7,11,13,17,19,23,29,31,37,49,60,100\}$ and $n \le 120$, every prime factor of every
+$30n-i$ exceeding $r$ has non-positive deficiency $\nu_p(P_r(n)) - \nu_p(a(n))$. No violation.
+
+\item The low-layer bound: for the same $r$ and all $n \le 400$, the observed deficiency at each
+prime $p \le r$ is at most $E(p,r)$.
+
+\item Theorem~\ref{thm:main} end-to-end: $P_r(n) \mid D(r)a(n)$ for
+$r \in \{1,7,11,13,17,19,23,29,31,37,49\}$ and $0 \le n \le 60$, together with the lower bounds
+for $D_{\min}(r)$ of Table~\ref{tab:minimal}.
+
+\item Theorem~\ref{thm:Ckr} end-to-end for $k \in \{2,3,5\}$, $r \in \{1,2,3,5,8,12\}$,
+$0 \le n \le 40$; and, independently of the theorems, all five of Bala's explicit assertions
+($30n-1$, $2n+1$, $3n+1$, $5n+1$, and the $42$-product) for $n < 400$.
+
+\item Corollary~\ref{cor:growth}: the inequality $E(p,r) \ge \lfloor (r-1)/(30p)\rfloor + 1$ for
+every eligible prime and every $r \le 3200$, plus the ratios of Table~\ref{tab:growth}.
+
+\item Proposition~\ref{prop:impossible}: for $i \in \{1,7,11,13,17,19,23,29,31\}$,
+$p \in \{31,61,151,181,211\}$ with $p>i$, and $e \le 3$, that $\nu_p(30n_e+i) = e$ while
+$\nu_p(a(n_e)) = 0$.
+
+\item Corollary~\ref{cor:lcm}: $E(p,r) \le \lfloor\log_p r\rfloor\cdot|\Lr|$ for all primes and
+all $r \le 80$, and the explicit divisibility $D(r) \mid \lcm(1,\dots,r)^{|\Lr|}$ for
+$r \in \{1,7,11,13,17,23\}$.
+
+\item Proposition~\ref{prop:mixed}: for all $n < 20000$, that $\gcd(x,y)=1$, $\gcd(x,z)\mid 3$,
+$\gcd(y,z)\mid 2$, that the only primes shared by two of the three factors are $2$ and $3$, and
+that whenever a prime is shared the smaller of the two valuations is exactly $1$ --- which is the
+step the proof turns on. The witness $\gcd(3,6)=3$ at $n=1$ for Remark~\ref{rem:mixed} is checked
+in the same block.
+\end{enumerate}
+
+Independently, the \texttt{codex} reviewer wrote a separate checker using a disjoint code path
+--- no SymPy, no construction of the factorials, direct trial division of the linear products and
+Legendre valuations of the five factorials --- and reported
+\begin{quote}\ttfamily\small
+independent D(13)=1001 check: n=0..50 OK\\
+independent C(3,5)=459117704332740252800 check: n=0..50 OK
+\end{quote}
+including the case $n=0$ and comparing prime valuations rather than reusing whole-integer
+divisibility.
+
+\begin{thebibliography}{99}
+
+\bibitem{oeis}
+OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}.
+\url{https://oeis.org}. Sequences cited: A211417 (the sequence \eqref{eq:a}; conjectural comments
+of P.~Bala, 24 January 2020 and 28 August 2025), A295431 (Vasyunin's list of the $52$ sporadic
+integral factorial ratio sequences of height one).
+
+\bibitem{bala}
+P.~Bala, comments on OEIS A211417, 28 August 2025: ``It appears that $a(n)/(30n-1)$ is integral
+for all $n$ (checked up to $n=1000$)''; ``$7a(n)/(2n+1)$, $a(n)/(3n+1)$, $a(n)/(5n+1)$,
+$42a(n)/((2n+1)(3n+1)(5n+1))$ [are] integer for all $n$''; ``More generally, for $r \ge 1$, we
+conjecture that there exists a constant $D(r)$ such that
+$D(r)\cdot a(n)/\prod_{i=1..r,\ i \text{ coprime to } 30}(30n-i)$ is integral for all $n$'';
+``Similar results may hold for all the 52 sporadic integral factorial ratio sequences listed in
+A295431.'' Also the supercongruence comment of 24 January 2020.
+
+\bibitem{landau}
+E.~Landau, \emph{Sur les conditions de divisibilit\'e d'un produit de factorielles par un autre},
+Nouvelles Annales de Math\'ematiques (3) \textbf{19} (1900), 344--362.
+
+\bibitem{rodriguezvillegas}
+F.~Rodriguez-Villegas, \emph{Integral ratios of factorials and algebraic hypergeometric
+functions}, arXiv:math/0701362 (2007).
+
+\bibitem{bober}
+J.~W.~Bober, \emph{Factorial ratios, hypergeometric series, and a family of step functions},
+J.~London Math.\ Soc.\ (2) \textbf{79} (2009), 422--444.
+
+\bibitem{nexus}
+G.~Tsoukalas et al., \emph{Advancing Mathematics Research with AI-Driven Formal Proof Search},
+arXiv:2605.22763. The Lean output for the case $r=1$ of the present conjecture is
+\texttt{APNOutputs/OEIS/oeis\_a211417\_conjecture\_specific.lean} in the repository
+\texttt{google-deepmind/alphaproof-nexus-results}.
+
+\bibitem{formalconjectures}
+Google DeepMind, \emph{formal-conjectures}: a collection of formalized conjectures in Lean~4.
+\url{https://github.com/google-deepmind/formal-conjectures}. File referenced:
+\texttt{FormalConjectures/OEIS/211417.lean}. Issue \#4923 (``Possible misformalizations II'',
+KitaKen1, opened 2026-08-13, body last edited 2026-08-16) and pull request \#5010 (merged
+2026-08-16) are discussed in Section~\ref{sec:priority}.
+
+\bibitem{lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language},
+in: Automated Deduction --- CADE 28, Lecture Notes in Computer Science 12699, Springer, 2021,
+pp.~625--635.
+
+\bibitem{mathlib}
+The mathlib Community, \emph{The Lean mathematical library},
+in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs
+(CPP 2020), ACM, 2020, pp.~367--381.
+\url{https://github.com/leanprover-community/mathlib4}.
+
+\end{thebibliography}
+
+\end{document}
