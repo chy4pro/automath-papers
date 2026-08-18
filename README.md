@@ -3,6 +3,10 @@
 Papers produced by an automated multi-agent research pipeline (Claude +
 OpenAI Codex + cross-vendor adversarial review + Lean 4 formalization).
 
+The Lean 4 proof library formerly at `lean/` has migrated to its own
+repository: [chy4pro/automath-lean-proofs](https://github.com/chy4pro/automath-lean-proofs)
+(history preserved in this repo's git log; see `lean/README.md`).
+
 ## A211417 — Bala's general divisibility conjecture (resolved)
 
 **Claim.** For the integral factorial ratio sequence
