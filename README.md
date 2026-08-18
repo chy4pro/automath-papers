@@ -39,3 +39,19 @@ To build: place the `.lean` files in a lake project with the included
 AI Usage Disclosure: all proofs were produced by an automated multi-agent
 pipeline (Claude + OpenAI models) with cross-vendor adversarial review;
 statements were checked against their sources by the pipeline operator.
+
+## OEIS quartet — A100434, A108211, A114362, A114831 (paper)
+
+Machine-verified resolutions of four OEIS conjectures, each with a full Lean 4
+formalization (see `lean/`). [`batch1/OEIS-quartet-A100434-A108211-A114362-A114831.pdf`](batch1/OEIS-quartet-A100434-A108211-A114362-A114831.pdf) (25 pp).
+A114831: independent, essentially simultaneous proof — priority ceded to
+K. Kitamura (FC PR #4969); the other three are, to our knowledge, unclaimed
+upstream as of 2026-08-18.
+
+## Fernandes conjecture (arXiv:2605.12342, Conjecture 1) — independent proof (paper)
+
+[`fernandes/Fernandes-conjecture1-independent-proof.pdf`](fernandes/Fernandes-conjecture1-independent-proof.pdf) (14 pp) + `Fernandes.lean` (507 lines, 0 sorry).
+Priority for the formal resolution belongs to K. Kitamura (FC PR #4868,
+opened 2026-08-11); our proof and formalization were found independently and
+are recorded for their expository value (Goursat + normal-quotient
+classification argument).
