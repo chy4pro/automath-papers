@@ -16,3 +16,26 @@ there is an explicit D(r) > 0 such that D(r)·a(n) is divisible by
 - Prior work: r = 1 case by AlphaProof Nexus (FC PR #5010); an unpublished general claim is discussed honestly in the paper's §7 (no public proof text known as of 2026-08-17)
 
 All results carry per-theorem verification status (dual cross-vendor review + Lean / computational).
+
+## Lean 4 proof library (`lean/`)
+
+Kernel-checked Lean 4 proofs from the same pipeline. Each file compiles under
+`leanprover/lean4:v4.34.0-rc1` + mathlib `v4.34.0-rc1` (manifest included),
+contains **no `sorry`**, and `#print axioms` for every main theorem reports only
+`propext`, `Classical.choice`, `Quot.sound`.
+
+| File | Result | Status |
+|---|---|---|
+| `A108211.lean` (509 lines) | OEIS A108211 floor formula `a(n) = ⌊1/(1/(4n) − log 2 + H(2n) − H(n))⌋` for all `n ≥ 1` | open upstream as of 2026-08-18 |
+| `A114362.lean` (577 lines) | Ordowski's conjecture 2 (A114362/A348829): `(1−t(n))/(1+t(n)) = 2^{−n}+3^{−n}+5^{−n}+7^{−n}+O(11^{−n})`, `t(n)=ζ(2n)/ζ(n)²` | open upstream as of 2026-08-18 |
+| `A100434.lean` (282 lines) | Dement's three identities for A100434, proved for the sign-corrected `b` (the upstream formalization has a sign error — see [formal-conjectures issue #5025](https://github.com/google-deepmind/formal-conjectures/issues/5025)) | open upstream as of 2026-08-18 |
+| `A211417.lean` (607 lines) | Bala's general divisibility conjecture, all `r ≥ 1` (strong form `D > 0`) | submitted upstream as [PR #5023](https://github.com/google-deepmind/formal-conjectures/pull/5023) |
+| `A114831.lean` (327 lines) | `a(n+1)/a(n) → √3` for A114831 | **independent proof; priority belongs to [KitaKen1](https://github.com/KitaKen1/oeis-a114831-asymptotic)** ([FC PR #4969](https://github.com/google-deepmind/formal-conjectures/pull/4969), opened 2026-08-15, merged 2026-08-16, before this pipeline produced its proof) |
+| `Fernandes.lean` (507 lines) | Fernandes (arXiv:2605.12342) Conjecture 1: the parity subgroup of `Sym m × Sym n` is 2-generated outside the four exceptional pairs | **independent proof; priority belongs to [KitaKen1](https://github.com/KitaKen1)** ([FC PR #4868](https://github.com/google-deepmind/formal-conjectures/pull/4868), opened 2026-08-11, before this pipeline started) |
+
+To build: place the `.lean` files in a lake project with the included
+`lakefile.toml` / `lake-manifest.json` / `lean-toolchain` and run `lake build`.
+
+AI Usage Disclosure: all proofs were produced by an automated multi-agent
+pipeline (Claude + OpenAI models) with cross-vendor adversarial review;
+statements were checked against their sources by the pipeline operator.
