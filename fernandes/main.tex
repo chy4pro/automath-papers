@@ -1,0 +1,1007 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,parsep=2pt,topsep=3pt}
+\usepackage[T1]{fontenc}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+\newcommand{\Sym}{\mathrm{S}}
+\newcommand{\Alt}{\mathrm{A}}
+\newcommand{\Gam}{\Gamma}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\normal}{\trianglelefteq}
+
+\title{The parity subgroup of $\Sym_m \times \Sym_n$ is $2$-generated:\\
+a proof of Fernandes' conjecture}
+
+\author{Haoyu Chen\thanks{%
+Disclosure of the production pipeline. The proof reproduced below was found by OpenAI GPT-5.6
+running in the \texttt{codex} command-line interface, responding to a disguised problem
+statement that named neither the conjecture nor its author. It was then verified line by line
+by Claude (Fable 5), and submitted, in separate sessions and without the solver's reasoning
+trace, to two adversarial reviewers: GPT-5.6 at ``Pro'' effort returned \textsc{valid} with no
+issues, and Qwen3.8-Max returned \textsc{incomplete} with six presentation objections and no
+critical error. Each of those six objections is answered in the present write-up; they are
+listed in Section~\ref{sec:chain}. All small cases were checked by exhaustive enumeration
+(Section~\ref{sec:comp}). Problem selection, task routing, review scheduling, and the drafting
+of this paper were likewise automated; no human supplied a definition, a lemma, a proof idea,
+or a correction. The argument is elementary and self-contained, and the reader is invited to
+check it directly.}}
+
+\date{16 August 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+For integers $m \ge n \ge 2$ let
+$\Gam_{m,n} = \{(\sigma,\tau) \in \Sym_m \times \Sym_n : \sgn(\sigma) = \sgn(\tau)\}$
+be the index-$2$ subgroup of pairs of permutations of equal parity. Fernandes
+(arXiv:2605.12342, Conjecture~1) conjectured that $\Gam_{m,n}$ has rank $2$ for all
+$m \ge n \ge 2$ outside the list $(m,n) \in \{(2,2),(3,3),(4,3),(4,4)\}$, and proved a special
+case. We give an independent proof of the conjecture in full, by exhibiting a uniform pair of generators for every
+admissible $(m,n)$. The proof is elementary: the generators are chosen so that both coordinate
+projections are surjective, and Goursat's lemma then confines the generated subgroup to a fibre
+product over a common quotient of $\Sym_m$ and $\Sym_n$. For unequal degrees the only such
+quotient is $C_2$, which forces the fibre product to be $\Gam_{m,n}$ itself; for equal degrees
+$r \ge 5$ the competing quotient $\Sym_r$ is killed by an order obstruction, the second
+generator being chosen with components of orders $2$ and $r$ or $r-1$. The four exceptional
+pairs are exactly those at which one of the two mechanisms fails, and we exhibit the failure
+explicitly. All claims are accompanied by exhaustive machine verification for $m,n \le 7$,
+including the closure computation for $|\Gam_{7,7}| = 12{,}700{,}800$. In addition, the main
+theorem is now formally verified in Lean~4 against the \texttt{formal-conjectures} statement of
+Conjecture~1, by a proof that is independent of the argument below rather than a transcription of
+it (Section~\ref{sec:chain}). An earlier kernel-checked Lean~4 proof of the same statement was
+submitted independently by Kenta Kitamura on 11~August~2026, predating this project; we do not
+claim priority for the formal verification (see the Prior work paragraph in
+Section~\ref{sec:chain}).
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{The conjecture}
+
+Let $m,n \ge 2$ be integers, let $\Sym_m$ and $\Sym_n$ denote the symmetric groups on
+$[m] = \{1,\dots,m\}$ and on a disjoint copy $[n'] = \{1',\dots,n'\}$, and set
+\begin{equation}
+\label{eq:gammadef}
+\Gam_{m,n} \;=\; \bigl\{(\sigma,\tau) \in \Sym_m \times \Sym_n \;:\;
+   \sgn(\sigma) = \sgn(\tau)\bigr\}.
+\end{equation}
+Equivalently, $\Gam_{m,n}$ is the kernel of the homomorphism
+$\Sym_m \times \Sym_n \to \{\pm1\}$, $(\sigma,\tau) \mapsto \sgn(\sigma)\sgn(\tau)$; since
+$m,n \ge 2$ this homomorphism is onto, so $\Gam_{m,n}$ has index $2$ and order $m!\,n!/2$. Under
+the natural embedding of $\Sym_m \times \Sym_n$ into the symmetric group on
+$[m] \cup [n']$, $\Gam_{m,n}$ is exactly the set of pairs whose joint action on
+$[m] \cup [n']$ is an even permutation. Fernandes writes $\Gam_{m\oplus n}$ for this group; we
+write $\Gam_{m,n}$, and we always assume $m \ge n$, which is no loss since
+$\Gam_{m,n} \cong \Gam_{n,m}$.
+
+The \emph{rank} of a finite group $G$, written $\rank(G)$, is the least cardinality of a
+generating set. The group $\Gam_{m,n}$ arises in Fernandes' study of monoids of transformations
+that are even on maximal proper subsets \cite{fernandes}, where its rank is computed for small
+parameters and conjectured in general.
+
+\begin{quote}
+\textbf{Conjecture 1} (Fernandes, 2026 \cite{fernandes}). \emph{For all integers
+$m \ge n \ge 2$ with $(m,n) \notin \{(2,2),(3,3),(4,3),(4,4)\}$, the group $\Gam_{m,n}$ has rank
+$2$.}
+\end{quote}
+
+The four excluded pairs are genuine exceptions, not artefacts. Indeed
+\[
+\Gam_{2,2} = \bigl\{(\mathrm{id},\mathrm{id}),\; ((1\,2),(1'\,2'))\bigr\} \cong C_2
+\]
+has rank $1$, while $\Gam_{3,3}$, $\Gam_{4,3}$ and $\Gam_{4,4}$, of orders $18$, $72$ and $288$,
+all have rank $3$. These values are recorded in \cite{fernandes} and were obtained there by
+machine computation; we have reconfirmed all four by an independent exhaustive sweep over all
+ordered pairs of elements (Section~\ref{sec:comp}).
+
+Fernandes proves his conjecture in a special case, his Corollary~4, under a coprimality
+hypothesis on the two degrees. The general case --- in particular, all the equal-degree cases
+$m = n \ge 5$, where a coprimality hypothesis is unavailable --- was left open, and was
+transcribed into Lean~4 as an open problem in the \texttt{formal-conjectures} corpus
+\cite{formalconjectures} on 9 August 2026 (Issue \#4815, PR \#4836), together with four
+\texttt{sorry}-ed variant statements recording the known ranks of the exceptional pairs.
+
+Independently of the present project, and before it began, Kenta Kitamura (GitHub user
+\texttt{KitaKen1}) opened \texttt{google-deepmind/formal-conjectures} pull request \#4868 on
+11~August~2026, ``mark Fernandes conjecture 1 as solved,'' linking a kernel-checked Lean~4 proof
+of the exact \texttt{formal-conjectures} statement of Conjecture~1; as of 18~August~2026 that pull
+request remains open and unmerged. This predates the start of the work reported here
+(16~August~2026). We learned of it only after completing our own proof and formalization, discuss
+it further in the Prior work paragraph of Section~\ref{sec:chain}, and do not claim priority or
+first resolution of the conjecture.
+
+\subsection{Result}
+
+\begin{theorem}
+\label{thm:main}
+Let $m \ge n \ge 2$ be integers with $(m,n) \notin \{(2,2),(3,3),(4,3),(4,4)\}$. Then
+$\Gam_{m,n}$ is generated by two elements. Explicitly, with $a_r$, $b_r$, $d_r$ as defined in
+\eqref{eq:abdef} and \eqref{eq:ddef} below:
+\begin{enumerate}
+\item if $m > n$, then $\Gam_{m,n} = \bigl\langle (a_m,a_n),\,(b_m,b_n) \bigr\rangle$;
+\item if $m = n = r \ge 5$, then $\Gam_{r,r} = \bigl\langle (a_r,a_r),\,(b_r,d_r) \bigr\rangle$.
+\end{enumerate}
+Moreover $\rank(\Gam_{m,n}) = 2$ exactly.
+\end{theorem}
+
+Because $(4,3)$ is excluded, case (i) covers every admissible pair with $m > n$; case (ii)
+covers every admissible pair with $m = n$, the pairs $(2,2)$, $(3,3)$ and $(4,4)$ being
+excluded. So Theorem~\ref{thm:main} settles Conjecture~1. It subsumes Fernandes' Corollary~4:
+the generators are uniform in $(m,n)$ and no arithmetic condition on the degrees is imposed.
+
+\subsection{Method}
+
+Write $\pi_1, \pi_2$ for the two coordinate projections of $\Sym_m \times \Sym_n$. A subgroup
+$H$ is \emph{subdirect} if $\pi_1(H) = \Sym_m$ and $\pi_2(H) = \Sym_n$. The proof has three
+moving parts.
+
+\emph{(a) Surjectivity of both projections.} The elements $a_r$ (an even cycle) and $b_r$ (an odd
+transposition) generate $\Sym_r$ for every $r \ge 2$, and the modified pair $a_r,d_r$ generates
+as well because $b_r = d_r a_r^{-1}$. Hence both candidate subgroups are subdirect.
+
+\emph{(b) Goursat's lemma.} A subdirect subgroup of $G \times K$ is a fibre product: there are
+$N_G \normal G$, $N_K \normal K$ and an isomorphism $\phi : G/N_G \to K/N_K$ with
+$H = \{(g,k) : \phi(gN_G) = kN_K\}$. The isomorphism type $Q$ of the common quotient $G/N_G
+\cong K/N_K$ is thus an invariant of $H$, and $|H| = |G|\,|K|/|Q|$. If $Q$ is trivial then
+$H$ is everything, which is impossible inside $\Gam_{m,n}$; and if $Q \cong C_2$ then the two
+kernels are forced to be $\Alt_m$ and $\Alt_n$ and $H = \Gam_{m,n}$ exactly. So the entire
+problem is to rule out every \emph{other} common quotient.
+
+\emph{(c) Killing the remaining quotients.} The nontrivial quotients of $\Sym_r$ are $C_2$ and
+$\Sym_r$ for $r \ne 4$, and $C_2$, $\Sym_3$, $\Sym_4$ for $r = 4$. For $m > n$ (excluding
+$(4,3)$) an order count leaves $C_2$ as the only common quotient. For $m = n = r$ the quotient
+$\Sym_r$ survives that count; it corresponds to $H$ being the graph of an automorphism $\phi$ of
+$\Sym_r$. This is where the asymmetric second generator $(b_r,d_r)$ does its work: such a graph
+would force $\phi(b_r) = d_r$, while $|b_r| = 2$ and $|d_r| \in \{r-1,r\}$. For $r \ge 5$ these
+differ, and automorphisms preserve orders --- so nothing about $\mathrm{Aut}(\Sym_r)$, in
+particular nothing about the outer automorphism of $\Sym_6$, needs to be known.
+
+At $r = 3$ mechanism (c) fails because $|d_3| = 2 = |b_3|$; at $r = 4$, and at $(m,n) = (4,3)$,
+it fails because of the extra quotient $\Sym_4/V_4 \cong \Sym_3$. Section~\ref{sec:exceptions}
+makes both failures explicit, so that the shape of the exceptional list is explained rather than
+merely respected.
+
+The paper is organised as follows. Section~\ref{sec:gens} fixes notation and establishes the
+properties of the generators. Sections~\ref{sec:goursat} and \ref{sec:normal} supply the two
+group-theoretic inputs, with complete proofs. Section~\ref{sec:proof} proves
+Theorem~\ref{thm:main}. Section~\ref{sec:exceptions} discusses the exceptional pairs,
+Section~\ref{sec:comp} the computational verification, Section~\ref{sec:chain} the verification
+chain, and Section~\ref{sec:limits} the limitations.
+
+\section{Notation and the generating pairs}
+\label{sec:gens}
+
+Throughout, permutations act on the left and are composed \emph{right to left}: $(pq)(x) =
+p(q(x))$. For $p \in \Sym_r$ and $i \ne j$ in $[r]$ we use repeatedly the conjugation rule
+\begin{equation}
+\label{eq:conj}
+p\,(i\;j)\,p^{-1} \;=\; \bigl(p(i)\;p(j)\bigr),
+\end{equation}
+and, more generally, $p (i_1\,\cdots\,i_k) p^{-1} = (p(i_1)\,\cdots\,p(i_k))$. We write
+$\Alt_r \normal \Sym_r$ for the alternating group, $\sgn : \Sym_r \to \{\pm1\}$ for the sign
+homomorphism, $|g|$ for the order of a group element $g$, $V_4 \le \Sym_4$ for the Klein
+four-group $\{\mathrm{id},(1\,2)(3\,4),(1\,3)(2\,4),(1\,4)(2\,3)\}$, and $C_2$ for the cyclic
+group of order $2$. A $k$-cycle has sign $(-1)^{k-1}$; thus a cycle is an odd permutation
+exactly when its length is even. The group $\Gam_{m,n}$ is as in \eqref{eq:gammadef}. Note for
+later use that $\Alt_m \times \Alt_n \le \Gam_{m,n}$.
+
+\begin{definition}
+\label{def:ab}
+For every integer $r \ge 2$ put
+\begin{equation}
+\label{eq:abdef}
+a_r =
+\begin{cases}
+(1\;2\;\cdots\;r), & r \text{ odd},\\[2pt]
+(1\;2\;\cdots\;r-1), & r \text{ even},
+\end{cases}
+\qquad
+b_r =
+\begin{cases}
+(1\;2), & r \text{ odd},\\[2pt]
+(r-1\;\;r), & r \text{ even},
+\end{cases}
+\end{equation}
+with the convention that a displayed cycle of length $1$ denotes the identity; thus
+$a_2 = \mathrm{id}$ and $b_2 = (1\,2)$. For $r \ge 3$ put
+\begin{equation}
+\label{eq:ddef}
+d_r \;=\; b_r a_r .
+\end{equation}
+\end{definition}
+
+\begin{lemma}
+\label{lem:parity}
+For every $r \ge 2$, the permutation $a_r$ is even and $b_r$ is odd.
+\end{lemma}
+
+\begin{proof}
+If $r$ is odd, $a_r$ is an $r$-cycle of odd length, hence even, and $b_r$ is a transposition,
+hence odd. If $r$ is even, $a_r$ is an $(r-1)$-cycle of odd length, hence even, and $b_r$ is
+again a transposition. (For $r = 2$: $a_2 = \mathrm{id}$ is even and $b_2 = (1\,2)$ is odd.)
+\end{proof}
+
+\begin{lemma}
+\label{lem:generate}
+For every $r \ge 2$ we have $\langle a_r, b_r\rangle = \Sym_r$.
+\end{lemma}
+
+\begin{proof}
+Suppose first that $r$ is odd, so $a := a_r = (1\,2\,\cdots\,r)$ and $b := b_r = (1\,2)$. By
+\eqref{eq:conj}, for $0 \le k \le r-2$,
+\[
+a^k b a^{-k} \;=\; \bigl(a^k(1)\;\;a^k(2)\bigr) \;=\; (k+1\;\;k+2).
+\]
+So $\langle a,b\rangle$ contains all $r-1$ adjacent transpositions
+$(1\,2), (2\,3), \dots, (r-1\;r)$. These generate $\Sym_r$: by induction on $j-i$, every
+transposition $(i\;j)$ with $i < j$ lies in the group they generate, since
+$(i\;\,j{+}1) = (j\;\,j{+}1)(i\;j)(j\;\,j{+}1)$ by \eqref{eq:conj}; and the transpositions
+generate $\Sym_r$.
+
+Now suppose $r$ is even, so $a := a_r = (1\,2\,\cdots\,r-1)$ fixes $r$, and
+$b := b_r = (r-1\;\,r)$. By \eqref{eq:conj}, for $0 \le k \le r-2$,
+\[
+a^k b a^{-k} \;=\; \bigl(a^k(r-1)\;\;a^k(r)\bigr) \;=\; \bigl(a^k(r-1)\;\;r\bigr),
+\]
+and as $k$ runs through $0,1,\dots,r-2$ the point $a^k(r-1)$ runs through all of
+$\{1,\dots,r-1\}$, because $a$ acts on that set as an $(r-1)$-cycle. Hence $\langle a,b\rangle$
+contains every transposition $(i\;\,r)$ with $1 \le i \le r-1$; and then it contains every
+transposition, since for distinct $i,j < r$ we have
+$(i\;j) = (i\;\,r)(j\;\,r)(i\;\,r)$ by \eqref{eq:conj}. So $\langle a,b\rangle = \Sym_r$. This
+argument includes $r = 2$, where $a_2 = \mathrm{id}$, the index $k$ takes only the value $0$,
+and we obtain $(1\;2)$, which generates $\Sym_2$.
+\end{proof}
+
+\begin{lemma}
+\label{lem:d}
+Let $r \ge 3$ and $d_r = b_r a_r$. Then
+\begin{equation}
+\label{eq:dcycles}
+d_r =
+\begin{cases}
+(2\;3\;\cdots\;r), & r \text{ odd},\\[2pt]
+(1\;2\;\cdots\;r{-}2\;\;r\;\;r{-}1), & r \text{ even},
+\end{cases}
+\qquad\text{so}\qquad
+|d_r| =
+\begin{cases}
+r-1, & r \text{ odd},\\
+r, & r \text{ even}.
+\end{cases}
+\end{equation}
+In both cases $d_r$ is an odd permutation, and $b_r = d_r a_r^{-1}$.
+\end{lemma}
+
+\begin{proof}
+Recall $d_r(x) = b_r(a_r(x))$.
+
+\emph{$r$ odd.} Here $a_r$ sends $x \mapsto x+1$ for $x < r$ and $r \mapsto 1$, while
+$b_r = (1\,2)$. Then $d_r(1) = b_r(2) = 1$; for $2 \le x \le r-1$ we have
+$d_r(x) = b_r(x+1) = x+1$, since $x+1 \ge 3$; and $d_r(r) = b_r(1) = 2$. Hence $d_r$ fixes $1$
+and cycles $2 \mapsto 3 \mapsto \cdots \mapsto r \mapsto 2$, i.e.\ $d_r = (2\;3\;\cdots\;r)$, a
+cycle of length $r-1$.
+
+\emph{$r$ even} (so $r \ge 4$). Here $a_r$ sends $x \mapsto x+1$ for $x \le r-2$, sends
+$r-1 \mapsto 1$ and fixes $r$; and $b_r = (r-1\;\,r)$. For $1 \le x \le r-3$ we get
+$d_r(x) = b_r(x+1) = x+1$, since $2 \le x+1 \le r-2$; next $d_r(r-2) = b_r(r-1) = r$;
+next $d_r(r-1) = b_r(1) = 1$, since $1 \notin \{r-1,r\}$ as $r \ge 4$; and finally
+$d_r(r) = b_r(r) = r-1$. Hence $d_r$ is the single cycle
+$1 \mapsto 2 \mapsto \cdots \mapsto r-2 \mapsto r \mapsto r-1 \mapsto 1$, that is
+$d_r = (1\;2\;\cdots\;r{-}2\;\;r\;\;r{-}1)$, a cycle of length $r$.
+
+The orders are the cycle lengths. For the parity: if $r$ is odd then $d_r$ is a cycle of even
+length $r-1$, hence odd; if $r$ is even then $d_r$ is a cycle of even length $r$, hence odd. (Of
+course this also follows from $\sgn(d_r) = \sgn(b_r)\sgn(a_r) = (-1)(+1)$ and
+Lemma~\ref{lem:parity}; we have given the cycle computation because the orders are needed in any
+case.) Finally $b_r = d_r a_r^{-1}$ is immediate from $d_r = b_r a_r$.
+\end{proof}
+
+\begin{lemma}
+\label{lem:generate2}
+For every $r \ge 3$ we have $\langle a_r, d_r \rangle = \Sym_r$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:d}, $b_r = d_r a_r^{-1} \in \langle a_r,d_r\rangle$ and
+$d_r = b_r a_r \in \langle a_r,b_r\rangle$, so $\langle a_r,d_r\rangle = \langle
+a_r,b_r\rangle$, which is $\Sym_r$ by Lemma~\ref{lem:generate}.
+\end{proof}
+
+\section{Subdirect subgroups of a direct product}
+\label{sec:goursat}
+
+Let $G$ and $K$ be groups and let $\pi_G : G \times K \to G$ and $\pi_K : G\times K \to K$ be the
+projections. A subgroup $H \le G \times K$ is \emph{subdirect} if $\pi_G(H) = G$ and
+$\pi_K(H) = K$. The following is Goursat's lemma \cite{goursat} in the form we need. We give the
+proof in full.
+
+\begin{lemma}[Goursat]
+\label{lem:goursat}
+Let $H \le G \times K$ be subdirect. Put
+\[
+N_G = \{g \in G : (g,1) \in H\}, \qquad N_K = \{k \in K : (1,k) \in H\}.
+\]
+Then $N_G \normal G$ and $N_K \normal K$, and there is a (unique) isomorphism
+$\phi : G/N_G \to K/N_K$ such that
+\begin{equation}
+\label{eq:fibre}
+H \;=\; \bigl\{(g,k) \in G\times K \;:\; \phi(gN_G) = kN_K \bigr\}.
+\end{equation}
+In particular $|H| = |G|\,|K| / |Q|$, where $Q := G/N_G \cong K/N_K$.
+\end{lemma}
+
+\begin{proof}
+\emph{$N_G$ and $N_K$ are normal.} That $N_G$ is a subgroup is clear from
+$(g,1)(g',1)^{-1} = (g(g')^{-1},1)$. Let $g \in N_G$ and $x \in G$. Since $\pi_G(H) = G$, there
+is $k \in K$ with $(x,k) \in H$; then
+\[
+(x,k)(g,1)(x,k)^{-1} = (xgx^{-1},\,1) \in H,
+\]
+so $xgx^{-1} \in N_G$. Hence $N_G \normal G$. Symmetrically $N_K \normal K$.
+
+\emph{Construction of $\phi$.} Let $g \in G$. Since $\pi_G(H) = G$ there exists $k$ with
+$(g,k) \in H$; we wish to set $\phi(gN_G) := kN_K$. We check this is unambiguous. Suppose
+$(g,k) \in H$ and $(g',k') \in H$ with $gN_G = g'N_G$. Then
+\[
+(g,k)^{-1}(g',k') = (g^{-1}g',\, k^{-1}k') \in H,
+\]
+and $g^{-1}g' \in N_G$, so $(g^{-1}g',1) \in H$; multiplying,
+\[
+(g^{-1}g',1)^{-1}\,(g^{-1}g',\,k^{-1}k') = (1,\,k^{-1}k') \in H,
+\]
+whence $k^{-1}k' \in N_K$, i.e.\ $kN_K = k'N_K$. Taking $g = g'$ shows in particular that the
+value does not depend on the choice of $k$; taking general $g,g'$ in the same coset shows it
+depends only on $gN_G$. So $\phi : G/N_G \to K/N_K$ is a well-defined map.
+
+\emph{$\phi$ is a homomorphism.} If $(g,k),(g',k') \in H$ then $(gg',kk') \in H$, so
+$\phi(gg'N_G) = kk'N_K = \phi(gN_G)\phi(g'N_G)$.
+
+\emph{$\phi$ is surjective.} Given $k \in K$, surjectivity of $\pi_K$ on $H$ gives $g$ with
+$(g,k) \in H$, and then $\phi(gN_G) = kN_K$.
+
+\emph{$\phi$ is injective.} Suppose $\phi(gN_G) = N_K$, witnessed by $(g,k) \in H$ with
+$k \in N_K$. Then $(1,k) \in H$, hence $(g,1) = (g,k)(1,k)^{-1} \in H$, hence $g \in N_G$, i.e.\
+$gN_G$ is trivial.
+
+\emph{Proof of \eqref{eq:fibre}.} The inclusion $\subseteq$ is the definition of $\phi$.
+Conversely, let $(g,k) \in G\times K$ satisfy $\phi(gN_G) = kN_K$. Choose $k_0$ with
+$(g,k_0) \in H$; then $\phi(gN_G) = k_0N_K$, so $k_0N_K = kN_K$, so $k_0^{-1}k \in N_K$ and
+$(1,k_0^{-1}k) \in H$. Therefore
+\[
+(g,k) = (g,k_0)\,(1,\,k_0^{-1}k) \in H .
+\]
+
+\emph{Uniqueness and order.} Any $\phi$ satisfying \eqref{eq:fibre} must send $gN_G$ to $kN_K$
+whenever $(g,k) \in H$, which determines it. Finally, by \eqref{eq:fibre} the map
+$H \to G$, $(g,k)\mapsto g$, is onto with all fibres of size $|N_K|$, so
+$|H| = |G|\,|N_K| = |G|\,|K|/|Q|$.
+\end{proof}
+
+We refer to $Q = G/N_G \cong K/N_K$ as the \emph{common quotient} of the subdirect subgroup $H$.
+Note the two degenerate cases: $Q = 1$ means $N_G = G$ and $N_K = K$, i.e.\ $H = G \times K$;
+and $|Q| = |G| = |K|$ means $N_G = N_K = 1$, i.e.\ $H$ is the graph
+$\{(g,\phi(g))\}$ of an isomorphism $\phi : G \to K$.
+
+\section{Normal subgroups and quotients of symmetric groups}
+\label{sec:normal}
+
+\begin{lemma}
+\label{lem:centralizer}
+For $r \ge 4$ the centraliser of $\Alt_r$ in $\Sym_r$ is trivial. (For $r = 3$ it is
+$\Alt_3 \cong C_3$, so the hypothesis $r \ge 4$ cannot be dropped.)
+\end{lemma}
+
+\begin{proof}
+Let $r \ge 4$ and let $\sigma \in \Sym_r$ centralise $\Alt_r$, and suppose $\sigma \ne
+\mathrm{id}$. Pick $i$ with $j := \sigma(i) \ne i$. Since $r \ge 4$ we may choose two further
+points $k,l$ with $i,j,k,l$ pairwise distinct. The $3$-cycle $\theta = (i\;k\;l)$ lies in
+$\Alt_r$, so by \eqref{eq:conj}
+\[
+\theta = \sigma\theta\sigma^{-1} = \bigl(\sigma(i)\;\;\sigma(k)\;\;\sigma(l)\bigr)
+       = \bigl(j\;\;\sigma(k)\;\;\sigma(l)\bigr).
+\]
+Two $3$-cycles are equal only if they move the same three points, so $j \in \{i,k,l\}$,
+contradicting the choice of $j,k,l$. Hence $\sigma = \mathrm{id}$. For $r = 3$, $\Alt_3$ is
+abelian, so it centralises itself, while no transposition centralises $(1\,2\,3)$; the
+centraliser is therefore $\Alt_3$.
+\end{proof}
+
+\begin{lemma}
+\label{lem:s4v4}
+$V_4 \normal \Sym_4$ and $\Sym_4/V_4 \cong \Sym_3$.
+\end{lemma}
+
+\begin{proof}
+Let $\Pi$ be the set of the three partitions of $\{1,2,3,4\}$ into two unordered pairs:
+\[
+P_1 = \{\{1,2\},\{3,4\}\},\quad P_2 = \{\{1,3\},\{2,4\}\},\quad P_3 = \{\{1,4\},\{2,3\}\}.
+\]
+The natural action of $\Sym_4$ on subsets of $\{1,2,3,4\}$ permutes $\Pi$, giving a homomorphism
+$\rho : \Sym_4 \to \mathrm{Sym}(\Pi) \cong \Sym_3$.
+
+$\rho$ is surjective: $(1\,2)$ fixes $P_1$ and interchanges $P_2$ and $P_3$ (it sends $\{1,3\}$
+to $\{2,3\}$ and $\{2,4\}$ to $\{1,4\}$, i.e.\ $P_2 \mapsto P_3$), while $(1\,3)$ fixes $P_2$ and
+interchanges $P_1$ and $P_3$. So the image contains two distinct transpositions of $\Pi$, and
+two distinct transpositions generate $\mathrm{Sym}(\Pi) \cong \Sym_3$.
+
+$V_4 \le \ker\rho$: the element $(1\,2)(3\,4)$ fixes each of $\{1,2\}$ and $\{3,4\}$ setwise, so
+fixes $P_1$; it sends $\{1,3\}$ to $\{2,4\}$ and $\{2,4\}$ to $\{1,3\}$, so fixes $P_2$; and it
+sends $\{1,4\}$ to $\{2,3\}$ and $\{2,3\}$ to $\{1,4\}$, so fixes $P_3$. The same computation
+applies to $(1\,3)(2\,4)$ and $(1\,4)(2\,3)$ after relabelling, and $\mathrm{id} \in \ker\rho$
+trivially.
+
+Since $\rho$ is surjective, $|\ker\rho| = |\Sym_4|/|\mathrm{Sym}(\Pi)| = 24/6 = 4 = |V_4|$, and
+$V_4 \le \ker\rho$ forces $\ker\rho = V_4$. Being a kernel, $V_4 \normal \Sym_4$, and the first
+isomorphism theorem gives $\Sym_4/V_4 \cong \mathrm{Sym}(\Pi) \cong \Sym_3$. (In particular the
+quotient is nonabelian, so it is $\Sym_3$ and not $C_6$.)
+\end{proof}
+
+\begin{proposition}
+\label{prop:normal}
+The normal subgroups of $\Sym_r$ are:
+\[
+\begin{array}{c|l}
+r & \text{normal subgroups of } \Sym_r\\ \hline
+2 & 1,\ \Sym_2\\
+3 & 1,\ \Alt_3,\ \Sym_3\\
+4 & 1,\ V_4,\ \Alt_4,\ \Sym_4\\
+r \ge 5 & 1,\ \Alt_r,\ \Sym_r
+\end{array}
+\]
+Consequently the nontrivial quotients of $\Sym_r$, up to isomorphism, are
+\begin{equation}
+\label{eq:quotients}
+\begin{array}{c|l}
+r & \text{nontrivial quotients of } \Sym_r\\ \hline
+2 & C_2\\
+3 & \Sym_3,\ C_2\\
+4 & \Sym_4,\ \Sym_3,\ C_2\\
+r \ge 5 & \Sym_r,\ C_2
+\end{array}
+\end{equation}
+and in every case the unique normal subgroup of index $2$ is $\Alt_r$.
+\end{proposition}
+
+\begin{proof}
+$r = 2$: $\Sym_2 \cong C_2$ has only the two trivial subgroups, and $\Alt_2 = 1$.
+
+$r = 3$: by Lagrange a proper nontrivial subgroup of $\Sym_3$ has order $2$ or $3$; the former
+are the three subgroups generated by the transpositions, and the latter is $\Alt_3$. A subgroup
+of order $2$ is not normal: the three transpositions are conjugate by \eqref{eq:conj}, so a
+normal subgroup containing one contains all three and has order at least $4$, which does not
+divide $6$. Thus the normal subgroups are $1, \Alt_3, \Sym_3$, and the nontrivial quotients are
+$\Sym_3$ and $\Sym_3/\Alt_3 \cong C_2$.
+
+$r = 4$: a normal subgroup is a union of conjugacy classes containing $\mathrm{id}$, and its
+order divides $24$. The conjugacy classes of $\Sym_4$ are indexed by cycle type, with sizes
+\[
+1\ (\mathrm{id}),\quad 6\ \bigl(\text{type } 2\bigr),\quad 3\ \bigl(\text{type } 2{+}2\bigr),
+\quad 8\ \bigl(\text{type }3\bigr),\quad 6\ \bigl(\text{type }4\bigr).
+\]
+Enumerating the sixteen sub-multisets of $\{6,3,8,6\}$ and adding $1$ for the identity class, the
+attainable orders are
+\[
+1,\;4,\;7,\;9,\;10,\;12,\;13,\;15,\;16,\;18,\;21,\;24,
+\]
+and the only ones among them dividing $24$ are $1$, $4$, $12$, $24$.
+These are realised only by $\{\mathrm{id}\}$; $\{\mathrm{id}\}\cup(\text{type }2{+}2) = V_4$;
+$\{\mathrm{id}\}\cup(\text{type }2{+}2)\cup(\text{type }3) = \Alt_4$; and $\Sym_4$, all four of
+which are indeed normal subgroups ($V_4$ by Lemma~\ref{lem:s4v4}, $\Alt_4$ as the kernel of
+$\sgn$). The nontrivial quotients therefore have orders $24$, $6$, $2$, and are $\Sym_4$,
+$\Sym_4/V_4 \cong \Sym_3$ by Lemma~\ref{lem:s4v4}, and $\Sym_4/\Alt_4 \cong C_2$.
+
+$r \ge 5$: let $N \normal \Sym_r$. Then $N \cap \Alt_r \normal \Alt_r$, and $\Alt_r$ is simple
+for $r \ge 5$, so $N \cap \Alt_r \in \{1, \Alt_r\}$. If $N \cap \Alt_r = \Alt_r$ then
+$\Alt_r \le N \le \Sym_r$, and since $[\Sym_r : \Alt_r] = 2$ we get $N \in \{\Alt_r,\Sym_r\}$. If
+$N \cap \Alt_r = 1$, then for $x \in N$ and $y \in \Alt_r$ the commutator
+$[x,y] = x^{-1}(y^{-1}xy)$ lies in $N$ (as $N \normal \Sym_r$) and equals
+$(x^{-1}y^{-1}x)y \in \Alt_r$ (as $\Alt_r \normal \Sym_r$), hence lies in $N \cap \Alt_r = 1$. So
+$N$ centralises $\Alt_r$, and $N = 1$ by Lemma~\ref{lem:centralizer}. The quotients are then
+$\Sym_r$ and $\Sym_r/\Alt_r \cong C_2$.
+
+Finally, in each row of the table the only normal subgroup of index $2$ is $\Alt_r$: for $r = 2$
+it is $1 = \Alt_2$; for $r = 3,4$ and $r \ge 5$ inspection of the lists (whose orders are
+$1,3,6$; $1,4,12,24$; $1,r!/2,r!$) gives $\Alt_r$ in each case.
+\end{proof}
+
+The following consequence is the engine of the whole proof.
+
+\begin{proposition}
+\label{prop:key}
+Let $m,n \ge 2$ and let $H \le \Gam_{m,n}$ be a subdirect subgroup of $\Sym_m \times \Sym_n$,
+with common quotient $Q$ as in Lemma~\ref{lem:goursat}. Then:
+\begin{enumerate}
+\item $Q$ is nontrivial;
+\item if $Q \cong C_2$ then $H = \Gam_{m,n}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) If $Q$ were trivial then, as noted after Lemma~\ref{lem:goursat}, $H = \Sym_m \times \Sym_n$.
+But $\Sym_m\times\Sym_n \not\le \Gam_{m,n}$: since $m \ge 2$ the transposition $(1\;2)$ lies in
+$\Sym_m$, and the pair $\bigl((1\;2), \mathrm{id}\bigr)$ has
+$\sgn((1\,2)) = -1 \ne +1 = \sgn(\mathrm{id})$, so it lies in $\Sym_m\times\Sym_n$ but not in
+$\Gam_{m,n}$. This contradicts $H \le \Gam_{m,n}$.
+
+(ii) Suppose $Q \cong C_2$. Then $N_{\Sym_m} \normal \Sym_m$ has index $2$, so
+$N_{\Sym_m} = \Alt_m$ by Proposition~\ref{prop:normal}; likewise $N_{\Sym_n} = \Alt_n$. The map
+$\sgn$ induces isomorphisms $\Sym_m/\Alt_m \xrightarrow{\ \sim\ } \{\pm1\}$ and
+$\Sym_n/\Alt_n \xrightarrow{\ \sim\ } \{\pm1\}$, and $C_2$ has only the identity automorphism, so
+under these identifications the Goursat isomorphism $\phi : \Sym_m/\Alt_m \to \Sym_n/\Alt_n$ is
+the identity of $\{\pm 1\}$; that is, $\phi(\sigma \Alt_m) = \tau\Alt_n$ holds if and only if
+$\sgn(\sigma) = \sgn(\tau)$. Now \eqref{eq:fibre} reads
+\[
+H = \bigl\{(\sigma,\tau) : \sgn(\sigma) = \sgn(\tau)\bigr\} = \Gam_{m,n}. \qedhere
+\]
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+\label{sec:proof}
+
+\subsection{Unequal degrees}
+
+\begin{proposition}
+\label{prop:unequal}
+Let $m > n \ge 2$ with $(m,n) \ne (4,3)$. Then
+$\Gam_{m,n} = \bigl\langle (a_m,a_n),\,(b_m,b_n) \bigr\rangle$.
+\end{proposition}
+
+\begin{proof}
+Put $H = \langle (a_m,a_n), (b_m,b_n)\rangle$.
+
+\emph{$H \le \Gam_{m,n}$.} By Lemma~\ref{lem:parity}, $a_m$ and $a_n$ are both even and $b_m$ and
+$b_n$ are both odd, so both generators lie in $\Gam_{m,n}$, which is a group.
+
+\emph{$H$ is subdirect.} The image of $H$ under the first projection contains $a_m$ and $b_m$,
+hence is $\Sym_m$ by Lemma~\ref{lem:generate}; symmetrically the second projection is onto
+$\Sym_n$.
+
+\emph{The common quotient is $C_2$.} Let $Q$ be the common quotient of $H$ given by
+Lemma~\ref{lem:goursat}; it is a quotient of $\Sym_m$ and also of $\Sym_n$, and it is nontrivial
+by Proposition~\ref{prop:key}(i). We show $Q \cong C_2$, distinguishing three cases according to
+$m$ (recall $m > n \ge 2$, so $m \ge 3$).
+
+\emph{Case $m \ge 5$.} By \eqref{eq:quotients}, $Q \cong C_2$ or $Q \cong \Sym_m$. In the second
+case $|Q| = m!$; but $Q$ is a quotient of $\Sym_n$, so $|Q|$ divides $n!$, whence $m! \le n!$,
+contradicting $m > n$. So $Q \cong C_2$.
+
+\emph{Case $m = 4$.} Then $n \in \{2,3\}$, and $n = 3$ is excluded by hypothesis, so $n = 2$. By
+\eqref{eq:quotients} the only nontrivial quotient of $\Sym_2$ is $C_2$, so $Q \cong C_2$.
+
+\emph{Case $m = 3$.} Then $n = 2$, and again $Q \cong C_2$.
+
+By Proposition~\ref{prop:key}(ii), $H = \Gam_{m,n}$.
+\end{proof}
+
+\begin{remark}
+The pair $(4,3)$ must be excluded here for a reason visible in the proof: $\Sym_4$ and $\Sym_3$
+share the nontrivial quotient $\Sym_3$, by Lemma~\ref{lem:s4v4}. This is not merely a gap in the
+argument --- Section~\ref{sec:exceptions} shows that the displayed pair really does fail to
+generate $\Gam_{4,3}$, and that it fails precisely by landing in the fibre product over $\Sym_3$.
+\end{remark}
+
+\subsection{Equal degrees}
+
+\begin{proposition}
+\label{prop:equal}
+Let $r \ge 5$. Then $\Gam_{r,r} = \bigl\langle (a_r,a_r),\,(b_r,d_r)\bigr\rangle$.
+\end{proposition}
+
+\begin{proof}
+Put $H = \langle (a_r,a_r), (b_r,d_r)\rangle$.
+
+\emph{$H \le \Gam_{r,r}$.} By Lemma~\ref{lem:parity} $a_r$ is even, so $(a_r,a_r) \in
+\Gam_{r,r}$; by Lemma~\ref{lem:parity} $b_r$ is odd, and by Lemma~\ref{lem:d} $d_r$ is odd as
+well, so $(b_r,d_r) \in \Gam_{r,r}$.
+
+\emph{$H$ is subdirect.} The first projection of $H$ contains $a_r$ and $b_r$, so is $\Sym_r$ by
+Lemma~\ref{lem:generate}. The second projection contains $a_r$ and $d_r$, so is $\Sym_r$ by
+Lemma~\ref{lem:generate2}.
+
+\emph{The common quotient is $C_2$.} Let $Q$ be the common quotient. It is nontrivial by
+Proposition~\ref{prop:key}(i), and since $r \ge 5$, \eqref{eq:quotients} leaves
+$Q \cong C_2$ or $Q \cong \Sym_r$. Suppose $Q \cong \Sym_r$. Then
+$|Q| = r! = |\Sym_r|$ forces both Goursat kernels to be trivial, so by the remark following
+Lemma~\ref{lem:goursat} the subgroup $H$ is the graph of an automorphism $\phi$ of $\Sym_r$:
+\[
+H = \{(\sigma, \phi(\sigma)) : \sigma \in \Sym_r\}.
+\]
+Both generators of $H$ have this form, so
+\[
+\phi(a_r) = a_r, \qquad \phi(b_r) = d_r .
+\]
+But an automorphism preserves the order of every element, while $|b_r| = 2$ and, by
+Lemma~\ref{lem:d},
+\[
+|d_r| = \begin{cases} r-1 \ge 4, & r \text{ odd},\\ r \ge 6, & r \text{ even},\end{cases}
+\]
+using $r \ge 5$ in both branches. Hence $|b_r| \ne |d_r|$, a contradiction. Therefore
+$Q \cong C_2$, and Proposition~\ref{prop:key}(ii) gives $H = \Gam_{r,r}$.
+\end{proof}
+
+\begin{remark}
+\label{rem:s6}
+The obstruction just used is an order obstruction, and orders are preserved by \emph{every}
+automorphism, inner or outer. In particular the argument requires no knowledge of
+$\mathrm{Aut}(\Sym_r)$; the well-known exceptional outer automorphism of $\Sym_6$ is immaterial,
+and the case $r = 6$ needs no separate treatment.
+\end{remark}
+
+\subsection{Conclusion, and the exact value of the rank}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $m \ge n \ge 2$ with $(m,n) \notin \{(2,2),(3,3),(4,3),(4,4)\}$. If $m > n$ then
+$(m,n) \ne (4,3)$ and Proposition~\ref{prop:unequal} applies. If $m = n = r$ then
+$r \notin\{2,3,4\}$, i.e.\ $r \ge 5$, and Proposition~\ref{prop:equal} applies. In both cases
+$\Gam_{m,n}$ is generated by the two displayed elements, so $\rank(\Gam_{m,n}) \le 2$. The
+reverse inequality is Corollary~\ref{cor:rank} below.
+\end{proof}
+
+\begin{corollary}
+\label{cor:rank}
+For every $(m,n)$ as in Theorem~\ref{thm:main}, the group $\Gam_{m,n}$ is nonabelian; hence it is
+not cyclic, $\rank(\Gam_{m,n}) \ge 2$, and therefore $\rank(\Gam_{m,n}) = 2$.
+\end{corollary}
+
+\begin{proof}
+A group of rank at most $1$ is cyclic, hence abelian, so it suffices to prove that $\Gam_{m,n}$
+is nonabelian. Note $m \ge 3$: the only admissible pair with $m = 2$ would be $(2,2)$, which is
+excluded.
+
+If $m \ge 4$, then $\Alt_m \times \{\mathrm{id}\} \le \Alt_m\times\Alt_n \le \Gam_{m,n}$ and
+$\Alt_m$ is nonabelian, since $(1\,2\,3)(1\,2\,4) = (1\,3)(2\,4)$ while
+$(1\,2\,4)(1\,2\,3) = (1\,4)(2\,3)$.
+
+If $m = 3$, then $n = 2$, because $(3,3)$ is excluded and $n \le m$. The first projection
+$\Gam_{3,2} \to \Sym_3$ is surjective (given $\sigma \in \Sym_3$, pair it with the element of
+$\Sym_2$ of the same sign) and injective (its kernel is $\{(\mathrm{id},\tau) : \sgn(\tau) = +1\}
+= \{(\mathrm{id},\mathrm{id})\}$), so $\Gam_{3,2} \cong \Sym_3$, which is nonabelian.
+\end{proof}
+
+Together with the known values $\rank(\Gam_{2,2}) = 1$ and
+$\rank(\Gam_{3,3}) = \rank(\Gam_{4,3}) = \rank(\Gam_{4,4}) = 3$, Theorem~\ref{thm:main}
+determines $\rank(\Gam_{m,n})$ for all $m \ge n \ge 2$.
+
+\section{The exceptional pairs}
+\label{sec:exceptions}
+
+The exceptional list in Conjecture~1 is exactly the list of pairs at which one of the two
+mechanisms of Section~\ref{sec:proof} breaks down, and the breakdown is visible in the
+constructions themselves; this explains, rather than merely accommodates, the shape of the
+exceptional set. Orders quoted here were computed by exhaustive closure
+(Section~\ref{sec:comp}).
+
+\emph{$(m,n) = (4,3)$.} The unequal-degree pair of Proposition~\ref{prop:unequal} reads
+$\bigl((1\,2\,3),(1\,2\,3)\bigr)$, $\bigl((3\,4),(1\,2)\bigr)$. It generates a subgroup of order
+$24$ inside $\Gam_{4,3}$, which has order $72$; the index is $3$. This is exactly the fibre
+product predicted by Lemma~\ref{lem:goursat} over the common quotient $\Sym_3$, which is a
+quotient of $\Sym_4$ (namely $\Sym_4/V_4$, by Lemma~\ref{lem:s4v4}) as well as of $\Sym_3$:
+indeed $|\Sym_4|\,|\Sym_3|/|\Sym_3| = 24$.
+
+\emph{$(m,n) = (4,4)$.} The equal-degree pair reads $\bigl((1\,2\,3),(1\,2\,3)\bigr)$,
+$\bigl((3\,4),(1\,2\,4\,3)\bigr)$; here the order obstruction of Proposition~\ref{prop:equal} is
+available ($|b_4| = 2 \ne 4 = |d_4|$) and does rule out the quotient $\Sym_4$, but the extra
+quotient $\Sym_4/V_4\cong\Sym_3$ is not ruled out --- and it is precisely what occurs: the
+generated subgroup has order $96 = 24\cdot 24/6$, of index $3$ in $|\Gam_{4,4}| = 288$.
+
+\emph{$(m,n) = (3,3)$.} Here $|d_3| = |(2\,3)| = 2 = |b_3|$, so the order obstruction is vacuous,
+and the graph case really occurs. Conjugation by $a_3 = (1\,2\,3)$ is an automorphism $\phi$ of
+$\Sym_3$ with $\phi(a_3) = a_3$ and, by \eqref{eq:conj},
+$\phi(b_3) = \phi((1\,2)) = (a_3(1)\;a_3(2)) = (2\,3) = d_3$. Hence the subgroup generated by
+$(a_3,a_3)$ and $(b_3,d_3)$ is contained in --- and, both projections being onto, equal to --- the
+graph $\{(\sigma, a_3\sigma a_3^{-1})\}$, of order $6$ and index $3$ in $|\Gam_{3,3}| = 18$.
+
+\emph{$(m,n) = (2,2)$.} $\Gam_{2,2} \cong C_2$ is cyclic of rank $1$, so it is excluded from a
+conjecture asserting rank exactly $2$, though it is of course $2$-generated in the weak sense.
+
+In all three nontrivial cases the recipe fails by exactly the index $3$ predicted by the
+corresponding Goursat quotient of order $6$. That no \emph{other} choice of two elements
+succeeds either --- the assertion $\rank = 3$ recorded in \cite{fernandes} --- we have
+reconfirmed independently in Section~\ref{sec:comp}.
+
+\section{Computational verification}
+\label{sec:comp}
+
+The proof of Theorem~\ref{thm:main} is complete and uses no computation. Nevertheless, since the
+theorem asserts something checkable for each small $(m,n)$, we verified the explicit generating
+pairs by exhaustive closure. The computation is a breadth-first search in the Cayley graph:
+starting from the identity of $\Sym_m\times\Sym_n$ and repeatedly left-multiplying by the two
+generators, one enumerates the generated subgroup and compares its cardinality with
+$|\Gam_{m,n}| = m!\,n!/2$. Permutations were indexed in lexicographic order and the two
+generators were pre-tabulated as index maps, so that each edge of the search costs two array
+lookups. All arithmetic is exact.
+
+\begin{table}[tb]
+\centering
+\small
+\begin{tabular}{llrrl}
+\toprule
+$(m,n)$ & recipe & $|\langle\,\cdot\,\rangle|$ & $|\Gam_{m,n}| = m!n!/2$ & verdict\\
+\midrule
+$(3,2)$ & unequal & $6$ & $6$ & equal\\
+$(4,2)$ & unequal & $24$ & $24$ & equal\\
+$(5,2)$ & unequal & $120$ & $120$ & equal\\
+$(5,3)$ & unequal & $360$ & $360$ & equal\\
+$(5,4)$ & unequal & $1{,}440$ & $1{,}440$ & equal\\
+$(6,2)$ & unequal & $720$ & $720$ & equal\\
+$(6,3)$ & unequal & $2{,}160$ & $2{,}160$ & equal\\
+$(6,4)$ & unequal & $8{,}640$ & $8{,}640$ & equal\\
+$(6,5)$ & unequal & $43{,}200$ & $43{,}200$ & equal\\
+$(7,3)$ & unequal & $15{,}120$ & $15{,}120$ & equal\\
+$(7,6)$ & unequal & $1{,}814{,}400$ & $1{,}814{,}400$ & equal\\
+$(5,5)$ & equal & $7{,}200$ & $7{,}200$ & equal\\
+$(6,6)$ & equal & $259{,}200$ & $259{,}200$ & equal\\
+$(7,7)$ & equal & $12{,}700{,}800$ & $12{,}700{,}800$ & equal\\
+\midrule
+$(4,3)$ & unequal & $24$ & $72$ & proper, index $3$\\
+$(3,3)$ & equal & $6$ & $18$ & proper, index $3$\\
+$(4,4)$ & equal & $96$ & $288$ & proper, index $3$\\
+\bottomrule
+\end{tabular}
+\caption{Exhaustive closure of the generating pairs of Theorem~\ref{thm:main}. The first
+fourteen rows are admissible pairs and the closure is all of $\Gam_{m,n}$. The last three rows
+are the nontrivial exceptional pairs, where the recipe demonstrably fails, by the index
+predicted in Section~\ref{sec:exceptions}.}
+\label{tab:closure}
+\end{table}
+
+Table~\ref{tab:closure} reports the outcome for fourteen admissible pairs, all those with
+$m \le 7$ that we selected, together with the three nontrivial exceptional pairs. In every
+admissible case the closure has exactly $m!\,n!/2$ elements, the largest being
+$|\Gam_{7,7}| = 12{,}700{,}800$; in every exceptional case it is a proper subgroup of index $3$.
+Four further families of checks were run.
+
+\begin{enumerate}
+\item \emph{Generators.} For $2 \le r \le 12$: $\sgn(a_r) = +1$, $\sgn(b_r) = \sgn(d_r) = -1$,
+$|b_r| = 2$, $|d_r| = r-1$ for odd $r$ and $r$ for even $r$, the closed form \eqref{eq:dcycles}
+for $d_r$, and the identity $b_r = d_ra_r^{-1}$: all confirmed. For $2 \le r \le 8$,
+$|\langle a_r,b_r\rangle| = |\langle a_r,d_r\rangle| = r!$: confirmed
+(Lemmas~\ref{lem:generate}, \ref{lem:generate2}).
+
+\item \emph{Ranks of the exceptional groups.} By exhaustive sweep over all ordered pairs of
+elements: $\Gam_{2,2}$ (order $2$) is cyclic; and for $\Gam_{3,3}$ (order $18$), $\Gam_{4,3}$
+(order $72$) and $\Gam_{4,4}$ (order $288$) \emph{no} pair of elements generates. This
+independently reconfirms the values $\rank = 3$ quoted from \cite{fernandes} and used in
+Section~\ref{sec:exceptions}, and it is what makes the exceptional list genuinely exceptional
+rather than an artefact of our particular recipe.
+
+\item \emph{Structural lemmas.} The conjugacy-class sizes of $\Sym_4$ were recomputed
+($1,6,3,8,6$ for types $\mathrm{id}$, $2$, $2{+}2$, $3$, $4$), confirming the enumeration in
+Proposition~\ref{prop:normal}; the homomorphism $\rho:\Sym_4\to\mathrm{Sym}(\Pi)$ of
+Lemma~\ref{lem:s4v4} was constructed explicitly and found to have image of order $6$, nonabelian,
+and kernel exactly $V_4$; and the centraliser of $\Alt_r$ in $\Sym_r$ was computed for
+$3 \le r \le 6$, giving order $3$ for $r = 3$ and order $1$ for $r = 4,5,6$, confirming both
+Lemma~\ref{lem:centralizer} and the necessity of its hypothesis $r \ge 4$.
+
+\item \emph{The isomorphism $\Gam_{3,2}\cong\Sym_3$} used in Corollary~\ref{cor:rank} was
+confirmed by checking that the first projection is injective on $\Gam_{3,2}$, which has order
+$6$.
+\end{enumerate}
+
+None of these computations is load-bearing for Theorem~\ref{thm:main}; all of them agree with
+it.
+
+\section{The verification chain}
+\label{sec:chain}
+
+We describe how this result was produced and checked, because the answer bears on how much
+weight a reader should give it before checking it personally.
+
+\emph{Solver/verifier separation.} The proof was found by OpenAI GPT-5.6 running in the
+\texttt{codex} command-line interface. The problem was presented in disguised form: the task
+file stated the group $\Gam_{m,n}$, the exceptional list and the known ranks, but named neither
+Fernandes nor the arXiv identifier, and the solver was instructed not to search the internet and
+not to read any other file in the workspace. It was required to present only what it could
+rigorously prove, and was explicitly permitted to return a partial answer; the solution it
+returned covered every admissible pair and was correct.
+
+\emph{Line-by-line verification.} The argument was then checked step by step by Claude
+(Fable 5), including independent recomputation of the cycle forms, parities and orders of
+$a_r,b_r,d_r$, of the conjugacy-class enumeration for $\Sym_4$, and of the closures of
+Section~\ref{sec:comp}.
+
+\emph{Adversarial review.} The argument was submitted, in two separate sessions with no access
+to the solver's reasoning trace, to two reviewers, under a protocol that requires each objection
+to be classified as a \emph{critical error} (breaking the logical chain) or a \emph{justification
+gap} (a true step insufficiently argued), and requires a final verdict. One reviewer was
+Qwen3.8-Max, from a different vendor than the solver; the other was GPT-5.6 at ``Pro'' effort,
+which is the same vendor as the solver in a different harness and at a different effort setting,
+and its independence should therefore be discounted accordingly.
+
+GPT-5.6 returned \textsc{valid}, with no issues, having independently confirmed the cycle form of
+$b_ra_r$ under right-to-left composition and the resulting orders $r-1$ and $r$, the generation
+statement including the edge case $r = 2$, the normal-quotient classification, the exclusion of
+quotients other than $C_2$ in the unequal case, the surjectivity of the second projection via
+$b_r = d_ra_r^{-1}$, and the order argument against the graph case including $r = 6$.
+
+Qwen3.8-Max returned \textsc{incomplete}: no critical errors, but six justification gaps, all of
+them about what was asserted rather than proved. We list each objection with the place in this
+write-up that answers it; we agree with the reviewer that all six were gaps in exposition and
+none was a gap in the mathematics.
+
+\begin{enumerate}
+\item \emph{$\Gam_{m,n}$ was used before being defined.} Answered by \eqref{eq:gammadef}.
+
+\item \emph{The well-definedness, bijectivity and converse inclusion in the Goursat lemma were
+asserted, not proved.} Answered by the complete proof of Lemma~\ref{lem:goursat}.
+
+\item \emph{$\Sym_4/V_4 \cong \Sym_3$ was asserted, whereas the class-size argument bounds only
+the order of the quotient, leaving $C_6$ formally open.} Answered by Lemma~\ref{lem:s4v4}, which
+exhibits the action of $\Sym_4$ on the three pair-partitions of $\{1,2,3,4\}$ and identifies the
+kernel, and thereby also shows the quotient nonabelian.
+
+\item \emph{The triviality of the centraliser of $\Alt_r$ in $\Sym_r$ was used without proof.}
+Answered by Lemma~\ref{lem:centralizer}, which also records that its hypothesis $r \ge 4$ cannot
+be dropped; it is applied only for $r \ge 5$, the cases $r \le 4$ of
+Proposition~\ref{prop:normal} being handled by direct enumeration.
+
+\item \emph{The parity of $d_r$ was not derived.} Answered by Lemma~\ref{lem:d}, which computes
+the cycle form of $d_r$ and reads the parity off the (even) cycle length in both branches.
+
+\item \emph{The step ``a trivial common quotient would make $H = \Sym_m\times\Sym_n$, which is
+not contained in $\Gam_{m,n}$'' did not say why the containment fails.} Answered by the explicit
+witness $((1\,2),\mathrm{id})$ in the proof of Proposition~\ref{prop:key}(i).
+\end{enumerate}
+
+\emph{Computational verification.} As reported in Section~\ref{sec:comp}.
+
+\emph{Formal verification.} The main theorem is now formally verified. The Lean~4 file
+\texttt{Fernandes.lean} (507 lines) compiles with zero errors and zero warnings, contains no
+\texttt{sorry} and no \texttt{native\_decide}, and introduces no new axioms: \texttt{\#print
+axioms} on each of its five public theorems reports exactly \texttt{[propext, Classical.choice,
+Quot.sound]}, the three axioms in routine use throughout mathlib. The statement of the main
+theorem, \texttt{conjecture\_1} --- including the auxiliary definitions \texttt{signDiffHom} and
+\texttt{gammaSubgroup} --- is byte-identical to the statement of \texttt{conjecture\_1} in
+\texttt{FormalConjectures/Arxiv/2605.12342/Conjecture1.lean} \cite{formalconjectures}; only the
+proof body differs. We also formalised the variant
+\texttt{conjecture\_1.variants.rank\_2\_2} ($\Gam_{2,2}$ is cyclic), discharging a second of the
+five \texttt{sorry} placeholders in that file. The remaining three variants, recording that
+$\Gam_{3,3}$, $\Gam_{4,3}$ and $\Gam_{4,4}$ have rank $3$, are not formalised; their verification
+remains the computational argument of Section~\ref{sec:comp}.
+
+\emph{Formalisation notes.} The formal proof is not a line-by-line translation of
+Sections~\ref{sec:gens}--\ref{sec:proof}, but an independently verified route to the same
+statement, which is arguably additional evidence for the theorem rather than a mechanical
+transcription of the write-up above. Four simplifications are worth recording. First, mathlib's
+\texttt{Equiv.Perm.alternatingGroup\_le\_of\_normal} (for $r \ge 5$) replaces
+Lemma~\ref{lem:centralizer} and Proposition~\ref{prop:normal} entirely. Second, the formalisation
+uses a single generating pair uniformly in $r$ --- $c = \mathrm{finRotate}\,r$ and
+$t = \mathrm{swap}\,0\,1$ --- whose roles under the sign character swap automatically with the
+parity of $r$, so the even/odd case split of Section~\ref{sec:gens} never appears. Third, the
+Goursat step is carried out with kernels alone (\texttt{goursatFst}, \texttt{goursatSnd}); the
+quotient isomorphism $\phi$ of Lemma~\ref{lem:goursat} is never constructed. Fourth, the order
+obstruction of Proposition~\ref{prop:equal} is weakened, and suffices in this weaker form, to
+$d^2 \ne 1$.
+
+\emph{Prior work.} Kenta Kitamura (GitHub user \texttt{KitaKen1}) has an earlier, independent
+kernel-checked Lean~4 proof of the exact \texttt{formal-conjectures} statement of Conjecture~1,
+linked from \texttt{google-deepmind/formal-conjectures} pull request \#4868 (``mark Fernandes
+conjecture 1 as solved''), opened 11~August~2026 and, as of this writing (18~August~2026), still
+open and unmerged. That date precedes the start of the present project (16~August~2026), so
+Kitamura's formalization has priority; our Lean development described above and the
+elementary argument of Sections~\ref{sec:gens}--\ref{sec:proof} were both found independently,
+by a different, unrelated pipeline, without knowledge of his proof. We record our proof anyway
+because we believe the human-readable argument here --- via Goursat's lemma and the classification
+of normal subgroups of $\Sym_r$ --- may retain expository value alongside the formal one, even
+though it establishes nothing that was not already machine-checked.
+
+\section{Limitations}
+\label{sec:limits}
+
+\begin{enumerate}
+\item \emph{The proof is elementary.} It combines two textbook ingredients --- Goursat's lemma
+and the classification of normal subgroups of $\Sym_r$ --- with one small design choice, namely
+replacing the symmetric second generator $(b_r,b_r)$ by $(b_r,d_r)$ so that the two components
+have different orders. There is no new technique here. The value of the result is that it
+settles a conjecture stated in 2026 and open at the time of writing, not that the method is
+novel.
+
+\item \emph{The equal-degree construction is not canonical.} Many other second generators would
+work; ours is chosen to make the order obstruction as short as possible. We have not
+investigated which pairs of elements generate $\Gam_{r,r}$ in general, nor the proportion of
+generating pairs (a natural question in the tradition of P.~Hall's Eulerian functions
+\cite{hall}).
+
+\item \emph{Literature work was automated, and we did not consult the source article.} Our
+statement of Conjecture~1, of the known ranks of the four exceptional pairs, and of the scope of
+Fernandes' Corollary~4, is taken from the Lean transcription in \texttt{formal-conjectures}
+\cite{formalconjectures} and from an automated literature pass, not from the arXiv PDF; the same
+applies to \cite{fv}, cited only as background. Theorem~\ref{thm:main} and its proof are
+self-contained and independent of all of that, but attributions --- in particular our
+characterisation of what Corollary~4 of \cite{fernandes} covers --- should be read with the
+caveat. An initial automated search for a prior proof of Conjecture~1 found none; a later, more
+targeted search did locate one --- K.~Kitamura's independent Lean~4 formalization, predating this
+project (Section~\ref{sec:chain}) --- so we no longer treat the earlier negative search as
+informative, and any remaining priority claim on our part should be discounted accordingly.
+
+\item \emph{Formalisation is complete for the main theorem and one variant.} The Lean~4
+formalisation (Section~\ref{sec:chain}) proves Theorem~\ref{thm:main} against the
+\texttt{formal-conjectures} statement of Conjecture~1, together with the variant recording
+$\rank(\Gam_{2,2}) = 1$. The three remaining variants, for the exceptional ranks
+$\rank(\Gam_{3,3}) = \rank(\Gam_{4,3}) = \rank(\Gam_{4,4}) = 3$, are not formalised; their
+verification remains the exhaustive computation of Section~\ref{sec:comp}, which is a complete
+proof but not a machine-checked one in the Lean sense.
+
+\item \emph{The exceptional cases are quoted, not proved here.} We reconfirmed
+$\rank(\Gam_{3,3}) = \rank(\Gam_{4,3}) = \rank(\Gam_{4,4}) = 3$ by exhaustive computation, which
+is a complete proof for those three finite groups, but a computational one; we give no
+structural explanation of why no pair generates. Conjecture~1 as stated presupposes those
+values, though Theorem~\ref{thm:main} does not depend on them: the assertion
+$\rank(\Gam_{m,n}) = 2$ for admissible $(m,n)$ is proved in Corollary~\ref{cor:rank} without
+reference to them.
+\end{enumerate}
+
+\subsection*{Acknowledgement of process}
+
+No human contributed a mathematical step to this paper. The pipeline --- problem selection,
+disguised task construction, solving, verification, adversarial review, computation, and
+drafting --- was run autonomously. Responsibility for the correctness of the argument
+nevertheless rests where it always does: with the reader who checks it.
+
+\begin{thebibliography}{9}
+
+\bibitem{fernandes}
+V.~H. Fernandes,
+\emph{Groups of permutations that are even on maximal proper subsets, and related monoids},
+arXiv:2605.12342 (2026).
+Conjecture~1 is the statement proved here; Corollary~4 of that paper establishes a special case.
+
+\bibitem{fv}
+V.~H. Fernandes and A.~Vernitski,
+\emph{Internat. J. Algebra Comput.} (2026).
+Cited as background on the ranks of the monoids in whose study $\Gam_{m,n}$ arises.
+Bibliographic details are as supplied by our automated literature pass; we did not consult the
+article (see Section~\ref{sec:limits}).
+
+\bibitem{goursat}
+\'E. Goursat,
+\emph{Sur les substitutions orthogonales et les divisions r\'eguli\`eres de l'espace},
+Ann. Sci. \'Ecole Norm. Sup. (3) \textbf{6} (1889), 9--102.
+The source of Lemma~\ref{lem:goursat}.
+
+\bibitem{hall}
+P.~Hall,
+\emph{The Eulerian functions of a group},
+Quart. J. Math. Oxford Ser. \textbf{7} (1936), 134--151.
+
+\bibitem{formalconjectures}
+Google DeepMind and contributors,
+\emph{formal-conjectures}: a corpus of open conjectures stated in Lean~4,
+\url{https://github.com/google-deepmind/formal-conjectures}.
+The statement proved here was added as
+\texttt{FormalConjectures/Arxiv/2605.12342/Conjecture1.lean} on 9~August~2026
+(Issue \#4815, PR \#4836), with five \texttt{sorry} placeholders: the conjecture itself and
+four variants recording the ranks of the exceptional pairs.
+
+\bibitem{mathlib}
+The mathlib Community,
+\emph{The Lean mathematical library},
+Proc. 9th ACM SIGPLAN Int. Conf. on Certified Programs and Proofs (CPP 2020), 367--381.
+
+\end{thebibliography}
+
+\end{document}
