@@ -55,3 +55,15 @@ Priority for the formal resolution belongs to K. Kitamura (FC PR #4868,
 opened 2026-08-11); our proof and formalization were found independently and
 are recorded for their expository value (Goursat + normal-quotient
 classification argument).
+
+## Structure Theory of Finite 677 Magmas (working paper, v7.2)
+
+[`etp677_structure/Structure-Theory-of-Finite-677-Magmas-v7.2.pdf`](etp677_structure/Structure-Theory-of-Finite-677-Magmas-v7.2.pdf) (~90 pp).
+Partial-results working paper on the last open finite implication of Tao's
+Equational Theories Project (E677 ⇒ E255): structure theorems, a nine-model
+zoo (including the order-77 minimal non-right-cancellative models m77/m77D),
+refutations of the transport/kernel-law programme, and an honest paper-wide
+retraction chain. Every numbered claim carries a verification marker
+(proved / machine-verified / computational / conjecture). Adversarial review:
+round 1 INVALID → repairs v7.1/v7.2 → round 2 CLEAN (cross-vendor, 2026-08-18).
+The main implication (P) remains OPEN.
