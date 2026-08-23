@@ -10,6 +10,11 @@ Read `Structure-Theory-of-Finite-677-Magmas-v8_2.pdf`.
 | `Structure-Theory-of-Finite-677-Magmas-v8.pdf` | 22054879 | [10.5281/zenodo.22054879](https://doi.org/10.5281/zenodo.22054879) | 2026-08-22 | `ff4fc4464bc3f7ca9e44d3c0b13c981e` | superseded |
 | `Structure-Theory-of-Finite-677-Magmas-v7.2.pdf` | 21995800 | [10.5281/zenodo.21995800](https://doi.org/10.5281/zenodo.21995800) | 2026-08-18 | `45211748b8f1542066118de9da9a7011` | superseded |
 
+Naming note: Zenodo keeps the record title at "(v8)" and distinguishes the
+correction releases by filename suffix. `v8_1` and `v8_2` are the first and second
+correction releases over `v8`; internal campaign notes call the same three
+artifacts v8, v9 and v10 respectively.
+
 All versions share the Zenodo concept DOI
 [10.5281/zenodo.21995799](https://doi.org/10.5281/zenodo.21995799), which always
 resolves to the latest.
