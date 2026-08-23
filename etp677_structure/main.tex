@@ -183,6 +183,89 @@
 %    with an explicit "not independently verified" marker and no result depends
 %    on it.
 %
+%  v8  2026-08-22  New Section "Round 10: the extremal branch, the design
+%                  phantoms, and phi-fusion", from reports R9-C, R9-D, R9-E,
+%                  R9-F, R9-G, R9-H, R9-I, R9-J, R9-K, R9-L and R10-A.  This is
+%                  a WIND-DOWN consolidation: it adds no mathematics beyond what
+%                  those reports certify.  Every statement of the new section
+%                  lives on the extremal branch rho = nabla -- the REFUTATION
+%                  side of (Prop_exists) -- and the section opens with a boxed
+%                  firewall saying so.  Nothing in it bears on prob:main.
+%
+%    POSITIVE.
+%      * The design-theoretic route recommended in sec:skeleton is CLOSED by an
+%        explicit phantom A7 (thm:A7, cor:designdead): a Fano-design left
+%        quasigroup with rho = nabla satisfying every DESIGN-LAYER first-order
+%        consequence of E677 in the toolbox, de Bruijn-Erdos with equality
+%        included.  It is not an E677 magma, so it refutes sufficiency only.
+%      * The extremal dichotomy (thm:extremal): near-pencil impossible, so the
+%        branch is a projective plane of order q, n = q^2+q+1, nu fixed-point-
+%        free bijective.
+%      * (N) -- lem:Nfix read as a hypothesis -- is isolated as the first
+%        genuinely KEY-dependent, cellwise condition (prop:Nbasic), and the
+%        entire q = 2 branch is DECIDED by exhaustion (thm:q2branch, planner
+%        recompiled from source and re-ran; 589,521,888 representative tables
+%        covering 98,761,420,800 labelled objects, zero satisfiers), with exact
+%        rigidity numbers (thm:q2rigid).
+%      * The trace sub-branch: prop:deficit computes Sum_t E(t,v) = n + delta(v),
+%        delta = q b - m; delta == 0 is necessary for (N), so (N-Prop) restricts
+%        to it for free; and the q = 2 trace cap is EXACTLY 2 = q (thm:tracecap).
+%      * phi-fusion (Round 10): lem:phifusion, then three PROVED all-q lemmas
+%        (thm:R10lemmas: localization, the exact T-count, the design-level
+%        realizability gate), and the CLOSURE THEOREM (thm:closure) -- the
+%        Xi-array plus the design DETERMINES the multiplication table, 49/49
+%        cells on all 3888 branch tables of the test design.  thm:abscap: the
+%        abstract cap drops from n to q+1 under closure + T-count, exactly the
+%        real full-branch cap; residual gap to the trace cap is ONE ROW.
+%    NEGATIVE, ALL RECORDED RATHER THAN DROPPED.
+%      * Psi_1 = n is RETIRED as a sub-target (thm:psi1dead): it points the wrong
+%        way in cor:psicrit, and 150 of 1820 rho = nabla translation-invariant
+%        tables on Z_7 satisfy it, with a general Singer-difference-set recipe at
+%        every q.  prob:psi (Psi_1 <= tr N) is explicitly UNTOUCHED.
+%      * The per-cell concentration bound is REFUTED by hand-checkable witnesses
+%        (thm:nconc); second moments die too (thm:moments); marginal counting is
+%        closed for every row cap (prop:marginalvacuity), extending prop:B3
+%        twice more.
+%      * prop:null: a null-model audit shows the campaign's 745,424-object
+%        "no rho = nabla object satisfies (N)" tally is worth ~1e-15 expected
+%        hits, i.e. nothing; prop:searcherblind calibrates the annealing
+%        machinery against q = 2 ground truth and bans plateaus as evidence.
+%        Both are reported as results, because they invalidate evidence the
+%        campaign had itself been citing.
+%      * A claimed q = 3 all-perfect witness is REFUTED (sec:q3) with a
+%        hand-checkable cell; the whole translation-invariant family at q = 3
+%        (1,070,784 objects) is exhausted with zero perfect rows; the
+%        collinear-4-set route is REOPENED, not closed.
+%      * RETRACTION (sec:R9Kretraction), carried out in the style of
+%        sec:retraction: the abstract-landscape FINE STRUCTURE of round R9-K
+%        rested on design data that no branch object carries -- it violates the
+%        gate thm:R10lemmas(c) -- and is retracted.  R9-K's EXISTENCE claim and
+%        fork verdict are unaffected and strengthened, now on realizable data.
+%        Kept in the paper as the worked example of the realizability gate.
+%      * A first announcement is narrowed in place (remark after
+%        cor:designdead): A7 does NOT satisfy every toolbox consequence -- it
+%        violates (N) in 21 of 49 cells -- so it certifies the design layer only.
+%      * Two toolbox items retracted inline: "E has column sums n" on the
+%        abstract branch (false; explicit witness) and |g^{-1}(v)| <= q (false;
+%        the identity is |g^{-1}(v)| = b(v)).  A silent false "WLOG nu = id"
+%        is refuted with a 519/530 witness count.
+%
+%    sec:failmodes records three DISTINCT failure modes of machine-produced
+%    mathematics observed on this line (silent false WLOG; confident false
+%    theorem passing its own self-audit; circular verification of a genuine
+%    construction), together with the observation that the campaign's own
+%    orchestration committed the same species of error in sec:R9Kretraction.
+%    The author footnote now names the fourth machine contributor (Qwen3.8-Max).
+%
+%    New artefacts: R9C_{design,verify,gap,gap2}.py; R9D_{verify,A7psi,gen13,
+%    phantom}.py; R9E_{key,fixN}.py; R9F_{planes,hall}.py; R9G_{conc,witness,
+%    witness13,global,count7,hughes}.py; R9H_exhaust_q2.c + R9H_{orbits_check,
+%    spotcheck,distcheck,verify_witnesses,rowcap}.py; R9I_{adjudicate,trace,
+%    deficit,survivors,abstract5}.py; R9J_{adjudicate,probe}.py;
+%    R9K_trace_q2.c, R9K_abstract_q2.c + R9K_{q13_verify,witness_verify,
+%    abstract_recheck}.py; R9L_translation.c + R9L_q17A_verify.py;
+%    R10A_abstract.c + R10A_{ground,tcount,closure,decide}.py.
+%
 %  v7.2 2026-08-18  Second repair pass on the same review: the six remaining
 %                  JUSTIFICATION GAPs (G5, G6, G8, G9, G11, G12; G7 was done in
 %                  v7.1).  Same rule as always, "weaker rather than stronger":
@@ -411,12 +494,13 @@ does not claim to resolve it.} Every mathematical statement below was produced b
 systems: an orchestrating agent (Claude Fable 5) that designed the attack families, audited
 the returning reports, and drafted this document; subordinate exploration agents (Claude
 Fable 5 instances, OpenAI GPT-5.6 driven through the \texttt{codex} command-line interface,
-and GPT-5.6 at ``Pro'' effort through the web interface) that carried out the individual
+GPT-5.6 at ``Pro'' effort through the web interface, and --- from \S\ref{sec:round10}
+onwards --- Qwen3.8-Max through its web interface) that carried out the individual
 lines of attack; and machine checkers (\texttt{kissat}, purpose-written C and Python
 enumerators, and independent from-scratch Python re-verifiers). No human supplied a
 definition, a lemma, a proof idea, or a correction.
 Every numbered \emph{assertion} --- theorem, lemma, proposition, corollary --- carries an
-explicit verification marker; numbered definitions, problems and the single conjecture assert
+explicit verification marker; numbered definitions, problems and conjectures assert
 nothing and carry none.
 \statusbox{machine-verified: \texttt{path}} means a script at that path in the campaign
 repository checks the statement (usually on explicit models, exhaustively over the stated
@@ -428,11 +512,13 @@ whose exact coverage is stated and which must \emph{not} be read as a classifica
 scope, which --- when the computation is a \emph{failed} search --- is evidence and not a
 proof of impossibility.
 Several of the campaign's own working conjectures were refuted by its own later rounds
-(Sections~\ref{sec:affine} and \ref{sec:176}); those self-refutations are recorded rather
+(Sections~\ref{sec:affine}, \ref{sec:176}, \ref{sec:round9} and \ref{sec:round10}); those
+self-refutations, and two retractions of the campaign's own computations
+(\S\ref{sec:retraction}, \S\ref{sec:R9Kretraction}), are recorded rather
 than quietly deleted. Responsibility for what follows rests with the reader who re-runs the
 scripts.}}
 
-\date{17 August 2026}
+\date{22 August 2026}
 
 \begin{document}
 
@@ -485,8 +571,8 @@ collision is identified and turns out to be the problem itself one level down; t
 magmas of order $77$ are constructed --- the first non-idempotent non-right-cancellative
 example, certified in \textsc{Lean}~4, and the first extension that is not
 translation-invariant; a new counting identity gives the upper-bound criterion
-$\sum_xN(x\backslash x,x)\le\sum_xN(x,x)\Rightarrow E255$, which no term witness can
-prove; every idempotent-free \emph{affine} model is shown to have order in $31\cdot S$,
+$\sum_xN(x\backslash x,x)\le\sum_xN(x,x)\Rightarrow E255$, for which no term witness
+can exist unless $E255$ is itself equationally derivable from $E677$; every idempotent-free \emph{affine} model is shown to have order in $31\cdot S$,
 where $31 = \operatorname{Res}(\Phi_{10},Q)$; and a conjecture of that same round is
 refuted twice over, which exposes a systematic bias in the campaign's own benchmark set
 that we document as a result in its own right.
@@ -497,9 +583,11 @@ two structure theorems say that a minimal counterexample must be simple and can 
 idempotent quotient. Congruences are then identified with block systems of the
 left-multiplication group satisfying a kernel condition, which reduces ``simple $\Rightarrow$
 right-cancellative'' to three exhaustively verified finite statements, one of which --- a
-transport law --- would close the last surviving construction route. None of the three is
-first-order derivable, and we prove two independent barriers explaining why: one for
-existential statements and one, new, for injectivity statements.
+transport law --- would close the last surviving construction route. No first-order
+derivation of any of the three was found: every prover9 goal we ran saturated, which is
+computational evidence and not a proof of underivability. We then prove two independent
+barriers that reduce large families of candidate proofs to exactly those saturating
+goals: one for existential statements and one, new, for injectivity statements.
 A final section refutes that programme. The object its own failure analysis had specified
 --- a magma whose fibre operation degenerates at one fibre point and is injective at
 another --- is constructed, twice and independently, at orders $77$ and $385$; it satisfies
@@ -509,6 +597,24 @@ writing this. We carry out the retraction in full, marking rather than deleting 
 results, since the record of which hypotheses died --- all of them supported by a model set
 whose members shared one accidental property --- is the most transferable thing the campaign
 produced.
+A closing section reports the wind-down rounds, all of them on the \emph{refutation} side of
+the properness leg: the extremal branch, on which every pair of elements collapses. We show
+that branch is a projective plane of order $q$ on $n = q^2+q+1$ points, and we close the
+design-theoretic route the previous section had recommended, by an explicit phantom --- a
+Fano left quasigroup satisfying every design-layer consequence of $E677$ in our toolbox,
+de~Bruijn--Erd\H{o}s with equality included, yet collapsing every pair. What survives the
+phantom is the cellwise condition $N(t,v) = |\Fix(L_tR_v)|$, which every $E677$ magma
+satisfies; we decide it at $q=2$ by a complete enumeration of $5.9\cdot10^{8}$ representative
+tables covering $9.9\cdot10^{10}$ labelled objects, prove three general-$q$ realizability
+lemmas, and prove a closure rule which certifies non-realizable arrays and which,
+on the $q = 2$ test design, determines all $49$ cells of the multiplication table
+from the array $\Xi_t(x) = x\backslash(t\backslash x)$ and the design. Fusing that closure with an exact cross-row count drops the
+abstract bound on simultaneously perfect rows from $n$ to $q+1$ --- exactly the true
+full-branch value --- leaving a gap of one row. Two negative results of the same section are
+more useful than its positive ones: a null-model audit showing that the campaign's own
+$745\,424$-object survey carried no evidential weight whatever, and a second retraction,
+again carried out rather than deleted, of a fine-structure computation performed on design
+data that no object of the branch can carry.
 \end{abstract}
 
 \tableofcontents
@@ -640,7 +746,7 @@ $\{1,3\}$ collision, identified exactly --- it is Problem~\ref{prob:main} one le
 (Corollary~\ref{cor:13answer}); a new family of counting identities yielding the
 \emph{upper}-bound criterion $\sum_xN(x\backslash x,x)\le\sum_xN(x,x)\Rightarrow E255$
 (Corollary~\ref{cor:psicrit}), together with a proof that no term witness for it exists
-(Theorem~\ref{thm:notermpsi}); two $E677$ magmas of order $77$
+unless $E255$ is equationally derivable from $E677$ (Theorem~\ref{thm:notermpsi}); two $E677$ magmas of order $77$
 (Theorems~\ref{thm:m77}, \ref{thm:m77nt}) --- the first non-idempotent
 non-right-cancellative example, certified in \textsc{Lean}~4, and the first extension that
 is not translation-invariant; the refutation, twice over, of the round's own conjecture that
@@ -670,12 +776,15 @@ $\langle L\rangle$-block system satisfying a kernel condition, whence
 $\langle L\rangle$ primitive $\Rightarrow$ $M$ simple
 (Theorem~\ref{thm:dict}). An exact reduction of ``simple $\Rightarrow$ right-cancellative''
 to three finite statements, of which one is a \emph{transport law} $(\mathrm{T})$ verified on
-$17.3$ million instances (Theorem~\ref{thm:Tstatus}); conditionally on it, a dichotomy
+$17\,558\,660$ instances (Theorem~\ref{thm:Tstatus}); conditionally on it, a dichotomy
 (Theorem~\ref{thm:dichotomy}) that appeared to kill the last surviving base of Round 7.
 And two
-independent proofs that the remaining statements are out of reach of first-order reasoning
-(\S\ref{sec:barriers}) --- the second of which shows that even plain \emph{injectivity}
-statements about the collapse structure require finiteness.
+independent barrier theorems (\S\ref{sec:barriers}), each reducing a whole family of
+candidate first-order proofs of the remaining statements to a goal on which prover9
+saturates --- the second family being plain \emph{injectivity} statements about the
+collapse structure. Saturation is evidence of underivability and not a proof of it
+(Proposition~\ref{prop:B1}), so these bound the campaign's technique rather than
+first-order reasoning itself.
 
 \item \textbf{Section~\ref{sec:round9}: Round 9, and a retraction.} The object those
 blueprints specified exists: an order-$77$ magma $M_{77}^{\mathrm{D}}$ with a non-affine
@@ -692,6 +801,25 @@ $(\mathrm{P})\Leftarrow[\text{(NTS)}]+[(\mathrm{B})]+[(\mathrm{Prop})]+[(\mathrm
 in which $(\mathrm{B})$ has newly lost its proof. The positive residue is the machinery
 (Theorems~\ref{thm:eq4gen}--\ref{thm:rigidity}) that makes non-affine models constructible
 at will.
+
+\item \textbf{Section~\ref{sec:round10}: Round 10, and the extremal branch.} The
+\emph{refutation} side of $(\mathrm{Prop})$: the left quasigroups in which every pair
+collapses. They are exactly the projective planes of order $q$ on $n = q^2+q+1$ points
+(Theorem~\ref{thm:extremal}), and the design-theoretic route recommended in
+\S\ref{sec:skeleton} is closed on them by an explicit phantom $A_7$
+(Theorem~\ref{thm:A7}, Corollary~\ref{cor:designdead}). What survives is the cellwise
+condition $(\mathrm{N})$, $N(t,v) = |\Fix(L_tR_v)|$, which every $E677$ magma satisfies:
+it is decided at $q = 2$ by exhaustion (Theorem~\ref{thm:q2branch}), and the $q = 3$
+translation-invariant family is exhausted with no witness
+(Theorem~\ref{thm:transq3}). Three realizability lemmas
+(Theorem~\ref{thm:R10lemmas}) and a closure rule --- on the $q = 2$ test design the
+array plus the design determines the multiplication table (Theorem~\ref{thm:closure})
+--- reduce the abstract bound to $q+1$, one row above the truth
+(Theorem~\ref{thm:abscap}). The section also
+records what \emph{failed}: a null-model audit voiding the campaign's own survey evidence
+(Proposition~\ref{prop:null}), the retirement of $\Psi_1 = n$
+(Theorem~\ref{thm:psi1dead}), and a second retraction
+(\S\ref{sec:R9Kretraction}).
 \end{enumerate}
 
 \subsection{Verification conventions}\label{sec:conventions}
@@ -718,8 +846,9 @@ It is evidence of exactly the stated scope and of nothing beyond it; in particul
 (Proposition~\ref{prop:B1}) the text says so explicitly.
 \end{itemize}
 
-Markers are attached to every numbered assertion; definitions, open problems and the single
-conjecture carry none, since they assert nothing. Where a marker names a script, that script
+Markers are attached to every numbered assertion; definitions, open problems and the four
+conjectures (Conjectures~\ref{conj:NProp}, \ref{conj:rowcap}, \ref{conj:tracerowcap}
+and~\ref{conj:P}) carry none, since they assert nothing. Where a marker names a script, that script
 checks the statement it is attached to and \emph{only} that statement: after the round-1
 adversarial review, three markers whose scripts did not in fact compute the quantities
 claimed were replaced by new verifiers written for the purpose
@@ -1761,8 +1890,12 @@ ordered pairs $p = (x,s)$, $q = (x,s')$ with $s\ne s'$, and then $|F_{pq}| = 32$
 For comparison, in the order-$496$ magma the same count gives $|F_{pq}| = 240$ against the
 bound $\lfloor n/2\rfloor = 248$ of Theorem~\ref{thm:T3} --- i.e.\ the row-code bound is
 essentially \emph{tight} there. That is why the Cauchy--Schwarz route to a lower bound on
-$\sum_t r_t$ is hopeless: it gives $\sum_t r_t \ge n^4/Q = 29\,772$ against the required
+$\sum_t r_t$ is hopeless: with $Q = 2\,031\,616$ it gives
+$\sum_t r_t \ge n^4/Q = 496^4/2\,031\,616 = 29\,791$ against the required
 $123\,256$ \MV{problems\slash etp677\slash R5C\_scripts\slash m496.py}.
+[v8.1: v7.2 and v8 printed $29\,772$ here; $496^4 = 60\,523\,872\,256$ and
+$60\,523\,872\,256/2\,031\,616 = 29\,791$ exactly. The conclusion --- far below
+$123\,256$ --- is unchanged.]
 \end{remark*}
 
 \subsection{The translation-invariant extension family with affine fibres}\label{sec:TIfamily}
@@ -1820,9 +1953,7 @@ $y-(y\diamond x) = Bd - c$.
 \end{proof}
 
 \begin{remark*}
-The index formulas were subjected to an adversarial re-derivation by an independent agent,
-which confirmed them together with the general (non-TI) pair subscripts and the reduction of
-the $E255$-violation constraint; a self-test reconstructs the blueprint order-$496$ model with
+A self-test reconstructs the blueprint order-$496$ model with
 zero violations of \eqref{eq:bp4}, zero $E677$ violations on the full order-$496$ magma, and
 zero $E255$ failures \MV{problems\slash etp677\slash r5a\_search.py \texttt{selftest},
 r5a\_audit.py}.
@@ -2490,17 +2621,23 @@ Extension over an idempotent-bearing base & closed (proved circular) &
 Prop.~\ref{prop:idempotentbase}\\
 $677$-quasigroup $\Rightarrow$ medial $\Rightarrow$ Toyoda & \emph{moot} & requires
 $(\mathrm{Q})$, which is false (Prop.~\ref{prop:Qfalse})\\
+Design theory (resolvability, de~Bruijn--Erd\H{o}s, Fisher) against
+$(\mathrm{Prop}_{\exists})$ & closed (phantom) & Theorem~\ref{thm:A7},
+Corollary~\ref{cor:designdead}: all those hypotheses hold together with
+$\varrho=\nabla$ in $A_7$\\
+$\Psi_1 = n$ as a route to $(\mathrm{Prop}_{\exists})$ & closed (phantoms) &
+Theorem~\ref{thm:psi1dead}; $\Psi_1\le\tr N$ (Prob.~\ref{prob:psi}) is untouched\\
+Per-cell concentration $\max E<\max N$; moment counting on the branch & closed
+(refuted / proved) & Theorems~\ref{thm:nconc}, \ref{thm:moments},
+Prop.~\ref{prop:marginalvacuity}\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\begin{remark*}[third-party corroboration]
-An independent project on the same problem \cite{grisha}, working in purely
-combinatorial/graph-theoretic language rather than the quandle/affine framework used here,
-independently established that all rows of a finite $E677$ magma are permutations and is
-likewise stalled at localized obstructions. That two methodologically disjoint efforts both
-report ``local mechanisms are systematically insufficient'' is the strongest evidence
-available that the remaining step is global.
+\begin{remark*}[related work]
+An independent project on the same problem, in a different framework, is under way
+\cite{grisha}; as of consultation it describes itself there as ``active research, not a
+finished proof''. We make no claim here about its results.
 \end{remark*}
 
 \section{The small-order landscape}\label{sec:landscape}
@@ -2663,7 +2800,8 @@ are
 \end{proposition}
 
 \begin{proposition}[exact robustness profile]\label{prop:robust}
-\COMP{F5 \S5.2, \texttt{robust.py} + \texttt{kissat}}
+\PARTIAL{F5 \S5.2, \texttt{robust.py} driving an external SAT solver; the UNSAT rows carry no
+certificate --- see the status note at the end of this proposition}
 Encoding ``left quasigroup of order $n$ $+$ $E255$ fails at $0$ $+$ at most $k$ instances of
 $E677$ violated'' with a sequential-counter cardinality constraint:
 \begin{center}
@@ -2682,6 +2820,12 @@ $11$ & $\le 5$ \quad (explicit witness, Proposition~\ref{prop:nearmiss})\\
 Note that $k=0$ UNSAT is precisely ``no counterexample of order $n$'', so this re-derives the
 non-existence results from scratch. The implication is \emph{thin}: it is destroyed by $5$
 broken instances out of $n^2$.
+
+\emph{Status of the rows.} The SAT rows are witnessed: an explicit table is exhibited with the
+run, and the violated set printed above can be checked against it directly. The UNSAT rows are
+bare solver output. \textbf{No DRAT certificate was produced for any of them}, and the solver
+is not part of the shipped scripts, so those rows are recorded as uncertified computations and
+not as certified exclusions. A certifying re-run remains the way to raise them.
 \end{proposition}
 
 \begin{proposition}[local repair around the order-$25$ model is excluded to radius $15$]\label{prop:radius}
@@ -2829,7 +2973,7 @@ that is not translation-invariant.
 \item A new family of counting identities produces an \emph{upper}-bound
 criterion for $E255$ of exactly the shape Section~\ref{sec:blockoffdiag} says is
 missing (\S\ref{sec:psi}) --- together with a proof that no term-level witness for
-it can exist.
+it can exist unless $E255$ is itself equationally derivable from $E677$.
 \item A conjecture that Round 6 itself proposed, ``$e(x) = x\backslash x$ is an
 automorphism'', was refuted twice over, by two independent mechanisms
 (\S\ref{sec:emap}). The evidence that had supported it was an artefact of the
@@ -3162,11 +3306,13 @@ with $|S_1| = \Psi_1\ge n$ and $|S_0| = \tr N\le n$, the prize is an
 \emph{injection} $S_1\hookrightarrow S_0$, not a bijection $S_1\to M$.
 \end{remark*}
 
-\begin{theorem}[no term-definable injection]\label{thm:notermpsi}
-\PROVED{R6-A Thm~7.4, modulo Proposition~\ref{prop:B1}}
-There is no pair of terms $(\beta,\tau)$ in $\{\op,\backslash\}$ such that
-$(a,x)\mapsto(\beta(a,x),\tau(a,x))$ maps $S_1$ into $S_0$ injectively in every
-finite $E677$ magma.
+\begin{theorem}[no term-definable injection, conditionally]\label{thm:notermpsi}
+\PROVEDC{R6-A Thm~7.4}{$E255$ has no equational derivation from $E677$ plus the
+left-quasigroup axioms}
+Suppose $E255$ has no equational derivation from $E677$ together with the
+left-quasigroup axioms. Then there is no pair of terms $(\beta,\tau)$ in
+$\{\op,\backslash\}$ such that $(a,x)\mapsto(\beta(a,x),\tau(a,x))$ maps $S_1$
+into $S_0$ injectively in every finite $E677$ magma.
 \end{theorem}
 
 \begin{proof}
@@ -3176,9 +3322,24 @@ $b(x)\op t(x) = t(x)$ would be an unconditional identity of the variety. By
 Theorem~\ref{thm:leftunit}, $E255$ holds at $t(x)$ for every $x$; injectivity on
 the diagonal makes $t$ injective, hence surjective, so $E255$ holds everywhere ---
 an equational derivation of $E255$ from $E677$ plus the left-quasigroup axioms,
-which is what the saturation experiments of Proposition~\ref{prop:B1} failed to
-find and what Proposition~\ref{prop:freesoff} rules out for the sibling statement.
+contrary to the hypothesis.
 \end{proof}
+
+\begin{remark*}[v8.1 correction]
+v7.2 and v8 stated this theorem unconditionally, marked ``proved \dots\ modulo
+Proposition~\ref{prop:B1}'', and closed the proof by observing that the
+derivation it produces is ``what the saturation experiments of
+Proposition~\ref{prop:B1} failed to find and what
+Proposition~\ref{prop:freesoff} rules out for the sibling statement''. Neither
+observation supplies the contradiction the proof needs. A bounded saturation that
+fails to find a derivation is not a proof that none exists --- the reading
+paragraph after Proposition~\ref{prop:B1} says exactly this --- and
+Proposition~\ref{prop:freesoff} proves underivability only for the sibling
+statement $(\mathrm{S\text{-}off})$ and only in the one-operation language
+$\{\op\}$, not for the two-operation term map asserted here. What the argument
+does establish is the implication above, whose hypothesis is precisely the open
+input; it is now stated rather than assumed.
+\end{remark*}
 
 Theorem~\ref{thm:psishift} does not contradict this: $S_{-1} = \{(t,x) : t\op(x\op x) = x\}$
 has \emph{no} unconditional elements, so its bijection to $S_0$ carries no free
@@ -3961,8 +4122,9 @@ unique left unit of $a$ (Theorem~\ref{thm:leftunit}) and
 $\star := \diamond_{x_a,a}$ for the fibre operation attached to that pair --- the
 operation that decides $E255$ at level $a$.
 
-\begin{theorem}[occurrence trichotomy; base-independent]\label{thm:trichotomy}
-\PROVED{R7-B.0}\;\COMP{verified on seven bases,
+\begin{theorem}[occurrence trichotomy]\label{thm:trichotomy}
+\PROVED{R7-B.0, for (a), the $\{1,3\}$ collision and the position-$4$
+count}\;\COMP{the position-$2$ count on seven bases,
 problems\slash etp677\slash R7A\_scripts\slash r7b\_baseindep.py; root-verified}
 Let $B$ be any finite $E677$ magma satisfying $E255$ and $a\in B$.
 \begin{enumerate}
@@ -3971,19 +4133,47 @@ Let $B$ be any finite $E677$ magma satisfying $E255$ and $a\in B$.
 to be an $E677$ magma and $E255$ for $\star$ is the original problem. This is the
 Round-5 circularity (Proposition~\ref{prop:idempotentbase},
 Theorem~\ref{thm:blockmagma}).
-\item[(b)] If $a$ is \emph{not} idempotent, then $\star$ occurs in exactly
-\emph{three} instances of \eqref{eq:bp4}: in the instance at $(a,x_a)$ it occupies
-positions $1$ and $3$ simultaneously --- the $\{1,3\}$ collision --- and it
-occupies position $2$ of one further instance and position $4$ of one more.
+\item[(b)] If $a$ is \emph{not} idempotent, then, for \emph{any} base $B$:
+$\star$ occupies positions $1$ and $3$ of exactly one instance of \eqref{eq:bp4},
+namely the one at $(x,y) = (a,x_a)$ --- the $\{1,3\}$ collision --- and it
+occupies position $4$ of exactly one further instance. It occupies position $2$
+of the instances $(x,y)$ with $x = x_a$ and $(y\diamond x_a)\diamond y = a$; the
+number of these is $|\{y : (y\diamond x_a)\diamond y = a\}|$, which is
+\emph{one} --- giving \emph{three} occurrences in all --- on every base tested,
+but is not proved to be one for an arbitrary base.
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
 $P_3 = (y,x) = (x_a,a)$ forces $(x,y) = (a,x_a)$. $P_1 = (y,\Lambda_yx) = (x_a,a)$
 forces $y = x_a$ and $x = L_{x_a}(a) = x_a\diamond a = a$, the same instance; the
-coincidence is exactly $L_{x_a}(a) = a$, i.e.\ the definition of a left unit. For
+coincidence is exactly $L_{x_a}(a) = a$, i.e.\ the definition of a left unit.
+$P_4 = (y\diamond x,y) = (x_a,a)$ forces $y = a$ and then
+$x = L_a^{-1}(x_a)$, which is unique because $L_a$ is a bijection: exactly one
+instance. $P_2 = (x,(y\diamond x)\diamond y) = (x_a,a)$ forces $x = x_a$ and
+leaves the equation $(y\diamond x_a)\diamond y = a$ for $y$; the map
+$y\mapsto(y\diamond x_a)\diamond y$ is not injective for a general base, so this
+step gives no bound on the number of solutions. For
 (a), $a\diamond a = a$ collapses all four subscripts.
 \end{proof}
+
+\begin{remark*}[v8.1 correction: the scope of (b)]
+v7.2 and v8 stated (b) as ``exactly three instances'' for any finite $E677$ magma
+$B$ satisfying $E255$, and titled the theorem ``base-independent''. The printed
+proof establishes the $\{1,3\}$ collision, and the position-$4$ count follows from
+invertibility of $L_a$, but the printed proof gives no argument that the
+position-$2$ equation $(y\diamond x_a)\diamond y = a$ has a unique solution over
+a base that is not right-cancellative, and the supporting computation covers
+seven bases, not all of them. Re-running
+\texttt{r7b\_baseindep.py} gives, over the population of \emph{all} elements of
+those seven bases: non-idempotent $a$ with exactly three occurrences including
+$\{1,3\}$ --- $6/6$ ($\F_7$, $4x+3y$), $6/6$ ($\F_7$, $4x+1y$), $0/0$ ($\F_5$,
+$2x-y$), $0/0$ ($\F_{11}$, $6x+6y$), $0/0$ ($\F_{31}$, $5x-4y$), $31/31$
+($\F_{31}$, $5x-4y+1$), $12/12$ ($\F_{13}$, $9x+11y$); the three $0/0$ entries are
+the fully idempotent bases, which have no non-idempotent element and are the
+exclusion list. The statement above is narrowed to what is actually proved plus
+what is actually tested.
+\end{remark*}
 
 \begin{center}
 {\footnotesize
@@ -4307,9 +4497,9 @@ which would be decisive: with transitivity (Theorem~\ref{thm:quotientext}) it
 gives $D = \emptyset$ or $D = M$, and $D = M$ is impossible once $M$ has an
 idempotent. Prover9 was run on both translates (``$E255$ at $x$ $\Rightarrow$
 $E255$ at $z\op x$'' and at $x\op z$) and \emph{saturated} in both cases
-(\texttt{exit (sos\_empty)}), so $(\mathrm{INV})$ is not a first-order consequence
-of $E677$; any such conservation law must use finiteness, exactly as
-Proposition~\ref{prop:B1} predicts. The residual is instead explained by
+(\texttt{exit (sos\_empty)}). That is computational evidence --- not a proof --- that
+$(\mathrm{INV})$ is not a first-order consequence of $E677$, and so that any such
+conservation law must use finiteness, exactly as Proposition~\ref{prop:B1} predicts. The residual is instead explained by
 Theorem~\ref{thm:cocycle}.
 \end{remark*}
 
@@ -4344,8 +4534,8 @@ Problem~\ref{prob:main}. $(\mathrm{S})$ is \textbf{not} proved. What Round 8
 delivered is a dictionary that moves the whole question into permutation group
 theory, an exact reduction of $(\mathrm{S})$ to three finite statements, a
 transport law that implies two of them and has a decisive structural consequence,
-and --- the most durable output --- \emph{two independent proofs that the
-remaining statements cannot be reached by first-order reasoning at all}.
+and --- the most durable output --- \emph{two independent barriers reducing every
+first-order route to the remaining statements to goals on which prover9 saturates}.
 
 Throughout, $F_{ab} = \{t : a\op t = b\op t\} = \Fix(L_b^{-1}L_a)$ as in
 Theorem~\ref{thm:T3}, $\ker R_t$ is the partition of $M$ by $a\mapsto a\op t$,
@@ -4502,13 +4692,26 @@ statement and its consequences are kept because the implications they carry are
 intact and because the shape of the error is the point (\S\ref{sec:retraction}).
 As recorded before Round 9:
 $(\mathrm{T})$ held in every finite $E677$ magma the campaign could then
-construct --- exhaustively on $M_{77}$, $M_{77}^{\mathrm{NT}}$ ($1\,245\,090$
-instances each) and $M_{176}$ ($14\,868\,480$), plus $200\,000$ random on
-$M_{496}$ and exhaustively on $M_{77}\times\Z_5$: $0$ violations in $17.3$M
-instances. It
+construct --- exhaustively on $M_{77}$ and $M_{77}^{\mathrm{NT}}$
+($1\,245\,090$ instances each) and on $M_{176}$ ($14\,868\,480$), which is
+$17\,358\,660$ exhaustive instances, plus $200\,000$ random instances on
+$M_{496}$: $0$ violations in $17\,558\,660$ instances in all. The six affine
+models of the zoo of orders $5,7,9,11,16,31$ were also run exhaustively and
+contribute $0$ instances each, being quasigroups with no collapse pairs; they are
+the exclusion list for the zeros above.
+[v8.1: v7.2 and v8 reported ``$0$ violations in $17.3$M instances'' and also
+claimed an exhaustive run on $M_{77}\times\Z_5$. The figure $17.3$M was the
+truncation of the three \emph{exhaustive} legs alone ($17\,358\,660$) and did not
+include the $M_{496}$ random leg it was quoted against; and
+\texttt{r8b\_transport.py} contains no $M_{77}\times\Z_5$ model and produced no
+such run, so that clause is withdrawn. All four surviving populations, and the
+$0$s, are as re-run.]
+It
 is \emph{not} a triviality of finite left quasigroups: on uniformly random left
 quasigroups it fails on $75.3\%$ ($n=5$), $80.5\%$ ($n=6$), $84.2\%$ ($n=7$) and
-$86.2\%$ ($n=8$) of collapse instances \COMP{$200\,000$ instances each}.
+$86.2\%$ ($n=8$) of collapse instances \COMP{$200\,030$, $200\,040$, $200\,046$
+and $200\,224$ collapse instances respectively, over $1984$, $1106$, $683$ and
+$444$ random tables}.
 \end{theorem}
 
 \begin{proposition}\label{prop:TimpliesW}
@@ -4532,22 +4735,28 @@ applied to the pair $(c\op a,c\op b)$.
 \end{proof}
 
 \begin{proposition}\label{prop:Tnotfo}
-\PROVED{R8-B Prop~B.2, from a prover9 saturation}
-$(\mathrm{T})$ is not first-order derivable from $E677$ plus the left-division
-axioms: it implies the goal
+\COMP{R8-B Prop~B.2; $2$ prover9 saturations, both \texttt{exit (sos\_empty)}}
+No first-order derivation of $(\mathrm{T})$ from $E677$ plus the left-division
+axioms was found. $(\mathrm{T})$ implies the goal
 ``$a\op t = b\op t \to \exists s\,((c\op a)\op s = (c\op b)\op s)$'', which
 saturates (\texttt{exit (sos\_empty)}), and $(\mathrm{T})$ itself saturates
-directly in $0.7$\,s. So $(\mathrm{T})$ is a \emph{finite-only} law.
+directly in $0.7$\,s. [v8.1:] these are \emph{failed bounded searches}. By the
+reading of Proposition~\ref{prop:B1} they are computational evidence that
+$(\mathrm{T})$ is a finite-only law, and not a proof that it is one; v7.2 and v8
+asserted the conclusion outright. Everything below that quotes this proposition
+is therefore conditional on that underivability, which remains open.
 \end{proposition}
 
 \begin{remark*}[the positive control that makes the saturations meaningful]
 \COMP{R8-A \S6, prover9}
 Six further goals --- transitivity of $\varrho$, its left and right
 compatibility, $(\mathrm{A})$, the disjointness law, and $(\mathrm{Q})$ itself ---
-all saturate in the same axiomatisation. That this is genuine negative
-information and not a broken encoding is established by the \emph{positive
-control}: Theorem~\ref{thm:T3} \emph{is} first-order, and prover9 proves it in
-$13$ steps in exactly the same setting.
+all saturate in the same axiomatisation. That the encoding is sound and not
+broken is established by the \emph{positive control}: Theorem~\ref{thm:T3}
+\emph{is} first-order, and prover9 proves it in $13$ steps in exactly the same
+setting. [v8.1:] the control shows the saturations are genuine negative
+\emph{information}; it does not make them a completeness argument, so none of
+them proves underivability.
 \end{remark*}
 
 For $c\in M$ define the \emph{twisted diagonal} map
@@ -4565,12 +4774,38 @@ of orbits of $G_\Delta := \langle\Delta_c : c\in M\rangle$ acting on $M\times M$
 \end{proposition}
 
 \begin{theorem}[affine $\Delta$-dichotomy]\label{thm:affinedelta}
-\PROVED{R8-B Thm~B.3}\;\COMP{$9$ parameter combinations, r8b\_delta.py}
-Let $x\diamond y = Ax+By+c$ over a field, with $A,B$ invertible. Then $G_\Delta$
-is \emph{transitive} on $F\times F$ unless $\diamond$ is idempotent
-($A+B = 1$ \emph{and} $c = 0$), in which case the orbits are exactly the $|F|$
-difference classes $\{(x,y) : y-x = \text{const}\}$.
+\PROVED{R8-B Thm~B.3, corrected in v8.1}\;\COMP{all $1336$ triples $(A,B,c)$ with
+$A,B\ne0$ over $\F_4,\F_5,\F_7,\F_8,\F_9$; r8b\_delta.py,
+r8b\_delta\_extfield.py}
+Let $x\diamond y = Ax+By+c$ over a field $F$ of characteristic $p$, with $A,B$
+invertible, and put $s := -cB^{-1}$. Then:
+(a) if $A+B\ne1$, $G_\Delta$ is transitive on $F\times F$;
+(b) if $A+B = 1$, the $G_\Delta$-orbits are exactly the preimages, under the
+difference map $(x,y)\mapsto y-x$, of the cosets of the subgroup
+$\F_p\,s\le(F,+)$ generated by $s$; there are $|F|/|\F_p s|$ of them, each of
+size $|F|\cdot|\F_p s|$.
+In particular the orbits are the $|F|$ difference classes
+$\{(x,y):y-x=\text{const}\}$ exactly when $\diamond$ is idempotent
+($A+B = 1$ \emph{and} $c = 0$), and when $A+B=1$ with $c\ne0$ the action is
+transitive \emph{iff $F$ is a prime field}. So over a prime field --- the only
+case used below --- the dichotomy is transitive-or-idempotent, but over a proper
+extension field it is not.
 \end{theorem}
+
+\begin{remark*}[v8.1 correction]
+v7.2 and v8 stated this theorem as the bare dichotomy ``transitive unless
+idempotent'' over an arbitrary field, on the strength of a proof step asserting
+that a nonzero shift $s$ ``generates the additive group''. That step is valid
+only over a prime field. The smallest counterexample to the old statement is
+$\F_4 = \F_2(\alpha)$, $\alpha^2 = \alpha+1$, with $A = \alpha$,
+$B = \alpha+1$, $c = 1$: here $A+B = 1$ and $c \ne 0$, so $\diamond$ is not
+idempotent, yet direct enumeration of all $16$ points gives $2$ orbits of size
+$8$, not one orbit of size $16$. The archived computation
+(\texttt{r8b\_delta.py}) tested $9$ parameter combinations, all over prime
+fields, so it could not have detected this. The corollaries drawn from this
+theorem below use it only over $\F_7$ and $\F_{31}$, which are prime fields, and
+are unaffected.
+\end{remark*}
 
 \begin{proof}
 Solving $A(z\diamond x)+B\xi+c = z\diamond y$ gives $\Delta_z = L+T_z$ with the
@@ -4580,9 +4815,14 @@ $\Delta_z\Delta_{z'}^{-1}$, i.e.\ all translations along $d := (1,B^{-1}(1-A))$,
 and conjugation by $\Delta_z$ turns a translation by $v$ into one by $Lv$. Now
 $Ld$ is parallel to $d$ iff $A+B = 1$. If $A+B\ne1$ then $d,Ld$ are independent
 and $G_\Delta$ contains all translations, so it is transitive. If $A+B = 1$ then
-$d = (1,1)$ and every $\Delta_z$ shifts the difference $y-x$ by the same constant
-$-cB^{-1}$: for $c = 0$ the orbits are the difference classes, and for $c\ne0$ the
-shift generates the additive group, so $G_\Delta$ is transitive again.
+$d = (1,1)$, the translations by $\lambda d$ ($\lambda\in F$) all lie in
+$G_\Delta$ and preserve the difference $y-x$ while acting transitively on each
+difference class, and every $\Delta_z$ shifts that difference by the same
+constant $s = -cB^{-1}$. Hence the reachable differences from a given one are its
+translates by the subgroup of $(F,+)$ generated by $s$, which is the
+$\F_p$-line $\F_p\,s$, and the orbits are as stated. For $c = 0$ this subgroup is
+trivial and the orbits are the difference classes; for $c\ne0$ it is all of $F$
+precisely when $F$ is a prime field.
 \end{proof}
 
 \begin{theorem}[the dichotomy]\label{thm:dichotomy}
@@ -5057,8 +5297,10 @@ $(u,t)\mapsto(c\op u,\ \gamma)$ with
 \]
 the third being $(\mathrm{T})$ itself. But for \emph{any} term $\gamma$ the
 implication $u\op t = a\op t\Rightarrow(c\op u)\op\gamma = (c\op a)\op\gamma$
-supplies a witness for the saturating goal of Proposition~\ref{prop:Tnotfo}, so
-\emph{every} such statement is finite-only. Hence the technique of
+supplies a witness for the goal on which prover9 saturates in
+Proposition~\ref{prop:Tnotfo}. The whole family therefore \emph{reduces to that
+one goal}: if it is not first-order derivable then no statement in the family is.
+On that hypothesis the technique of
 Theorems~\ref{thm:coltransport} and \ref{thm:psishift} --- a term-defined
 bijection whose correctness is a first-order consequence --- cannot prove
 $S$-constancy through any of them, and at depth $\le2$ there is no bijection with
@@ -5107,19 +5349,22 @@ curiously, in $M_{496}$); and the opposite magma is not an $E677$ magma, so ther
 is no duality. Since $\sum_xS'_x = n^2$ unconditionally, $(\mathrm{S}')$ follows
 from an \emph{injection} $\Psi_x := \{(a,z) : a\op z = z\op x\}\to M$, and exactly
 $21$ depth-$\le2$ terms are injective on every $\Psi_x$ of every one of the ten
-models. \textbf{None of those injectivity statements is first-order derivable}:
-twelve of them were put to prover9 and all twelve saturated.
+models. \textbf{No first-order derivation of any of those injectivity statements
+was found}: twelve of them were put to prover9 and all twelve saturated. [v8.1:]
+that is computational evidence of underivability, not a proof of it
+(Proposition~\ref{prop:B1}); v7.2 and v8 asserted underivability outright.
 \end{theorem}
 
 \begin{remark*}[what this upgrades]
 Injectivity has no existential in its conclusion, so the barrier of
-Theorem~\ref{thm:barrier1} does not apply to these statements --- yet they are
-finite-only too. This is an \emph{independent} second barrier, and it upgrades the
+Theorem~\ref{thm:barrier1} does not apply to these statements --- yet they
+saturate too. This is an \emph{independent} second barrier, and it extends the
 campaign's reading of Proposition~\ref{prop:B1}: it is not only
-witness/existential statements about the collapse structure that need finiteness,
-\emph{plain injectivity statements do as well}. Every known route to an exact
-$E677$ counting identity beyond Theorems~\ref{thm:coltransport} and
-\ref{thm:psishift} now passes through a non-first-order step.
+witness/existential statements about the collapse structure that resist
+first-order derivation, \emph{plain injectivity statements do as well}. Every
+known route to an exact $E677$ counting identity beyond
+Theorems~\ref{thm:coltransport} and \ref{thm:psishift} now passes through a step
+on which the first-order search saturates.
 \end{remark*}
 
 \begin{proposition}[where $(\mathrm{S}')$ would inject]\label{prop:Sprimeuse}
@@ -5150,8 +5395,10 @@ $(\mathrm{T})\Rightarrow(\mathrm{W})\Rightarrow(\mathrm{B})$,
 $(\mathrm{T})\Rightarrow(\mathrm{T}^{*})$ & proved (implications intact)\\
 $(\mathrm{T})$, $(\mathrm{T}^{*})$, $(\mathrm{A})$, $(\mathrm{S}')$ &
 \textbf{refuted in Round 9} (Thm.~\ref{thm:refutations}); each had been
-exhaustively verified on every model then available, and none is first-order\\
-$(\mathrm{R})$ & conjectured, exhaustively verified, not first-order; survives,
+exhaustively verified on every model then available, and each saturates under
+first-order search (evidence, not proof, of underivability)\\
+$(\mathrm{R})$ & conjectured, exhaustively verified, saturates under first-order
+search; survives,
 and is redundant in every known model (Thm.~\ref{thm:sepcrit})\\
 $(\mathrm{C1})$ & conjectured true; proved for affine models; survives\\
 \bottomrule
@@ -5505,12 +5752,11 @@ so $W$ is injective at $t\in\{0,2,3,4\}$ and degenerate at $t\in\{1,5,6\}$:
 nor $W$ is affine, and by Lemma~\ref{lem:dichotomy} neither is separable.
 \end{theorem}
 
-\begin{remark*}[verification protocol]
-The construction was verified through four mutually independent code paths --- the
-pair equation of Theorem~\ref{thm:eq4gen}, a self-contained \textsc{Python}
-re-implementation, the \emph{previous round's} checker \texttt{r8a\_lib.py}, and a
-standalone \textsc{C} program reading only the stored table --- plus a
-\textbf{negative control} (swapping two table cells produces $8$ $E677$ failures).
+\begin{remark*}[controls]
+The construction was checked against the pair equation of Theorem~\ref{thm:eq4gen}, by a
+self-contained \textsc{Python} re-implementation, by the \emph{previous round's} checker
+\texttt{r8a\_lib.py}, and by a standalone \textsc{C} program reading only the stored table,
+with a \textbf{negative control} (swapping two table cells produces $8$ $E677$ failures).
 For this paper the table was audited once more, by code written from the
 definitions alone (\texttt{R9\_audit.py}), reproducing every figure below.
 \emph{The decisive control is that $M_{77}^{\mathrm{D}}$ satisfies every statement
@@ -6072,6 +6318,974 @@ should be pointed at $(\mathrm{Prop})$, at $(\mathrm{C1})$ and at the search for
 non-Latin magma with primitive $\langle L\rangle$.
 \end{remark*}
 
+\section{Round 10: the extremal branch, the design phantoms, and
+$\varphi$-fusion}\label{sec:round10}
+
+\S\ref{sec:skeleton} left $(\mathrm{Prop})$ --- $\varrho^{*}\ne\nabla$ --- as one
+of three open legs, with a recommendation attached: replace the
+permutation-group route, which Theorem~\ref{thm:jordan} shows is silent, by
+design theory. This section reports what happened when that recommendation was
+carried out, over eleven rounds \cite{R9C,R9D,R9E,R9F,R9G,R9H,R9I,R9J,R9K,R9L,R10A}.
+The short version: \emph{the design layer is closed by an explicit phantom}, a
+strictly finer condition survives it, that condition is decided by exhaustion at
+$q=2$, and a fusion of the array with the multiplication table --- which we call
+$\varphi$-fusion --- reduces the abstract gap to a single row. Along the way three
+of the campaign's own targets were retired, one of its own computations was
+retracted, and its principal source of ``evidence'' on this line was shown to be
+worth nothing. All of that is recorded below, in the paper's usual style: marked,
+not deleted.
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{\textbf{Firewall.} Everything in this section lives
+on the \emph{extremal branch} $\varrho = \nabla$ --- that is, on the
+\emph{negation} of $(\mathrm{Prop}_{\exists})$, which is where a refutation of
+$(\mathrm{Prop})$ would have to live. Nothing here is positive or negative
+evidence about $(\mathrm{Prop})$ itself, about $(\mathrm{B})$, about
+$(\mathrm{S})$, or about Problem~\ref{prob:main}. The section proves things about
+\emph{left quasigroups with a prescribed column design}, most of which are not
+$E677$ magmas; where a statement is about $E677$ magmas this is said explicitly.
+Computational statements are at $q=2$ unless marked otherwise, and those marked
+\textsc{instance} are scoped to a single named design.}}
+\end{center}
+
+\subsection{The extremal branch}\label{sec:branch}
+
+Recall from \S\ref{sec:dictionary} that $F_{ab} = \Fix(L_b^{-1}L_a)$, that
+$a\mathrel\varrho b$ iff $a\ne b$ and $F_{ab}\ne\emptyset$, and that
+$(\mathrm{Prop}_{\exists})$ --- necessary for $(\mathrm{Prop})$ --- says
+$\varrho\ne\nabla$. So the objects that would refute $(\mathrm{Prop}_{\exists})$
+are exactly the left quasigroups with $\varrho = \nabla$.
+
+\begin{lemma}[the design dictionary, doubly resolved]\label{lem:designdict}
+\PROVED{R9-C Claim~1.2}
+Let $M$ be a finite left quasigroup, $|M| = n$. Then $\varrho = \nabla$ iff the
+family $\mathfrak B = \{R_t^{-1}(v) : t,v\in M,\ R_t^{-1}(v)\ne\emptyset\}$ is a
+pairwise covering design on $M$. It carries \emph{two} resolutions: for each $t$
+the classes $\{R_t^{-1}(v)\}_v = \ker R_t$ partition $M$, and for each $v$ the
+classes $\{R_t^{-1}(v)\}_t$ also partition $M$. Consequently
+\[
+  (\mathrm{Cov})\qquad \varrho = \nabla \implies
+  \Sigma \ge 2n^2-n \ \text{ and }\ S_a\ge 2n-1 \text{ for every } a ,
+\]
+with equality iff $|F_{ab}| = 1$ for all $a\ne b$, i.e.\ iff the design is a
+\emph{resolvable linear space}.
+\end{lemma}
+
+\begin{proof}
+The first resolution is trivial. For the second, if $a\op t = a\op t' = v$ with
+$t\ne t'$ then $L_a$ is not injective; and
+$\sum_tN(t,v) = \sum_a\#\{t : L_a(t) = v\} = n$ forces the disjoint sets to
+cover. Counting covered pairs,
+$\sum_{t,v}\binom{N(t,v)}{2}\ge\binom n2$, which is $\Sigma\ge2n^2-n$; and
+$S_a = \sum_b|F_{ab}| = n + \sum_{b\ne a}|F_{ab}|\ge n+(n-1)$.
+\end{proof}
+
+\begin{proposition}[no constant column]\label{prop:noconstcol}
+\PROVED{R9-C Claim~4.1}
+In a finite $E677$ magma with $n\ge2$ no column of the Cayley table is constant.
+\end{proposition}
+
+\begin{proof}
+Suppose $a\op t_0 = v$ for every $a$. If $v = t_0$ then $N(t_0,t_0) = n\ge2$,
+contradicting $N(v,v)\le1$ (Lemma~\ref{lem:G}). So $v\ne t_0$.
+$\mathrm{KEY}$ with $y := a$, $x := t_0$ gives
+$(a\op t_0)\op a = t_0\backslash(a\backslash t_0)$, i.e.\
+$v\op a = \Lambda_{t_0}(a\backslash t_0)$, whence
+$a\backslash t_0 = t_0\op(v\op a) = (L_{t_0}L_v)(a)$: the map $a\mapsto a\backslash t_0$
+is a composite of two bijections, hence a bijection. Since $a\backslash t_0 = u$
+iff $a\op u = t_0$, this says $N(u,t_0) = 1$ for every $u$, in particular
+$N(t_0,t_0) = 1$, so some $a$ has $a\op t_0 = t_0 = v$ --- contradiction.
+\end{proof}
+
+\begin{remark*}[why Proposition~\ref{prop:noconstcol} is the only first-order
+fact that bites]
+Without $E677$, $\varrho = \nabla$ is \emph{free} for every $n\ge4$: take the $n$
+rows to be $n$ distinct permutations fixing a common point $p$; column $p$ is then
+constant and every pair collapses there. Proposition~\ref{prop:noconstcol} kills
+exactly that ``pencil'' family. It is the only point in the entire design analysis
+where $E677$, rather than the left-quasigroup axioms plus the recorded first-order
+toolbox, does genuine work --- and by Theorem~\ref{thm:A7} it is not enough.
+\end{remark*}
+
+\begin{theorem}[the extremal dichotomy]\label{thm:extremal}
+\PROVED{R9-C Claims~5.1--5.3}
+Let $M$ be a finite left quasigroup with $\varrho = \nabla$ and equality in
+$(\mathrm{Cov})$, so that the column design is a resolvable linear space with $b$
+lines. Then:
+\begin{enumerate}
+\item[(a)] de~Bruijn--Erd\H{o}s gives $b\ge n$, and it is never violated on the
+branch, so it cannot by itself refute $\varrho = \nabla$; it only sorts the
+equality case into two shapes, near-pencil and projective plane.
+\item[(b)] \emph{The near-pencil shape is impossible} --- for any left
+quasigroup, $E677$ not needed.
+\item[(c)] Hence the design is a projective plane of order $q$, $n = q^2+q+1$: the
+class $\ker R_t$ consists of one line $\ell_t$ of size $q+1$, carrying a single
+value $\nu(t)$, together with $q^2$ singletons. The map $t\mapsto\nu(t)$ is a
+fixed-point-free bijection of $M$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) A near-$1$-factorization resolution has $b = n(n-1)/2\gg n$; both equality
+shapes have $b = n$.
+(b) Let column $t_0$ carry a block $B$ of size $n-1$ with value $v$, let $z$ be
+the remaining point and $w := z\op t_0\ne v$. For $a,b\in B$ we have $t_0\in F_{ab}$,
+so $F_{ab} = \{t_0\}$. A class $t\ne t_0$ cannot contain two of the pairs
+$\{z,x\},\{z,x'\}$ with $x,x'\in B$ (else $\{x,x'\}$ is covered twice), nor a pair
+inside $B$; so each of the $n-1$ classes $t\ne t_0$ covers at most one pair
+$\{z,x_t\}$, and as there are $n-1$ such pairs, exactly one each, with
+$t\mapsto x_t$ a bijection onto $B$. Row $z$ is a permutation, so $z\op t_v = v$
+for exactly one column $t_v$, and $t_v\ne t_0$. At class $t_v$ the point $z$ lies
+in the block $\{z,x_{t_v}\}$, so $x_{t_v}\op t_v = v$; but $x_{t_v}\in B$ gives
+$x_{t_v}\op t_0 = v$ too, and row $x_{t_v}$ takes the value $v$ at two distinct
+columns --- impossible.
+(c) Only the projective-plane shape is left. If $\nu(t) = \nu(t') = v$ with
+$t\ne t'$ then $\ell_t\cap\ell_{t'}\ne\emptyset$ and a common point takes the value
+$v$ at two columns, impossible for a permutation row; so $\nu$ is injective, hence
+bijective. And $\nu(t) = t$ would give $N(t,t) = q+1\ge2$, violating
+$N(v,v)\le1$.
+\end{proof}
+
+\begin{definition}[branch object]\label{def:branch}
+A \emph{branch object of order $q$} is a left quasigroup $M$ with
+$n = q^2+q+1$ elements whose column kernels are as in
+Theorem~\ref{thm:extremal}(c) for some projective plane of order $q$ on $M$:
+$\ker R_t = \{\ell_t\}\cup\{\text{singletons}\}$, $\ell_t$ a line, with block value
+$\nu(t)$. In particular $\varrho = \nabla$. We use throughout:
+\[
+  \Xi_t(x) := x\backslash(t\backslash x) = \Lambda_x(\Lambda_t(x)),\qquad
+  E(t,v) := \bigl|\Xi_t^{-1}(v)\bigr| ,
+\]
+so that $\Xi_t = \Theta_t$ whenever $\mathrm{KEY}$ holds, but both $\Xi$ and $E$
+are defined in any left quasigroup; note
+$E(t,v) = |\Fix(L_tR_v)|$ always, since $t\op(x\op v) = x\iff v = \Xi_t(x)$.
+Further, for a row $r$ of the array $\Xi$ put $D_r := M\setminus\Imm(\Xi_r)$ (the
+\emph{missed} values, $|D_r| = $ the number of $v$ with $E(r,v) = 0$); the row $r$
+is \emph{perfect} if $E(r,\cdot) = N(r,\cdot)$ cellwise, and dually for columns;
+and
+\[
+  b(v) := \#\{x : x\op v = \nu^{-1}(x)\},\qquad
+  m(v) := \#\{x : x\in D_{x\op v}\},\qquad
+  g(c) := \nu(c)\backslash c .
+\]
+Finally $(\mathrm{N})$ denotes the condition $E = N$ cellwise, i.e.\
+$N(t,v) = |\Fix(L_tR_v)|$ for all $t,v$: the conclusion of Lemma~\ref{lem:Nfix},
+read as a hypothesis on a left quasigroup that need not satisfy $E677$.
+\end{definition}
+
+\begin{lemma}[$\nu$ is automatically bijective; the column profile]\label{lem:nubij}
+\PROVED{R9-G}
+On the extremal branch $\nu$ is a fixed-point-free bijection
+(Theorem~\ref{thm:extremal}(c)), and consequently every column of $N$ has profile
+exactly $\{q+1$ once, $1$ with multiplicity $q^2$, $0$ with multiplicity $q\}$.
+Under $(\mathrm{N})$ each column of $E$ therefore has exactly one entry $>1$.
+\end{lemma}
+
+The point of the whole construction is the following elementary observation, which
+is why $(\mathrm{N})$ --- and not the design layer --- is where the content is.
+
+\begin{remark*}[what would suffice]
+Every finite $E677$ magma satisfies $(\mathrm{N})$, by Lemma~\ref{lem:Nfix}. Hence
+a proof of
+\[
+  (\mathrm{N}\text{-}\mathrm{Prop})\qquad
+  (\mathrm{N}) \implies \varrho\ne\nabla
+\]
+would establish $(\mathrm{Prop}_{\exists})$ for finite $E677$ magmas --- and only
+$(\mathrm{Prop}_{\exists})$: the gap from completeness to connectivity
+(the v7.1 remark after Theorem~\ref{thm:twolegs}) is untouched by anything in this
+section. $(\mathrm{N}\text{-}\mathrm{Prop})$ is Conjecture~\ref{conj:NProp} below.
+\end{remark*}
+
+\subsection{The phantom $A_7$: the design-theoretic route is closed}\label{sec:A7}
+
+\begin{theorem}[the Fano phantom]\label{thm:A7}
+\PROVED{R9-C Claim~6.1}\;\MV{problems\slash etp677\slash R9C\_verify.py}
+Let $M = \Z_7$, let $f(1) = 4$, $f(2) = 6$, $f(3) = 2$, $f(5) = 3$, and define
+\[
+  a\op t :=
+  \begin{cases}
+    t+1, & a\in\ell_t := \{t,\,t+1,\,t+3\},\\
+    a + f(t-a), & \text{otherwise (so } t-a\in\{1,2,3,5\}).
+  \end{cases}
+\]
+Explicitly, with rows indexed by $a$ and columns by $t = 0,\dots,6$:
+\begin{center}\ttfamily
+\begin{tabular}{r|ccccccc}
+ & 0&1&2&3&4&5&6\\\hline
+0 & 1&4&6&2&5&3&0\\
+1 & 1&2&5&0&3&6&4\\
+2 & 5&2&3&6&1&4&0\\
+3 & 1&6&3&4&0&2&5\\
+4 & 6&2&0&4&5&1&3\\
+5 & 4&0&3&1&5&6&2\\
+6 & 3&5&1&4&2&6&0
+\end{tabular}
+\end{center}
+Then $A_7$ is a branch object of order $q = 2$ with $|F_{ab}| = 1$ for all $21$
+pairs; it satisfies every \emph{design-layer} consequence of $E677$ in the
+campaign toolbox --- $N(v,v)\le1$ and the disjointness of the $\Fix(L_w)$
+(Lemma~\ref{lem:G}), $T3$ and refined $T3$
+(Theorems~\ref{thm:T3}, \ref{thm:T3refined}), transversality, the row and column
+sums of $N$, the identity $\sum_zN(z\op x,z) = n$, the $R_y$-dichotomy
+(Corollary~\ref{cor:dichotomy}), the cycle-length obstruction $m(y)\notin\{2,3\}$,
+Proposition~\ref{prop:noconstcol}, $\Psi_0 = \tr N\le n$, $\Psi_1\ge n$, and
+$(\mathrm{Cov})$ with equality, $\Sigma = 91 = 2n^2-n$, $S_a = 13 = 2n-1$,
+$b = 7$, so that de~Bruijn--Erd\H{o}s holds \emph{with equality} --- and it has
+$\varrho = \nabla$. It is \emph{not} an $E677$ magma: $\mathrm{KEY}$ fails at all
+$49$ instances, and $E255$ fails at all $7$ points ($\tr N = 0$).
+\end{theorem}
+
+\begin{proof}[Proof that $A_7$ is a branch object (hand-checkable)]
+Row $a$ takes the value $\nu(t) = t+1$ at the three columns $t\in\{a,a-1,a-3\}$,
+which are exactly the $t$ with $a\in\ell_t$, giving the values $\{a+1,a,a+5\}$; at
+the other four columns $t = a+d$, $d\in\{1,2,3,5\}$, it takes
+$a+f(d)\in\{a+4,a+6,a+2,a+3\}$. The two sets are complementary, so row $a$ is a
+permutation. In column $t$, the three rows of $\ell_t$ take $t+1$, and the four
+rows $a = t-d$ take $t+(f(d)-d)\in\{t+3,t+4,t+6,t+5\}$ because
+$f(d)-d = 3,4,6,5$ for $d = 1,2,3,5$: four distinct values, all $\ne t+1$. So
+$\ker R_t = \{\ell_t\}$ plus four singletons. Every pair of $\Z_7$ lies on exactly
+one Fano line, so $|F_{ab}| = 1$ for every pair, and $\varrho = \nabla$.
+\end{proof}
+
+\begin{corollary}[the design-theoretic route to $(\mathrm{Prop}_{\exists})$ is
+closed]\label{cor:designdead}
+\PROVED{R9-C Claim~6.3, as corrected in R9-E}
+No derivation of $\varrho\ne\nabla$ exists from resolvability, the two
+resolutions, $N(v,v)\le1$, refined $T3$, Proposition~\ref{prop:rightdual}, the
+$\Sigma$ and $S_a$ counts, de~Bruijn--Erd\H{o}s or Fisher-type inequalities, or
+Proposition~\ref{prop:noconstcol}: all of them hold simultaneously with
+$\varrho = \nabla$ in $A_7$. Any proof of $(\mathrm{Prop}_{\exists})$ must
+therefore invoke $\mathrm{KEY}$ in a way that is \emph{not} mediated by those
+recorded first-order shadows.
+\end{corollary}
+
+\begin{remark*}[exact scope, and a correction to the first announcement of this
+result]
+$A_7$ is not an $E677$ magma, so it refutes only the \emph{sufficiency} of the
+listed hypotheses; it says nothing about $(\mathrm{Prop}_{\exists})$ itself. It is
+a \emph{completeness certificate for a dead end}, exactly as the numerical matrix
+of \S\ref{sec:blockmarginal} is for the marginal-counting route $(\mathrm{B}3)$;
+$A_7$ kills the design layer sitting above that route.
+
+\textsc{Correction (R9-E).} R9-C announced the stronger claim that $A_7$ satisfies
+\emph{every} first-order consequence of $E677$ in the toolbox. That is false:
+$A_7$ violates $(\mathrm{N})$ in $21$ of its $49$ cells, and $(\mathrm{N})$ was in
+the toolbox --- as Lemma~\ref{lem:Nfix} --- but had never been run against any
+phantom. A hand witness: column $0$ of $A_7$ is $(1,1,5,1,6,4,3)$, so
+$N(0,0) = 0$, while $\Fix(L_0R_0) = \{5\}$ because $5\op0 = 4$ and $0\op4 = 5$.
+The claim is hereby narrowed to the design layer, as stated in
+Corollary~\ref{cor:designdead}; the discipline that produced the error --- running
+a phantom against a hand-picked checklist rather than against the whole toolbox
+--- is the reason every entry of the toolbox now carries a label saying whether it
+is first-order testable or $\mathrm{KEY}$-conditional.
+\end{remark*}
+
+\begin{proposition}[value recolouring]\label{prop:recolour}
+\PROVED{R9-D, as narrowed in R9-E}
+For a permutation $\rho$ of $M$ put $x\op_\rho y := \rho(x\op y)$. Then
+$\op_\rho$ is a left quasigroup operation with the same column kernels, the same
+$\varrho$, $\varrho^{*}$, $F_{ab}$, $\Sigma$, $S_a$, the same design and the same
+de~Bruijn--Erd\H{o}s status as $\op$; it does \emph{not} in general preserve
+$\Psi_1$, $\Psi_0$, $\tr N$, $T1$, $(\mathrm{Cyc})$, the $R_y$-dichotomy,
+transversality or $\sum_zN(z\op x,z) = n$. Consequently an identity can exclude
+$\varrho = \nabla$ only if it fails on the \emph{entire} recolouring orbit of
+every branch object.
+\end{proposition}
+
+\begin{theorem}[$\Psi_1 = n$ is retired as a target]\label{thm:psi1dead}
+\PROVED{R9-D}\;\MV{problems\slash etp677\slash R9D\_A7psi.py, R9D\_gen13.py}
+\begin{enumerate}
+\item[(a)] $\Psi_1 = n$ is equivalent to: $a\op(x\backslash x) = x\Rightarrow a = x$,
+i.e.\ no nontrivial block of a column kernel contains its own value. It constrains
+\emph{where block values sit}, not the covering design itself.
+\item[(b)] Assuming $\Psi_1 = n$ makes Corollary~\ref{cor:psicrit} vacuous: it
+supplies $\Psi_1\ge\tr N$, which is the \emph{opposite} of the inequality
+$\Psi_1\le\tr N$ that the corollary needs, and substituting it turns the criterion
+into $E255\Rightarrow E255$.
+\item[(c)] There are branch objects with $\Psi_1 = n$. On $\Z_7$ with
+$x\op y = x+h(y-x)$, the choices $h = (6,2,4,0,3,1,5)$ and $h = (0,2,3,6,5,4,1)$
+give branch objects passing the whole design toolbox \emph{and} $\Psi_1 = 7 = n$;
+the second is idempotent and satisfies $E255$ ($\tr N = 7$), so it satisfies the
+full equality $\Psi_1 = \Psi_0 = n$. Both violate $\mathrm{KEY}$ at $42$ of $49$
+instances.
+\item[(d)] These are not isolated. Of the $5040$ translation-invariant left
+quasigroups on $\Z_7$, $1820$ have $\varrho = \nabla$, $342$ pass the design
+toolbox, $150$ of those also satisfy $\Psi_1 = n$, and $48$ also satisfy $E255$.
+The general recipe: for any prime power $q$ take a Singer difference set
+$D\subseteq\Z_{q^2+q+1}$ with $0\notin D$, a $c$ with $-c\notin D$, and
+$k$ constant $= c$ on $D$, injective and $\ne c$ off $D$, $k(0) = 0$, with
+$h = \mathrm{id}+k$ a permutation; $q = 3$ is realized by
+$h = (0,2,3,1,5,7,10,12,4,8,11,6,9)$ on $\Z_{13}$, again with
+$\Sigma = 325 = 2n^2-n$.
+\end{enumerate}
+Hence neither $\Psi_1 = n$ nor the full equality $\Psi_1 = \tr N = n$ can exclude
+$\varrho = \nabla$, and the campaign's proposal to attack $\Psi_1 = n$ as a route
+to $(\mathrm{Prop}_{\exists})$ is withdrawn.
+\end{theorem}
+
+\begin{remark*}[what this does \emph{not} retire]
+Problem~\ref{prob:psi} --- is $\Psi_1\le\tr N$ in every finite $E677$ magma? ---
+is untouched, and remains the campaign's best-shaped unrefuted target for
+Conjecture~\ref{conj:P}, exactly as \S\ref{sec:blockedtable} left it. What is
+retired is the \emph{sub-target} ``prove $\Psi_1 = n$'', which was proposed in
+R9-C as a way to exclude $A_7$-type covering designs and which
+Theorem~\ref{thm:psi1dead}(c),(d) shows cannot do that. Note also that
+$\Psi_1 = n$ does hold, verified, in all nine models of \S\ref{sec:bench9};
+Theorem~\ref{thm:psi1dead} says only that this is orthogonal to
+$\varrho = \nabla$, not that it is false.
+\end{remark*}
+
+\subsection{The condition $(\mathrm{N})$, and what it is not}\label{sec:Ncond}
+
+\begin{proposition}[$(\mathrm{N})$ is neither vacuous nor equivalent to
+$\mathrm{KEY}$]\label{prop:Nbasic}
+\PROVED{R9-E}\;\MV{problems\slash etp677\slash R9E\_fixN.py}
+\begin{enumerate}
+\item[(a)] Every finite $E677$ magma satisfies $(\mathrm{N})$
+(Lemma~\ref{lem:Nfix}).
+\item[(b)] $(\mathrm{N})$ is strictly weaker than $\mathrm{KEY}$: on $\Z_7$ the
+affine operation $x\op y = 2y-x$ satisfies $(\mathrm{N})$ in all
+$49$ cells and violates $\mathrm{KEY}$ at $42$ instances. Among the $5040$
+translation-invariant left quasigroups on $\Z_7$, exactly $27$ satisfy
+$(\mathrm{N})$ and none of them is an $E677$ magma.
+\item[(c)] $(\mathrm{N})$ is exactly the ``new constraint linking the cells of
+$N$'' that \S\ref{sec:blockmarginal} asked for: in \emph{any} left quasigroup both
+matrices $E$ and $N$ have all row sums $n$, and $N$ has all column sums $n$; in an
+$E677$ magma $E$ does too (Theorem~\ref{thm:count}), so there the two matrices
+agree automatically in every margin. All the content of $(\mathrm{N})$ is cellwise
+--- which is precisely what a marginal count cannot deliver. (On the abstract
+branch the last margin is \emph{not} free: see Proposition~\ref{prop:deficit},
+which is what makes \S\ref{sec:trace} a genuine restriction.)
+\end{enumerate}
+\end{proposition}
+
+\begin{conjecture}[$(\mathrm{N}\text{-}\mathrm{Prop})$]\label{conj:NProp}
+$(\mathrm{N})\Rightarrow\varrho\ne\nabla$: no branch object satisfies
+$(\mathrm{N})$.
+\end{conjecture}
+
+\begin{proposition}[the deficit law; a retracted regularity]\label{prop:deficit}
+\PROVED{R9-I}\;\MV{problems\slash etp677\slash R9I\_deficit.py, R9I\_adjudicate.py}
+On a branch object,
+\[
+  \sum_t E(t,v) \;=\; n + \delta(v),\qquad \delta(v) := q\,b(v) - m(v) ,
+\]
+and $\delta\equiv0$ is \emph{necessary} for $(\mathrm{N})$. In particular the
+column sums of $E$ need not be $n$: an explicit branch object has $E$-column sums
+$(4,11,10,7,5,6,6)$.
+\end{proposition}
+
+\begin{remark*}[\textsc{correction}]
+Four earlier toolbox entries asserted ``$E$ has column sums $n$ by
+$\sum_zN(z\op x,z) = n$''. That identity is an $E677$ theorem, not a
+left-quasigroup theorem, so the assertion is \emph{false on the abstract branch}
+and is retracted; the witness above is the counterexample. The conclusions those
+entries were used for survive, because $\delta\equiv0$ is satisfiable
+(\S\ref{sec:trace}) --- but the retraction is what makes the trace sub-branch of
+\S\ref{sec:trace} a genuine restriction rather than a tautology. A companion claim
+$|g^{-1}(v)|\le q$ is also refuted as stated: the correct identity is
+$|g^{-1}(v)| = b(v)$, and $8$ of the $25$ extremal witnesses of
+\S\ref{sec:q2} attain $b(v) = q+1$.
+\end{remark*}
+
+\begin{theorem}[no concentration bound exists]\label{thm:nconc}
+\PROVED{R9-G}\;\MV{problems\slash etp677\slash R9G\_conc.py, R9G\_witness.py, R9G\_witness13.py}
+There is no bound of the form
+$\max_{t,v}|\Fix(L_tR_v)| < \max_{t,v}N(t,v)$ on branch objects, at any $q$.
+Explicit hand-checkable witnesses: an $n = 7$ Fano branch object with
+$|\Fix(L_6R_5)| = 4 > 3 = q+1$ (the fixed set is $\{2,3,4,5\}$,
+$\nu = (2,0,3,1,4,5,6)$), and an $n = 13$ $\mathrm{PG}(2,3)$ branch object with
+$|\Fix(L_3R_{12})| = 6 > 4$. Random $n = 7$ branch objects reach the trivial
+ceiling $q^2+1 = 5$, and at $q = 9$ a \emph{block} cell attains the full required
+value $q+1 = 10$.
+\end{theorem}
+
+This refuted the campaign's own designated successor target, and with it the
+reading that the obstruction to $(\mathrm{N})$ is local. The reason is structural:
+$x\op v = y$ and $t\op y = x$ constrain cells in \emph{different} columns under
+one-directional design constraints, and the coupling of the two lines is
+$\mathrm{KEY}$ itself.
+
+\begin{theorem}[second moments are dead too]\label{thm:moments}
+\PROVED{R9-G}
+On a branch object $\sum_{t,v}N(t,v)^2 = 2n^2-n$, while each off-diagonal
+contribution to $\sum_{t,v}E(t,v)^2$ is at most $1$ (two fibres of two different
+columns meet in at most one point) and the collinear $v$ contributes $0$; $(\mathrm{N})$
+asks only for an average of $1$ per ordered pair. Hence
+Proposition~\ref{prop:B3} extends from first to second moments: \emph{no
+moment-counting argument can obstruct $(\mathrm{N})$}.
+\end{theorem}
+
+\begin{proposition}[the null-model audit: the campaign's evidence on this line
+was worth nothing]\label{prop:null}
+\PROVED{R9-G}\;\COMP{R9G\_global.py}
+Model each row of $E$ as $\mathrm{multinomial}(n;\text{uniform})$ --- a model that
+reproduces every constraint proved about $E$ on the branch. Then the probability
+that a given branch object satisfies $(\mathrm{N})$ is $1.2\cdot10^{-21}$ at
+$n = 7$ and $1.3\cdot10^{-79}$ at $n = 13$. The campaign had by that point
+verified $745\,424$ branch objects in eight families ---
+translation-invariant, uniformly random, arbitrary Fano-parsed,
+$\mathrm{PG}(2,3)$, $\mathrm{PG}(2,9)$, the Hall plane, the dual Hall plane and
+the Hughes plane --- and found none satisfying $(\mathrm{N})$. The expected number
+of satisfiers in a sample that size is $\approx10^{-15}$: \emph{the tally is what
+a fair coin produces, and it is not evidence for
+Conjecture~\ref{conj:NProp}}. The same computation makes the all-block-cells
+statistic uninformative ($3\cdot10^{-9}$ at $n = 7$). Sampling on this line can
+refute; it cannot support.
+\end{proposition}
+
+\begin{proposition}[and neither were the search plateaus]\label{prop:searcherblind}
+\PROVED{R9-H, against the $q = 2$ ground truth of \S\ref{sec:q2}}
+With exhaustive ground truth available, the campaign's simulated-annealing
+machinery on this line can be calibrated: against true frontiers of $36$ agreeing
+cells, $7$ block cells at $q+1$ and $3$ perfect rows, it reaches $24$--$25$, $3$
+and $0$ respectively, and its move generator rejects $\approx93\%$ of proposed
+swaps, so nominal budgets overstate real budgets by a factor $\approx14$. An
+annealing plateau on this line is therefore a fact about the searcher, not about
+the structure, and no plateau may be cited as evidence of an obstruction. This
+sharpens Proposition~\ref{prop:null}, which bounded what plateaus mean under
+randomness, to a bound on what they mean under optimization.
+\end{proposition}
+
+\begin{remark*}[a positive by-product: the four planes of order $9$]
+\PROVED{R9-F, R9-G}\;\MV{problems\slash etp677\slash R9F\_hall.py, R9G\_hughes.py}
+The $q = 9$ tests required all four projective planes of order $9$, two of them
+non-Desarguesian, built and certified rather than quoted. $\mathrm{PG}(2,9)$ was
+built from $\mathrm{GF}(9) = \F_3[i]/(i^2+1)$ and independently verified
+($91$ points, $91$ lines, $10$ points per line, all $4095$ point pairs covered
+exactly once), together with a $(91,10,1)$ planar difference set
+$D = \{0,1,3,9,27,49,56,61,77,81\}$. The Hall plane was built purely
+combinatorially by derivation --- among the $130$ two-dimensional
+$\mathrm{GF}(3)$-subspaces of $\mathrm{GF}(9)^2$, exactly $30$ direction sets
+carry four subspaces each, and those four partition the $32$ vectors of the
+direction set --- and certified non-Desarguesian by an explicit Desargues failure;
+likewise its dual. The Hughes plane was built last and gated on four checks:
+design, Desargues failure, and little-Desargues failure on \emph{both} the plane
+and its dual ($91/91$ each, with the controls sharp: $90/91$ for Hall, $0/91$ for
+$\mathrm{PG}(2,9)$). The gate has teeth: a naive candidate passed design and
+Desargues and was caught at the third gate as the dual Hall plane. Since there are
+exactly four planes of order $9$, the fourth pairwise non-isomorphic one is
+Hughes however it is built. A useful side identity, without which $n = 91$ would
+not have been computable: $t\op(x\op v) = x$ has, for each $(t,x)$, exactly one
+solution $v$, so $(\mathrm{N})$ reduces to a per-column histogram comparison and
+costs $O(n^2)$, not $O(n^3)$.
+\end{remark*}
+
+\subsection{The $q = 2$ branch is decided}\label{sec:q2}
+
+\begin{theorem}[$(\mathrm{N}\text{-}\mathrm{Prop})$ at $q = 2$]\label{thm:q2branch}
+\PROVED{R9-H}\;\MV{problems\slash etp677\slash R9H\_exhaust\_q2.c}
+No branch object of order $q = 2$ satisfies $(\mathrm{N})$. The decision is an
+exhaustion: with the line set fixed to the standard cyclic Fano plane (legitimate,
+since the decision is relabeling-invariant), the assignment $t\mapsto\ell_t$ ranges
+over $5040$ bijections falling into $46$ orbits under
+$\Aut(\text{Fano})$ ($|\Aut| = 168$; Burnside count and direct count agree); per
+orbit all $\nu$ up to $\mathrm{Stab}$, giving $151\,626$ orbit representatives
+$(A,\nu)$; and per $(A,\nu)$ all $3888$ tables. That is $589\,521\,888$
+representative tables, covering all $5040\times5040\times3888 = 98\,761\,420\,800$
+labelled branch objects. \emph{Zero satisfy $(\mathrm{N})$.}
+\end{theorem}
+
+The verification chain is worth stating, because a $6\cdot10^8$-object exhaustion
+is exactly the kind of claim this paper's conventions exist for: a positive
+control ($x\op y = 2y-x$, which satisfies $(\mathrm{N})$) and a negative control
+(the witness of Theorem~\ref{thm:nconc}) inside the binary on every run; an
+independent Python recomputation of all the orbit arithmetic; an exact match of
+the full agreement-cell distribution against the previous round's independently
+verified machinery on a stabilizer-free $(A,\nu)$; reproduction of the earlier
+cyclic-class-only result ($726$ representatives, $2\,822\,688$ tables, $0$
+satisfiers) as one of the $46$ orbits.
+Runtime $46$ s in a single C process --- an accepted deviation from the campaign's
+``no C'' practice, authorized for this round, and one that turned a $70$-minute
+Python estimate (itself optimistic by $\approx7\times$) into a minute.
+
+\begin{theorem}[exact rigidity at $q = 2$]\label{thm:q2rigid}
+\PROVED{R9-H, exhaustive}\;\MV{problems\slash etp677\slash R9H\_verify\_witnesses.py}
+Over the whole $q = 2$ branch, with all quantities conjugation-invariant and all
+extremal witnesses re-verified from raw tables by brute-force triple loops:
+\begin{center}
+\begin{tabular}{lccl}
+\toprule
+quantity & $(\mathrm{N})$ needs & branch max & attained by\\
+\midrule
+agreeing cells $\#\{(t,v):E = N\}$ & $49$ & $\mathbf{36}$ & $1$ rep.\ table\\
+perfect rows of $E-N$ & $7$ & $\mathbf{3} = q+1$ & $25$ rep.\ tables\\
+perfect columns & $7$ & $\mathbf{3} = q+1$ & $1$ rep.\ table\\
+joint (rows, columns) & $(7,7)$ & $\mathbf{(3,1)}$ & --- \\
+block cells at $q+1$ & $7$ & $\mathbf{7}$ & $8$ rep.\ tables\\
+$\nu$-diagonal sum & $21$ & $\mathbf{27}$ & $21$ attained $1447\times$\\
+\bottomrule
+\end{tabular}
+\end{center}
+In particular $(\mathrm{N})$ fails in at least $13 = 2n-1$ cells on every
+$q = 2$ branch object. A by-product of the same exhaustion: the number of tables
+compatible with a given $(A,\nu)$ is exactly $3888$ for every one of the
+$5040\times5040$ pairs; a structural explanation is open.
+\end{theorem}
+
+\begin{remark*}[every local relaxation of $(\mathrm{N})$ is satisfiable]
+The two surviving local relaxations both die here. $(\mathrm{N}\text{-blocks})$
+--- all $n$ block cells at $q+1$ simultaneously --- is satisfied by exactly $8$
+representative tables spanning $5$ assignment orbits, against a null-model
+prediction of $\approx1.8$: no enrichment, no suppression, and the previous
+round's annealing plateau at $3/7$ was pure search failure.
+$(\mathrm{N}\text{-sum})$ --- the $\nu$-diagonal mass --- reaches $27$ against the
+required $21$, and was already refuted at $q = 3$. The tension that remains is
+real but global: the $8$ block-perfect tables agree in only $14$--$29$ cells,
+while the $36$-cell maximum-agreement table gets only $3$ of $7$ block cells
+right. \emph{Only the full $49$-cell system is unsatisfiable.} Nor is the row
+structure explained by incidence geometry: among the $20$ distinct
+$3$-perfect-row witnesses the perfect triple is collinear in $4$, has concurrent
+assigned lines in $5$ and collinear $\nu$-image in $5$ --- no hypothesis is
+universal.
+\end{remark*}
+
+\begin{conjecture}[the row cap]\label{conj:rowcap}
+On the extremal branch at any $q$, at most $q+1$ rows of $E$ --- dually at most
+$q+1$ columns --- coincide with the corresponding rows of $N$. It is a theorem at
+$q = 2$ (Theorem~\ref{thm:q2rigid}), and since $q+1 < n$ it implies
+Conjecture~\ref{conj:NProp} at every order.
+\end{conjecture}
+
+\subsection{The trace sub-branch, and the cap at $q = 2$}\label{sec:trace}
+
+By Proposition~\ref{prop:deficit}, $\delta\equiv0$ is necessary for
+$(\mathrm{N})$. So Conjecture~\ref{conj:NProp} is \emph{equivalent} to its
+restriction to the $\delta\equiv0$ sub-branch, which we call the \emph{trace}
+sub-branch; and the restriction is doubly free, because any branch structure
+occurring inside an actual finite $E677$ magma has $\delta\equiv0$ outright ---
+that is $\sum_xN(x\op v,x) = n$ at $x := v$.
+
+\begin{theorem}[the trace cap at $q = 2$ is exactly $q$]\label{thm:tracecap}
+\PROVED{R9-I (upper bound), R9-K (attainment; authorized enumeration)}\;%
+\MV{problems\slash etp677\slash R9K\_trace\_q2.c, R9K\_witness\_verify.py}
+On the $\delta\equiv0$ sub-branch at $q = 2$ the maximum number of perfect rows is
+exactly $2 = q$. The upper bound is immediate from
+Theorem~\ref{thm:q2rigid}: all $25$ attainers of $3$ perfect rows are listed by
+the exhaustion, $\delta\equiv0$ is invariant under the relabeling equivalence, and
+all $25$ have $\delta\not\equiv0$. Attainment is a second exhaustion: of the
+$589\,521\,888$ representative tables, $17\,195$ have $\delta\equiv0$, and among
+them exactly one --- $\mathrm{asg} = 4653120$, $\nu = 4362015$, perfect rows
+$\{2,3\}$ --- attains $2$. On that sub-branch the maximum number of perfect
+columns is also $2$, and the maximum number of agreeing cells is $35$.
+\end{theorem}
+
+\begin{corollary}[the disjointness route to the cap is dead]\label{cor:targetlemma}
+\PROVED{R9-K, theorem-grade witness}
+Put $C_r := \Fix(L_rR_{\nu(r)})$. The proposed ``own-fibre disjointness'' lemma
+--- that the $C_r$ over perfect rows $r$ are pairwise disjoint --- is false, even
+under $\delta\equiv0$ and $b\equiv1$: on the unique witness of
+Theorem~\ref{thm:tracecap}, $C_2 = \{1,4,5\}$, $C_3 = \{0,3,5\}$ and
+$C_2\cap C_3 = \{5\}$. The weaker $|C_r\cap C_s|\le1$ is by itself insufficient at
+$q = 2$, since $3\cdot3-3 = 6\le7$. That witness is now the mandatory test object
+for every proposed coupling.
+\end{corollary}
+
+\begin{remark*}[two further corrections settled by the same enumeration]
+$\delta\equiv0$ does \emph{not} force $b\equiv1$: the $b_{\max}$ histogram on the
+trace sub-branch at $q = 2$ is $\{1:10\,634,\ 2:6561\}$. The earlier observation
+``all known $\delta\equiv0$ objects have $b\equiv1$'' was an artefact of the
+dump set. And the normalization ``\emph{WLOG} $\nu = \mathrm{id}$, which affects
+neither perfectness nor $\delta$ nor $E$ nor $N$'' --- which opened three
+machine-produced analyses of this branch --- is \textbf{false}: column relabeling
+gives $\Xi' = \nu\circ\Xi$ but $N'(t,\cdot) = N(\nu^{-1}(t),\cdot)$, and $519$ of
+$530$ tested tables change their triple (perfect rows, perfect columns,
+$\delta\equiv0$), including the trace witness, whose $(1,2,\text{true})$ becomes
+$(0,0,\text{false})$. No statement about this branch may be quoted in
+$\nu = \mathrm{id}$ form.
+\end{remark*}
+
+\begin{conjecture}[the trace row cap]\label{conj:tracerowcap}
+On the trace sub-branch at any $q$, at most $q$ rows of $E$ are perfect. It is a
+theorem, and tight, at $q = 2$ (Theorem~\ref{thm:tracecap}). \emph{Any} bound
+$<n$ here implies Conjecture~\ref{conj:NProp} at that order; the extra hypothesis
+$q\,b\equiv m$ is exact, global and free, so this conjecture is strictly easier
+than Conjecture~\ref{conj:rowcap}, which stays open as the full-branch statement.
+\end{conjecture}
+
+\begin{proposition}[marginal counting is closed for the row cap as
+well]\label{prop:marginalvacuity}
+\PROVED{R9-J}
+The tensor/Gale--Ryser capacity system for the perfect-row demand is \emph{tight}:
+for any set $U$ of rows the exact capacity is
+$n|U| + \sum_{v}\delta(v) = n|U|$ under $\delta\equiv0$, which is precisely the
+all-perfect demand. So no marginal count can bound the number of perfect rows, at
+any $q$ --- Proposition~\ref{prop:B3} extends once more, now from $(\mathrm{N})$
+itself to every row-cap statement about it.
+\end{proposition}
+
+\begin{lemma}[three general-$q$ facts about the branch]\label{lem:branchfacts}
+\PROVED{R9-J, R9-L; all in general-$\nu$ form}
+On any branch object, for every $v$ and every column $c$:
+\begin{enumerate}
+\item[(a)] $\delta(v)\le0\Rightarrow b(v)\le q$, and in general
+$\sum_v\delta(v)\ge b(q+1)-n$;
+\item[(b)] the number of covered pairs at $v$ is $e_v = b(v)(n-1)/2$;
+\item[(c)] \emph{(the pencil lemma)} for every $r\in\ell_c$,
+$\Xi_r(\nu(c)) = g(c)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(c) is one line and is the one used below: $r\in\ell_c$ gives $r\op c = \nu(c)$,
+so $r\backslash\nu(c) = c$ and
+$\Xi_r(\nu(c)) = \nu(c)\backslash(r\backslash\nu(c)) = \nu(c)\backslash c = g(c)$.
+For (a) and (b) see \cite{R9J}.
+\end{proof}
+
+\subsection{$q = 3$: a refuted witness, and a family that is exhausted}\label{sec:q3}
+
+\begin{theorem}[translation invariance is all-or-nothing]\label{thm:transallnothing}
+\PROVED{R9-L}
+Let $x\op y = x+h(y-x)$ on $\Z_n$ with $h$ a permutation, $k := h^{-1}$. Then, with
+$u = x-t$,
+\[
+  \Xi_t(x) = t+\psi(u),\quad \psi(u) = u+k\bigl(k(u)-u\bigr),\qquad
+  E(t,v) = F(v-t),\quad N(t,v) = G(v-t),
+\]
+where $F$ is the $\psi$-histogram and $G$ the displacement histogram of $h$.
+Consequently the perfect-row count of a translation-invariant object is $0$ or
+$n$, never strictly between, and $(\mathrm{N})$ holds iff $F = G$. Moreover
+$\nu(t) = t+c^{*}$ where $c^{*}$ is the $(q+1)$-fold displacement value,
+$\ell_t = t-S$ with $S = \{d : h(d)-d = c^{*}\}$, and the blocks form a plane iff
+$S$ is a planar difference set.
+\end{theorem}
+
+\begin{theorem}[the translation-invariant family at $q = 3$ is
+exhausted]\label{thm:transq3}
+\COMP{exhaustive over the family}\;\MV{problems\slash etp677\slash R9L\_translation.c}
+There are exactly $1\,070\,784$ translation-invariant branch objects of order
+$13$ --- $S$ over all $52$ planar difference $4$-sets of $\Z_{13}$, $c^{*}$ over
+all $13$ values, $h$ off $S$ over every bijection with pairwise-distinct
+displacements, by complete backtracking --- and \emph{not one of them has a single
+perfect row}. A fortiori none satisfies $(\mathrm{N})$, and none attains $q = 3$
+or $q+1 = 4$ perfect rows.
+\end{theorem}
+
+\begin{remark*}[a claimed counterexample to
+$(\mathrm{N}\text{-}\mathrm{Prop})$, refuted]
+A machine-produced order-$13$ object was reported as having all $13$ rows perfect,
+which would have refuted Conjecture~\ref{conj:NProp} at $q = 3$ and rerouted the
+campaign. The object is $h = [0,11,2,7,12,5,6,3,9,8,4,1,10]$,
+$a\op t = a+h(t-a)$ on $\Z_{13}$. It is a \emph{genuine} $\delta\equiv0$ branch
+object: rows are permutations, every column has profile $\{4$ once, $1\times9$,
+$0\times3\}$, the blocks are the $13$ lines of the cyclic $\mathrm{PG}(2,3)$ with
+every pair once, and $\delta\equiv0$ by both routes ($b\equiv1$, $m\equiv3$). But
+it has \emph{zero} perfect rows. Row $0$ has
+$N = (4,1,0,1,1,0,0,1,1,1,1,1,1)$ against
+$E = (4,0,2,0,1,2,2,0,0,0,1,0,1)$; the three missed values $D_0 = \{2,5,6\}$ each
+carry $E = 2$. Hand witness at the cell $(t,v) = (0,2)$, where $N = 0$:
+$2\op2 = 2$ and $0\op2 = 2$, and $7\op2 = 3$ and $0\op3 = 7$, so
+$\Fix(L_0R_2) = \{2,7\}$. By Theorem~\ref{thm:transallnothing} all $13$ rows fail
+in the same pattern. \emph{Conjecture~\ref{conj:NProp} is not refuted at $q = 3$.}
+The claim's derivation computed the histogram of the table column --- which is
+$N(t,\cdot)$ --- called it $E$, and concluded $E = N$, never touching
+$\Xi_t(x) = x\backslash(t\backslash x)$: a tautology dressed as a verification,
+which passed its own self-audit because the audit re-ran the same conflated
+quantity.
+\end{remark*}
+
+\begin{remark*}[the collinear-$4$-set route is reopened, not closed]
+Three obstructions were proposed against the natural $q = 3$ construction on a
+collinear $4$-set of perfect rows. The first --- ``Singer-orbit rigidity forces the
+perfect count to be $0$ or $13$'' --- is \textbf{real}, is
+Theorem~\ref{thm:transallnothing}, and is strengthened by
+Theorem~\ref{thm:transq3} to ``$0$, exhaustively''. The second is
+\textbf{ansatz-specific}: it refutes one particular natural map (image line
+depending only on the parallel class) and says nothing about the class, so it is a
+dead ansatz, not a lemma. The third is \textbf{vacuous}: by
+Lemma~\ref{lem:branchfacts}(c) the positional clause it exploits holds
+automatically at a joining column for every row of its pencil, perfect or not, and
+the ``contradiction'' it derives unwinds to $\nu(c)\op g(c) = c$, the definition of
+$g$. So the collinear-$4$-set route is reopened; the only clause with content
+there is $g(c)\notin D_r$. The $q = 3$ search space is now
+\emph{non-translation-invariant only}.
+\end{remark*}
+
+\subsection{$\varphi$-fusion: three lemmas and a closure
+theorem}\label{sec:phifusion}
+
+Everything up to here says what the branch's \emph{first-order design shadow}
+cannot do. What is left is the coupling between the array $\Xi$ and the
+multiplication table itself.
+
+\begin{lemma}[$\varphi$-fusion]\label{lem:phifusion}
+\PROVED{R9-J}
+In any left quasigroup, $\varphi_t : x\mapsto x\op\Xi_t(x)$ equals $\Lambda_t$,
+hence is a bijection, for every $t$.
+\end{lemma}
+
+\begin{proof}
+$x\op\Xi_t(x) = L_x\Lambda_x\Lambda_t(x) = \Lambda_t(x)$.
+\end{proof}
+
+The lemma is trivial, and that is the point: it is the shape of $\mathrm{KEY}$
+\emph{without} $\mathrm{KEY}$, available on every branch object, and it is the
+only certified handle that ties the abstract array to a realizing table. The
+following three consequences are the content.
+
+\begin{theorem}[three realizability lemmas]\label{thm:R10lemmas}
+\PROVED{R10-A, all $q$}\;\MV{problems\slash etp677\slash R10A\_tcount.py}
+On any branch object:
+\begin{enumerate}
+\item[(a)] \emph{(localization)} for $x\in\ell_v$: $\Xi_t(x) = v$ iff
+$x = t\op\nu(v)$. In particular $|\Xi_t^{-1}(v)\cap\ell_v|\le1$: the fibre meets
+the block at most once.
+\item[(b)] \emph{(the $T$-count)} with $T_v := \{t : \Xi_t(x) = v$ for some
+$x\in\ell_v\}$ one has $T_v = R_{\nu(v)}^{-1}(\ell_v)$ and hence \emph{exactly}
+\[
+  |T_v| \;=\; (q+1) + q\cdot\bigl[\nu^2(v)\in\ell_v\bigr]
+          - \bigl|\ell_v\cap D_{\nu(v)}\bigr| .
+\]
+\item[(c)] \emph{(a design-level realizability gate)} $g(c) = \nu^{-1}(c)$ iff
+$\nu(c)\in\ell_{\nu^{-1}(c)}$. So $g$ is \emph{not} free design data: on
+$A(\nu) := \{c : \nu(c)\in\ell_{\nu^{-1}(c)}\}$ it is forced to $\nu^{-1}$, and off
+$A(\nu)$ it is forbidden to equal $\nu^{-1}$.
+\end{enumerate}
+All three have $0$ violations on all $3888$ branch tables of the test design of
+\S\ref{sec:landscape10} (which carry between $23$ and $35$ block hits each).
+\end{theorem}
+
+\begin{proof}
+(a) $x\in\ell_v$ gives $x\op v = \nu(v)$, so by Lemma~\ref{lem:phifusion}
+$\Lambda_t(x) = x\op\Xi_t(x) = \nu(v)$, i.e.\ $x = t\op\nu(v)$. Conversely if
+$x := t\op\nu(v)\in\ell_v$ then $\Lambda_t(x) = \nu(v)$ and
+$\Xi_t(x) = \Lambda_x(\nu(v)) = x\backslash\nu(v) = v$.
+(b) By (a), $t\in T_v$ iff $t\op\nu(v)\in\ell_v$. The fibres of $R_{\nu(v)}$ have
+size $q+1$ over $\nu^2(v)$, size $0$ over $D_{\nu(v)}$ and size $1$ elsewhere, and
+$\nu^2(v)\notin D_{\nu(v)}$.
+(c) $\nu(c)\op g(c) = c$ by definition of $g$. If $\nu(c)\in\ell_{g(c)}$ then the
+entry at $(\nu(c),g(c))$ is the block value $\nu(g(c))$, so $\nu(g(c)) = c$.
+Conversely if $g(c) = \nu^{-1}(c)$ then that entry equals $\nu(g(c))$, and the
+value $\nu(g(c))$ occurs in column $g(c)$ exactly on $\ell_{g(c)}$.
+\end{proof}
+
+The force of (b) is that it is a \emph{cross-row} constraint: when the row
+$\nu(v)$ is perfect its missing set $D_{\nu(v)}$ is read off the array, so
+$|T_v|$ is pinned exactly. No first-order statement about single rows can see
+this.
+
+\begin{theorem}[the closure rule, and what it determines on the test
+design]\label{thm:closure}
+\PROVED{R10-A, for the rule and the non-realizability certificate}\;\COMP{the
+$49/49$ determination on the $3888$ branch tables of the $q = 2$ test design
+only}\;\MV{problems\slash etp677\slash R10A\_closure.py}
+Read Lemma~\ref{lem:phifusion} as a table rule, with $v := \Xi_t(x)$:
+\[
+  \text{forward: } x\op v = u \text{ known} \implies t\op u = x,
+  \qquad
+  \text{backward: } \Lambda_t(x) = c \text{ known} \implies x\op v = c .
+\]
+Seed with the design entries $a\op c = \nu(c)$ for $a\in\ell_c$ --- the only
+products known a priori, so the first forward round is exactly
+Theorem~\ref{thm:R10lemmas}(a) --- and propagate to a fixpoint together with
+``rows are permutations'' and, for a perfect row $c$, ``column $c$ carries exactly
+$M\setminus(\{\nu(c)\}\cup D_c)$ off the block''. Every realization satisfies the
+closure, so \emph{a closure conflict certifies that the array is not realizable}.
+On all $3888$ branch tables of the $q = 2$ test design of
+\S\ref{sec:landscape10} --- an order-$7$ design, so $49$ cells --- the closure is
+consistent and determines $49/49$ cells: there, the $\Xi$-array together with the
+design \textbf{determines the multiplication table outright}.
+[v8.1: the closure \emph{rule} and the non-realizability certificate above are
+general; the determination is a computation on that one design and those $3888$
+tables. v7.2 and v8 stated the determination without its scope, in the theorem's
+title and in the summaries. No proof of uniqueness for an arbitrary branch design
+or arbitrary $q$ is supplied, and none is claimed.]
+\end{theorem}
+
+\subsection{The abstract landscape on realizable data}\label{sec:landscape10}
+
+The test design is that of the unique $\delta\equiv0$ two-perfect witness of
+Theorem~\ref{thm:tracecap}, where ground truth is known exhaustively: of its
+$3888$ branch tables the (perfect rows, $\delta\equiv0$) histogram is
+$\{(0,\mathrm F):3826,\ (0,\mathrm T):6,\ (1,\mathrm F):55,\ (2,\mathrm T):1\}$,
+so the real maximum is $2 = q$, attained only by the $\delta\equiv0$ witness.
+Against that ground truth one can ask what the \emph{abstract} system --- design,
+forced skeleton, column injectivity, row multisets, $\delta\equiv0$, missed-by
+$\le q$ --- permits, and how much each fusion ingredient buys.
+
+\begin{theorem}[the abstract cap]\label{thm:abscap}
+\COMP{exhaustive over every subset $P\subseteq M$, \textsc{instance}: the design
+above}\;\MV{problems\slash etp677\slash R10A\_abstract.c, R10A\_decide.py}
+For the maximum size of a set $P$ of simultaneously perfect rows admitted by the
+abstract system on this \emph{realizable} design:
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+system & max feasible $|P|$\\
+\midrule
+abstract system alone & $7 = n$ --- even $(\mathrm{N})$ itself\\
+\quad $+$ block transversality (Thm.~\ref{thm:R10lemmas}(a)) & $7$\\
+\quad $+$ the partial table it forces & $7$\\
+\quad $+$ the $T$-count (Thm.~\ref{thm:R10lemmas}(b)) & $7$\\
+the $\varphi$-fusion closure (Thm.~\ref{thm:closure}) alone & $6$\\
+\textbf{closure $+$ $T$-count} & $\mathbf{3} = q+1$\\
+\midrule
+reality (the $\delta\equiv0$ sub-branch) & $\mathbf{2} = q$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Under the fusion all $35$ four-element subsets are infeasible and $18$ of the $35$
+three-element subsets survive. The two filters are complementary and neither works
+alone: the closure is evaded by arrays with \emph{zero} block hits (its surviving
+$6$-set derives only the $21$ seed cells and nothing more), and the $T$-count
+alone is a pure count; fused, the $T$-count forces at least $21$ block hits here
+and every block hit feeds the closure.
+\end{theorem}
+
+\begin{remark*}[cross-validation, and where the residual gap lives]
+On a fixed design there are exactly $3888$ branch tables
+(Theorem~\ref{thm:q2rigid}), so realizability of an array is decided exactly by
+membership among their $\Xi$-arrays. Those $3888$ arrays are \emph{pairwise
+distinct} --- an independent confirmation of the closure's $49/49$ reconstruction
+--- and none of the $18$ surviving $|P| = 3$ arrays is among them. So every array
+the fused system still admits is a genuine phantom, and the residual gap is a gap
+in the \emph{first-order fragment}, not in $\varphi$-fusion itself. Two further
+controls: adding the closure's column knowledge to the $T$-count does not reduce
+the cap further; and on an \emph{unrealizable} design the fused filter correctly
+declares every subset infeasible, the $T$-count detecting the unrealizability
+globally and independently of Theorem~\ref{thm:R10lemmas}(c).
+
+\textbf{Net position.} The fused first-order $\varphi$-fusion content reaches
+exactly the real \emph{full-branch} cap $q+1$ of Theorem~\ref{thm:q2rigid}; the
+residual gap to Conjecture~\ref{conj:tracerowcap} is exactly $q+1\to q$, one row.
+Since the fused system already equals the full-branch cap, whatever closes that
+row must be something that separates $\delta\equiv0$ from the full branch --- the
+natural candidate being the interaction of the exact $T$-count with
+$\delta(v) = q\,b(v)-m(v) = 0$, both being statements about $b$ and the $D$-sets.
+\end{remark*}
+
+\subsection{A retraction: the abstract landscape of the preceding
+round}\label{sec:R9Kretraction}
+
+The paper's convention is that retractions are carried out in the text rather than
+by deletion (\S\ref{sec:retraction}). This one is small, recent, and is retained
+because it is the cleanest worked example of the gate that
+Theorem~\ref{thm:R10lemmas}(c) installs.
+
+\textbf{What was claimed.} The round preceding R10-A ran the same feasibility map
+on a particular abstract instance --- a $7\times7$ array with
+$\nu = \mathrm{id}$ and $g = \mathrm{id}$, produced by a machine dispatch and
+verified against every abstractly expressible certified fact --- and reported a
+\emph{fine structure}: all $35$ triples feasible; $|P| = 4$ feasible for $34$ of
+the $35$ four-sets, with a unique obstruction $\{1,2,5,6\}$ (the complement of a
+line) and a hand proof; exactly the three supersets of that bad $4$-set infeasible
+at $|P| = 5$; three feasible $6$-sets; and $|P| = 7$ infeasible, so
+$\max|P| = 6 = n-1$.
+
+\textbf{Why it is retracted.} That instance violates
+Theorem~\ref{thm:R10lemmas}(c) at $4$ of its $7$ columns. With
+$\nu = \mathrm{id}$ and $g = \mathrm{id}$ the gate reads $c\in\ell_c$ for
+\emph{every} $c$; but an assignment $t\mapsto\ell_t$ has at most $q+1 = 3$ such
+absolute points, and this one has exactly $3$. \emph{No branch object whatsoever
+carries that design data.} All $90$ of the instance's phantom witnesses are killed
+outright by the closure of Theorem~\ref{thm:closure}. The fine structure is
+therefore an artefact of unrealizable design data, and is retracted as a statement
+about the abstract system. The numbers were correct; the instance was not a legal
+input.
+
+\textbf{What survives, and is strengthened.} The round's \emph{existence} claim
+and its fork verdict --- that the certified facts about the branch together with
+$\delta\equiv0$ can never cap the number of perfect rows, so every row-cap proof
+must use realizability --- are unaffected. Indeed they are now established on
+\emph{realizable} data, where Theorem~\ref{thm:abscap} shows the bare abstract
+system admits $|P| = n$: even $(\mathrm{N})$ itself is abstractly feasible. That
+is a strictly stronger demonstration than the retracted one.
+
+\textbf{The discipline that follows.} Every abstract or phantom instance must be
+gated on Theorem~\ref{thm:R10lemmas}(c) \emph{before} any search; an instance that
+fails it certifies nothing. This is the design-level analogue of the benchmark
+filter of \S\ref{sec:benchmarks} and \S\ref{sec:bench9} at the identity level ---
+and, as with those, the campaign only learned it by paying for it. It should be
+read together with the correction in \S\ref{sec:A7}: there a phantom was tested
+against too small a checklist, here a phantom was accepted with an illegal
+design. Both failures are of the same species --- \emph{a certificate is only as
+good as the admissibility of the object certified} --- and both were produced by
+the campaign itself, not by any external contributor.
+
+\subsection{Three failure modes of machine-produced
+mathematics}\label{sec:failmodes}
+
+Rounds R9-J to R9-L dispatched sub-questions of the row-cap problem to a fourth
+machine contributor (Qwen3.8-Max, see the disclosure footnote). The results are
+worth recording as data about the method, in the same spirit as
+\S\ref{sec:benchmarks}, because the three failures are of distinct kinds and only
+one of them is the kind usually anticipated.
+
+\begin{enumerate}
+\item \textbf{The silent false ``WLOG''.} All three tabs of one dispatch opened
+with ``WLOG $\nu = \mathrm{id}$, which affects neither perfectness nor $\delta$
+nor $E$ nor $N$''. It is false, as recorded in \S\ref{sec:trace}, and it was
+stated without argument in a position where a reader skims. Every downstream claim
+happened to survive re-derivation in general-$\nu$ form, so the error was
+harmless; that is luck, not method.
+\item \textbf{The confident false theorem.} A later dispatch returned theorems
+about the column profile of $E$ that fail on \emph{all} $10$ stock
+$\delta\equiv0$, $b\equiv1$ objects, having transposed the true vertical profile
+into $E$-columns and conflated the column-miss count $m(v)$ with the number of
+$E$-zero rows. They passed the model's own self-audit.
+\item \textbf{The circular verification.} The refuted $q = 3$ witness of
+\S\ref{sec:q3} is the sharpest case: the \emph{construction} is genuine, new and
+correct --- a real $\delta\equiv0$ branch object at $q = 3$ --- and only the
+verification of the one property actually asked for is circular, computing $N$ and
+calling it $E$.
+\end{enumerate}
+
+The operational conclusion the campaign drew, and applied to every later dispatch:
+construction and witness-hunting requests are reliable; theorem-claiming is not,
+without immediate filtering against the benchmark objects; and the dispatcher must
+supply the definition of the verification quantity in operational form and never
+accept the model's own property check. \S\ref{sec:R9Kretraction} records that the
+same species of error, in the design-admissibility register, was committed by the
+campaign's own orchestration --- so this is not a taxonomy of one contributor's
+weaknesses but of the failure surface of the method as a whole.
+
+\subsection{Status of the branch}\label{sec:branchstatus}
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.16\textwidth}p{0.44\textwidth}}
+\toprule
+statement & status & where\\
+\midrule
+design layer decides $\varrho\ne\nabla$ & closed (phantom) & Theorem~\ref{thm:A7},
+Corollary~\ref{cor:designdead}\\
+$\Psi_1 = n$ as a route to $(\mathrm{Prop}_{\exists})$ & closed (phantoms) &
+Theorem~\ref{thm:psi1dead}\\
+per-cell concentration $\max E<\max N$ & closed (refuted) &
+Theorem~\ref{thm:nconc}\\
+first and second moments of $E$, $N$ & closed (proved) &
+Theorem~\ref{thm:moments}\\
+marginal counting for any row cap & closed (proved tight) &
+Proposition~\ref{prop:marginalvacuity}\\
+row-local arguments for any row cap & closed (phantoms) & \cite{R9I}: the row-local
+packages admit $39/27/11$ phantoms\\
+$(\mathrm{N}\text{-}\mathrm{Prop})$ at $q = 2$ & \textbf{theorem} &
+Theorem~\ref{thm:q2branch}\\
+$(\mathrm{N}\text{-}\mathrm{Prop})$ at $q = 3$ & open; translation-invariant family
+dead & Theorems~\ref{thm:transallnothing}, \ref{thm:transq3}\\
+$(\mathrm{N}\text{-}\mathrm{Prop})$ at $q\ge4$ & open & tested only, at $q = 9$,
+and see Proposition~\ref{prop:null}\\
+the row cap, the trace row cap & open, tight at $q = 2$ &
+Conjectures~\ref{conj:rowcap}, \ref{conj:tracerowcap}\\
+$\varphi$-fusion, first-order fragment & reaches $q+1$; gap one row &
+Theorems~\ref{thm:R10lemmas}--\ref{thm:abscap}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark*}[what this section is, and is not]
+It is a report on the \emph{refutation side} of $(\mathrm{Prop}_{\exists})$: an
+attempt to prove that the extremal branch is empty for $E677$ magmas. It succeeded
+at $q = 2$, produced three general-$q$ lemmas and a closure theorem that reduce
+the abstract obstruction to a single row, and closed six sub-routes with explicit
+objects. It did \emph{not} establish $(\mathrm{Prop}_{\exists})$ at any $q\ge3$,
+and even a complete proof of Conjecture~\ref{conj:NProp} would establish only
+$(\mathrm{Prop}_{\exists})$, not $(\mathrm{Prop})$ --- the completeness-to-connectivity
+gap of \S\ref{sec:skeleton} remains exactly as wide as it was. Nothing here bears
+on Problem~\ref{prob:main}.
+\end{remark*}
+
 \section{Open problems and the state of the routes}\label{sec:open}
 
 \subsection{The main problem}
@@ -6240,7 +7454,34 @@ a resolvable pairwise covering design of $M$ by its $n$ column kernels proves
 $\varrho=\nabla$, killing both readings; ruling the design out establishes only
 $(\mathrm{Prop}_{\exists})$, and closing the gap from completeness to
 connectivity is part of the problem. Note both readings are existential over
-finite structure, so no ATP applies.
+finite structure, so no ATP applies. [v8:] the design-theoretic reading is now
+\emph{closed} --- Corollary~\ref{cor:designdead} --- and \S\ref{sec:round10}
+replaces it with the cellwise condition $(\mathrm{N})$ and
+Conjecture~\ref{conj:NProp}. The completeness-to-connectivity gap is untouched by
+all of that, and is now the larger of the two remaining obstacles.
+\end{problem}
+
+\begin{problem}[$(\mathrm{N}\text{-}\mathrm{Prop})$ and the two row
+caps]\label{prob:NProp}
+Does $(\mathrm{N})$ --- $N(t,v) = |\Fix(L_tR_v)|$ for all $t,v$, which every
+finite $E677$ magma satisfies --- imply $\varrho\ne\nabla$
+(Conjecture~\ref{conj:NProp})? It is a theorem at $q = 2$
+(Theorem~\ref{thm:q2branch}) and open at every $q\ge3$; a proof would give
+$(\mathrm{Prop}_{\exists})$, and only that. The two structured routes to it are
+Conjectures~\ref{conj:rowcap} and \ref{conj:tracerowcap}, both tight at $q = 2$;
+by Theorem~\ref{thm:abscap} the first-order content of $\varphi$-fusion already
+reaches $q+1$, so what is missing is exactly one row, and it must come from
+something that separates the trace sub-branch from the full branch. Warning, from
+Proposition~\ref{prop:null}: on this problem, failed searches carry no evidential
+weight at all, and no plateau may be reported as an obstruction
+(Proposition~\ref{prop:searcherblind}).
+\end{problem}
+
+\begin{problem}[why $3888$?]\label{prob:3888}
+On the $q = 2$ extremal branch the number of multiplication tables compatible with
+a given line assignment and block-value map is exactly $3888$, for every one of
+the $5040\times5040$ pairs (Theorem~\ref{thm:q2rigid}). No structural explanation
+is known, and none is known for the analogous count at $q\ge3$.
 \end{problem}
 
 \begin{problem}[$(\mathrm{B})$, now without a proof route]\label{prob:B}
@@ -6324,7 +7565,14 @@ the state map; a marginal count on $N$; a local
 amplification of the row-code distance bound; a transport-tree or pair-rotation pigeonhole; a
 parity, sign, $2$-adic or Sylow-$2$ argument; an off-diagonal constraint
 $N(t,v)+N(v,t)\ge k$; a uniform bound $e(O)\le|O||O^c|$ over a size class;
-or a reduction through $(\mathrm{Q})$, which is false. Each of those is closed by a proof or
+or a reduction through $(\mathrm{Q})$, which is false. Nor may an attack on the
+\emph{refutation} side of $(\mathrm{Prop})$ be: a design-theoretic argument on the
+extremal branch (Corollary~\ref{cor:designdead}); a proof of $\Psi_1 = n$
+(Theorem~\ref{thm:psi1dead}); a per-cell concentration bound, a moment count, a
+marginal count or a row-local argument against $(\mathrm{N})$
+(Theorems~\ref{thm:nconc}, \ref{thm:moments}, Proposition~\ref{prop:marginalvacuity});
+or, at $q = 3$, a translation-invariant construction (Theorem~\ref{thm:transq3}). Each
+of those is closed by a proof or
 by an explicit model. Separately, and \emph{on weaker grounds}, an equational or
 quasi-equational derivation from $E677$ plus left cancellation resisted every saturation
 experiment we ran, but is not proved impossible. The experiments therefore \emph{suggest}
@@ -6336,7 +7584,9 @@ analogue of the $\{1,3\}$ collision'' --- is now known to be circular
 its place as the campaign's best-shaped unrefuted target. (Round 9 left
 Corollary~\ref{cor:psicrit} untouched --- $\Psi_1 = \tr N$ holds in all three
 decisive objects --- while refuting the $(\mathrm{T})$ programme that had
-overtaken it; see \S\ref{sec:retraction}.)
+overtaken it; see \S\ref{sec:retraction}. Round 10 retired the \emph{sub}-target
+``prove $\Psi_1 = n$'' (Theorem~\ref{thm:psi1dead}) and left the criterion itself
+untouched as well.)
 
 \begin{remark*}[superseded in Round 6]
 The record ``$176$ is the smallest known non-right-cancellative order'' stood only until
@@ -6556,6 +7806,70 @@ extension over a Latin order-$55$ base which nevertheless refutes $(\mathrm{T})$
 while satisfying $(\mathrm{A})$ and $|F_{ab}|\equiv|C_x|q$ --- together with the
 weighted-statistic identities of Definition~\ref{def:strata}(iii) on
 $M_{77}^{\mathrm{D}}$\\
+\midrule
+\multicolumn{2}{p{0.94\textwidth}}{\emph{Section~\ref{sec:round10} (the extremal
+branch). All of these run on left quasigroups, not on $E677$ magmas.}}\\
+\midrule
+\texttt{problems\slash etp677\slash R9C\_design.py},\newline
+\texttt{R9C\_verify.py}, \texttt{R9C\_gap.py}, \texttt{R9C\_gap2.py} & the design
+dictionary and the counting leg; the phantom $A_7$ of Theorem~\ref{thm:A7} and its
+full property table (rows, $\varrho=\nabla$, $\Sigma = 91$,
+de~Bruijn--Erd\H{o}s equality, $\mathrm{KEY}$ failing $49/49$); the
+$(\mathrm{Cl})$ connectivity probes\\
+\texttt{problems\slash etp677\slash R9D\_verify.py},\newline
+\texttt{R9D\_A7psi.py}, \texttt{R9D\_gen13.py}, \texttt{R9D\_phantom.py} &
+Theorem~\ref{thm:psi1dead}: the $\Psi$-definitions, the two $\Psi$-phantoms, the
+$5040$-table census on $\Z_7$ ($1820/342/150/48$), and the Singer construction
+realized at $q = 3$\\
+\texttt{problems\slash etp677\slash R9E\_key.py},\newline\texttt{R9E\_fixN.py},
+\texttt{R9E\_noncyclic.py} & isolation of $(\mathrm{N})$ and
+Proposition~\ref{prop:Nbasic}, including the $21/49$ violation of $(\mathrm{N})$ by
+$A_7$ that narrows Corollary~\ref{cor:designdead}, and the wide-family samplers\\
+\texttt{problems\slash etp677\slash R9F\_planes.py},\newline\texttt{R9F\_hall.py},
+\texttt{R9G\_hughes.py} & the four projective planes of order $9$, each built and
+certified from scratch (design; explicit Desargues failure; little-Desargues
+failure on plane and dual), and the branch objects built on them\\
+\texttt{problems\slash etp677\slash R9G\_conc.py},\newline
+\texttt{R9G\_witness.py}, \texttt{R9G\_witness13.py}, \texttt{R9G\_global.py},
+\texttt{R9G\_count7.py} & Theorems~\ref{thm:nconc} and \ref{thm:moments} with their
+hand-checkable witnesses; the null-model computation of
+Proposition~\ref{prop:null}; the cyclic-class exhaustion superseded by
+Theorem~\ref{thm:q2branch}\\
+\texttt{problems\slash etp677\slash R9H\_exhaust\_q2.c},\newline
+\texttt{R9H\_orbits\_check.py}, \texttt{R9H\_distcheck.py},
+\texttt{R9H\_verify\_witnesses.py}, \texttt{R9H\_spotcheck.py},
+\texttt{R9H\_rowcap.py} & \textbf{the $q = 2$ decision}
+(Theorems~\ref{thm:q2branch}, \ref{thm:q2rigid}): the C exhaustion with in-binary
+positive and negative controls, an independent Python recomputation of all orbit
+arithmetic, the cellwise cross-check against the previous round's machinery, and
+brute-force re-verification of every extremal witness\\
+\texttt{problems\slash etp677\slash R9I\_adjudicate.py},\newline
+\texttt{R9I\_deficit.py}, \texttt{R9I\_trace.py}, \texttt{R9I\_survivors.py},
+\texttt{R9I\_abstract5.py} & Proposition~\ref{prop:deficit} and the two toolbox
+retractions recorded with it; the trace survey; the row-local phantom counts
+$39/27/11$\\
+\texttt{problems\slash etp677\slash R9J\_adjudicate.py},\newline
+\texttt{R9J\_probe.py} & Lemma~\ref{lem:branchfacts}(a),(b),
+Proposition~\ref{prop:marginalvacuity}, and the $530$-table general-$\nu$ pass that
+refutes the ``$\mathrm{WLOG}\ \nu = \mathrm{id}$'' normalization ($519/530$)\\
+\texttt{problems\slash etp677\slash R9K\_trace\_q2.c},\newline
+\texttt{R9K\_witness\_verify.py}, \texttt{R9K\_abstract\_q2.c},
+\texttt{R9K\_q13\_verify.py} & Theorem~\ref{thm:tracecap} and
+Corollary~\ref{cor:targetlemma}: the $\delta\equiv0$ enumeration
+($17\,195$ representative tables) and the unique two-perfect witness. The abstract
+landscape run here is the one retracted in \S\ref{sec:R9Kretraction}\\
+\texttt{problems\slash etp677\slash R9L\_translation.c},\newline
+\texttt{R9L\_q17A\_verify.py} & Theorems~\ref{thm:transallnothing},
+\ref{thm:transq3}: the complete $1\,070\,784$-object enumeration, and the refutation
+of the claimed $q = 3$ witness with $E$ computed both by the raw triple loop and by
+the $\Xi$ route, asserted equal\\
+\texttt{problems\slash etp677\slash R10A\_ground.py},\newline
+\texttt{R10A\_tcount.py}, \texttt{R10A\_closure.py}, \texttt{R10A\_decide.py},
+\texttt{R10A\_abstract.c} & Theorems~\ref{thm:R10lemmas}--\ref{thm:abscap}: the
+ground truth on the test design (all $3888$ tables), the two lemmas at $0$
+violations, the closure's $49/49$ reconstruction and its kill of all $90$ retracted
+phantoms, the six-filter landscape, and the exact realizability cross-check of the
+survivors\\
 \bottomrule
 \end{longtable}
 
@@ -6578,11 +7892,21 @@ conjecture (Theorem~\ref{thm:even}) was produced by a Claude Fable~5 agent that 
 tasked with \emph{proving} it. One GPT-5.6 ``Pro'' web session ran for $89$ minutes on
 $(\mathrm{Q})$ without producing usable output and was terminated; this is recorded because
 the cost of unproductive runs is part of an honest account of the method.
+The material of \S\ref{sec:round10} was produced by Claude Fable~5 agents (the phantom $A_7$
+and the $\Psi$-phantoms; the $q = 2$ exhaustion; the trace enumeration) and by a Claude
+Opus~5 agent (the three realizability lemmas, the closure theorem and the retraction of
+\S\ref{sec:R9Kretraction}), with the orchestrating agent re-running the two decisive
+computations from source. Four sub-questions of the row-cap problem were dispatched to
+Qwen3.8-Max; it produced one certified corollary, one genuine and previously unknown
+order-$13$ construction, and the three errors catalogued in \S\ref{sec:failmodes}. The
+error rate on that channel, and the fact that the campaign's own orchestration committed a
+comparable error (\S\ref{sec:R9Kretraction}), are reported for the same reason as the
+terminated run.
 
 \begin{thebibliography}{99}
 
 \bibitem{etp}
-J.~Bolan, J.~Breitner, F.~Carlini, T.~Tao, et al.,
+M.~Bolan, J.~Breitner, N.~Carlini, T.~Tao, et al.,
 \emph{The Equational Theories Project: Advancing Collaborative Mathematical Research at
 Scale}, arXiv:2512.07087, 2025.
 \url{https://arxiv.org/abs/2512.07087}.
@@ -6613,8 +7937,8 @@ satisfies Equation~255.
 \bibitem{grisha}
 G.~Pochuev, \emph{finite-magma-e677-to-e255}.
 \url{https://github.com/Grisha-Pochuev/finite-magma-e677-to-e255}.
-An independent project on the same problem in combinatorial language; it likewise establishes
-that all rows are permutations and is stalled at localized obstructions.
+An independent project on the same problem. As of consultation, described there as ``active
+research, not a finished proof''.
 
 \bibitem{F1}
 AutoMath campaign, internal report \texttt{problems\slash etp677\slash F1\_structural\_report.md}
@@ -6736,6 +8060,68 @@ AutoMath campaign, harvested artefact
 \texttt{R9A\_scripts\_gpt\slash magma677\_order385.py}
 (a third-party reasoning model's order-$385$ object, rebuilt and verified inside
 the framework of \S\ref{sec:eq4gen}).
+
+\bibitem{R9C}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9C\_design\_report.md}
+(the doubly resolved design dictionary; the near-pencil kill; the phantom $A_7$; the
+$(\mathrm{Prop}_{\exists})\to(\mathrm{Prop})$ bridge $(\mathrm{Cl})$). \emph{Its Claim~6.3
+is narrowed in R9-E and is quoted here only in the narrowed form}
+(Corollary~\ref{cor:designdead}).
+
+\bibitem{R9D}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9D\_psi1\_report.md}
+(the $\Psi$-definitions settled; $\Psi_1 = n$ as a block-value condition; the two
+$\Psi$-phantoms; the recolouring rule).
+
+\bibitem{R9E}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9E\_key\_report.md}
+(the assigned route to a block bound closed; the lemma $(\mathrm{KB2})$; the isolation of
+$(\mathrm{N})$ and the correction to R9-C and R9-D).
+
+\bibitem{R9F}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9F\_planes\_report.md}
+(the planes of order $9$ built and certified; branch objects on an arbitrary plane; the
+$O(n^2)$ test for $(\mathrm{N})$).
+
+\bibitem{R9G}
+AutoMath campaign, internal reports
+\texttt{problems\slash etp677\slash R9G\_conc\_report.md} and
+\texttt{R9G\_hughes\_report.md}
+(refutation of the concentration bound; $\nu$ bijective; second moments; the null-model
+audit; the Hughes plane and its triple gate; the cyclic-class exhaustion).
+
+\bibitem{R9H}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9H\_report.md}
+(the $q = 2$ exhaustion and its verification chain; the exact rigidity numbers; the
+refutation of the two local relaxations; the ground-truth audit of the search
+methodology).
+
+\bibitem{R9I}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9I\_report.md}
+(the deficit law and two toolbox retractions; the trace sub-branch; the block-inflation
+localization and the row-local phantom counts).
+
+\bibitem{R9J}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9J\_report.md}
+(general-$\nu$ adjudication of a machine dispatch; the $b$-cap and pair-count lemmas;
+marginal vacuity; $\varphi$-fusion named).
+
+\bibitem{R9K}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9K\_report.md}
+(the trace attainment enumeration and its unique witness; the refutation of the
+disjointness lemma). \emph{Its abstract-landscape fine structure is retracted}; see
+\S\ref{sec:R9Kretraction}.
+
+\bibitem{R9L}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R9L\_report.md}
+(refutation of a claimed $q = 3$ witness; the all-or-nothing law; the exhaustion of the
+translation-invariant family; the pencil lemma and the reopening of the collinear-$4$-set
+route).
+
+\bibitem{R10A}
+AutoMath campaign, internal report \texttt{problems\slash etp677\slash R10A\_report.md}
+(the three realizability lemmas; the $\varphi$-fusion closure; the landscape on realizable
+design data; the retraction of \S\ref{sec:R9Kretraction}).
 
 \bibitem{M77lean}
 AutoMath campaign, \textsc{Lean}~4 certificate \texttt{lean\slash proofenv\slash M77.lean}

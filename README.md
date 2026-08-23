@@ -18,6 +18,10 @@ there is an explicit D(r) > 0 such that D(r)·a(n) is divisible by
 - DOI: [10.5281/zenodo.21995715](https://doi.org/10.5281/zenodo.21995715)
 - Lean 4 formalization: [google-deepmind/formal-conjectures PR #5023](https://github.com/google-deepmind/formal-conjectures/pull/5023) — 0 sorry among added declarations, axioms {propext, Classical.choice, Quot.sound}, compiled under the repository's own toolchain
 - Verification suite: [`a211417/a211417_verify.py`](a211417/a211417_verify.py)
+- **Note:** `a211417/main.tex` and `a211417/A211417-Bala-Paper.md` carry a
+  correction (the computational coverage for Corollary 3.8 is six values of `r`,
+  not all `r <= 3200`) that the **published PDF does not contain**; no corrected
+  PDF has been published. See [`a211417/README.md`](a211417/README.md).
 - Prior work: r = 1 case by AlphaProof Nexus (FC PR #5010); an unpublished general claim is discussed honestly in the paper's §7 (no public proof text known as of 2026-08-17)
 
 All results carry per-theorem verification status (dual cross-vendor review + Lean / computational).
@@ -63,15 +67,50 @@ opened 2026-08-11); our proof and formalization were found independently and
 are recorded for their expository value (Goursat + normal-quotient
 classification argument).
 
-## Structure Theory of Finite 677 Magmas (working paper, v7.2)
+## Structure Theory of Finite 677 Magmas (working paper) — current: v8_2
 
-[`etp677_structure/Structure-Theory-of-Finite-677-Magmas-v7.2.pdf`](etp677_structure/Structure-Theory-of-Finite-677-Magmas-v7.2.pdf) (~90 pp).
-DOI: [10.5281/zenodo.21995800](https://doi.org/10.5281/zenodo.21995800).
+[`etp677_structure/Structure-Theory-of-Finite-677-Magmas-v8_2.pdf`](etp677_structure/Structure-Theory-of-Finite-677-Magmas-v8_2.pdf) (~110 pp).
+DOI: [10.5281/zenodo.22070405](https://doi.org/10.5281/zenodo.22070405)
+(concept DOI, always latest: [10.5281/zenodo.21995799](https://doi.org/10.5281/zenodo.21995799)).
 Partial-results working paper on the last open finite implication of Tao's
-Equational Theories Project (E677 ⇒ E255): structure theorems, a nine-model
+Equational Theories Project (E677 => E255): structure theorems, a nine-model
 zoo (including the order-77 minimal non-right-cancellative models m77/m77D),
-refutations of the transport/kernel-law programme, and an honest paper-wide
-retraction chain. Every numbered claim carries a verification marker
-(proved / machine-verified / computational / conjecture). Adversarial review:
-round 1 INVALID → repairs v7.1/v7.2 → round 2 CLEAN (cross-vendor, 2026-08-18).
-The main implication (P) remains OPEN.
+refutations of the transport/kernel-law programme, the round-9/round-10 extremal
+branch, and an honest paper-wide retraction chain. Every numbered claim carries a
+verification marker (proved / machine-verified / computational / partial /
+conjecture). The main implication (P) remains OPEN.
+
+v8_2 is a correction release: it removes a fabricated quotation that v8 attributed
+to an independent third-party project, corrects two misprinted real-person author
+names in a reference, downgrades an uncertified SAT computation from a certified
+marker, and withdraws an overstated verification claim. **Read v8_2.**
+Earlier published versions (v8, v7.2) are kept in the directory because they carry
+their own DOIs; see [`etp677_structure/README.md`](etp677_structure/README.md) for
+the full version table with per-file md5s.
+
+`etp677_structure/main.tex` is the source of the published v8_2 PDF, verified by
+recompilation.
+
+## WOWII-61 — Graffiti conjecture 61 (partial results) — current: v2
+
+[`wowii61/Partial-Results-WOWII-61-Graffiti-v2.pdf`](wowii61/Partial-Results-WOWII-61-Graffiti-v2.pdf) (44 pp).
+DOI: [10.5281/zenodo.22069069](https://doi.org/10.5281/zenodo.22069069)
+(concept DOI, always latest: [10.5281/zenodo.22054650](https://doi.org/10.5281/zenodo.22054650)).
+`residue(G) + ceil(diam(G)/3) <= f(G)`: not resolved. Unconditional for
+`diam(G)` in {1,2,3,5,6,9}; at diameter 4 reduced to a dichotomy, of which
+`tau <= 3` is settled.
+
+v2 is a correction release: seven statements that v1 marked "certified: two review
+rounds" did not have that review history and are re-marked as elementary
+arguments given in full; the `tau = 3` claim is qualified as a skeleton rather than
+a complete case analysis. **Read v2.** v1 (DOI
+[10.5281/zenodo.22054651](https://doi.org/10.5281/zenodo.22054651)) is kept in the
+directory because it was published, and should not be relied on. See
+[`wowii61/README.md`](wowii61/README.md).
+
+## WOWII-133 — Graffiti conjecture 133 (partial results)
+
+[`wowii133/Partial-Results-WOWII-133-Graffiti.pdf`](wowii133/Partial-Results-WOWII-133-Graffiti.pdf).
+DOI: [10.5281/zenodo.22054835](https://doi.org/10.5281/zenodo.22054835).
+Only version; no correction has been published. See
+[`wowii133/README.md`](wowii133/README.md).

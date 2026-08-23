@@ -522,7 +522,8 @@ inequality prime by prime and confirming the case split. Lean: the *existence* s
 machine-checked in the strengthened form $\exists D > 0$ (`general_divisibility_strong`), but with
 the cruder witness $(r!)^{r^2}$ rather than the $D(r)$ above; the sharp constant is *not* formalised
 (Section 8). Computational: end-to-end for $r \in \{1,7,11,13,17,19,23,29,31,37,49\}$ and
-$0 \le n \le 60$, plus a per-prime deficiency check for $r$ up to $100$ and $n \le 400$, plus an
+$0 \le n \le 60$, plus a per-prime deficiency check over
+$r \in \{1,7,11,13,17,19,23,29,31,37,49,60,100\}$ and $n \le 400$, plus an
 independently written check by the `codex` reviewer through a disjoint code path.
 
 **Remark 3.6 (the case $n = 0$).** Because $P_r(n)$ is defined in $\mathbb{Z}$ and its factors are
@@ -577,8 +578,10 @@ refute the claim $\log D(r) = O(r\log\log r)$ asserted in the first draft of thi
 is false and has been removed. The *upper* bound was re-derived in round 2 (Qwen, targeted): OK,
 with the Mertens and Chebyshev steps checked separately. The lower bound, being the first reviewer's
 own construction, has not been independently re-reviewed. Computational: the inequality
-$E(p,r) \ge \lfloor (r-1)/(30p)\rfloor + 1$ was checked for all primes and all $r \le 3200$ with no
-violation, and numerically $\log D(r)/(r\log r)$ stays near $0.30$ over $r = 100,\dots,3200$ while
+$E(p,r) \ge \lfloor (r-1)/(30p)\rfloor + 1$ was checked at the six values
+$r \in \{100, 200, 400, 800, 1600, 3200\}$, and at each of them for every prime $p$ with
+$7 \le p \le r$ ($22$ primes at $r=100$, rising to $449$ at $r=3200$), with no
+violation. Numerically $\log D(r)/(r\log r)$ stays near $0.30$ across those same six values of $r$ while
 $\log D(r)/(r\log\log r)$ increases monotonically from $0.83$ to $1.17$ (Table A.2), which is what
 refutes the discarded claim.
 
@@ -1505,8 +1508,9 @@ following checks, all of which pass with no counterexample.
    independently of the theorems, all five of Bala's explicit assertions ($30n-1$, $2n+1$, $3n+1$,
    $5n+1$, and the $42$-product) for $n < 400$.
 
-7. Corollary 3.8: the inequality $E(p,r) \ge \lfloor (r-1)/(30p)\rfloor + 1$ for every eligible prime
-   and every $r \le 3200$, plus the ratios of Table A.2.
+7. Corollary 3.8: the inequality $E(p,r) \ge \lfloor (r-1)/(30p)\rfloor + 1$ at the six values
+   $r \in \{100, 200, 400, 800, 1600, 3200\}$ and, at each of them, for every prime $p$ with
+   $7 \le p \le r$; plus the ratios of Table A.2.
 
 8. Proposition 5.1: for $i \in \{1,7,11,13,17,19,23,29,31\}$, $p \in \{31,61,151,181,211\}$ with
    $p>i$, and $e \le 3$, that $\nu_p(30n_e+i) = e$ while $\nu_p(a(n_e)) = 0$.
