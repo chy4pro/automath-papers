@@ -1,5 +1,7 @@
 # An effective finiteness theorem for an exceptional set of Erdős and Selfridge
 
+Zenodo: https://doi.org/10.5281/zenodo.22962744 (concept DOI 10.5281/zenodo.22962743), published 2026-09-25.
+
 Erdős Problem #889. Read `main.pdf` (9 pages).
 
 ## The claim, in two sentences
