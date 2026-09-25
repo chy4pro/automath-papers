@@ -1,0 +1,687 @@
+\documentclass[10pt]{article}
+\usepackage[hmargin=1in,vmargin=0.9in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={An effective finiteness theorem for an exceptional set of Erdos and Selfridge},
+  pdfauthor={Haoyu Chen}, pdfsubject={Erdos Problem 889}}
+
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% named statements (Theorem A, Corollary A1, ...)
+\newcommand{\stmtname}{}
+\theoremstyle{plain}
+\newtheorem*{named}{\stmtname}
+\newenvironment{namedthm}[1]{\renewcommand{\stmtname}{#1}\begin{named}}{\end{named}}
+
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}{-2.6ex \@plus -.8ex \@minus -.2ex}{1.3ex \@plus .2ex}{\normalfont\large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}{-2.2ex \@plus -.6ex \@minus -.2ex}{1ex \@plus .2ex}{\normalfont\normalsize\bfseries}}
+\makeatother
+
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\Bbar}{\overline{B}}
+\newcommand{\unif}{\mathrm{u}}
+\newcommand{\eps}{\varepsilon}
+
+\title{An effective finiteness theorem for an exceptional set\\ of Erd\H{o}s and Selfridge}
+\author{Haoyu Chen\\ Independent researcher}
+\date{September 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For integers $n\ge 0$ and $k\ge 1$ let $v(n,k)$ be the number of prime factors of $n+k$ that divide none
+of $n,n+1,\dots,n+k-1$, equivalently the number of primes $p>k$ dividing $n+k$, and let
+$v_1(n)=\sup_{k\ge 1}v(n,k)$. Erd\H{o}s and Selfridge (1967) expected $v_1(n)=1$ to have only finitely many
+solutions but could not prove it. We prove that every $n\ge N_0$, where
+$\log N_0=e^{45.28}\approx 4.62\cdot 10^{19}$, has some $k\le 10\log n$ with $v(n,k)\ge 2$. Hence every
+solution of $v_1(n)=1$ is smaller than $N_0$. The proof combines an elementary counting lemma with
+Matveev's explicit lower bound for linear forms in logarithms; every numerical inequality is certified by
+interval arithmetic. The same argument gives, for all integers $l\ge1$ and $n$ with $\log\log n\ge 48.82$ and
+$\log n\ge l$, some $k\in[l,10\,l\log n]$ with $v(n,k)\ge 2$. The qualitative finiteness also follows from
+a 1981 theorem of Langevin combined with an elementary lemma.
+\end{abstract}
+
+\noindent\textit{MSC 2020:} 11N25, 11J86.\quad
+\textit{Keywords:} prime factors of consecutive integers; smooth numbers; linear forms in logarithms;
+Erd\H{o}s problems.
+
+\section{Introduction}
+
+Erd\H{o}s and Selfridge \cite{ErSe67} considered, for integers $n\ge 0$ and $k\ge 0$, the number $v(n;k)$
+of prime factors of $n+k$ that divide none of $n,n+1,\dots,n+k-1$, and the quantities
+\[
+v_0(n)=\max_{k\ge 0}v(n;k),\qquad v_l(n)=\max_{k\ge l}v(n;k).
+\]
+They showed that $v_0(n)>1$ for all $n$ except $n=1,2,3,4,7,8,16$, and wrote: ``It seems certain that
+$\lim v_l(n)=\infty$ for every $l$, but unfortunately we have not even been able to prove that $v_1(n)=1$ has
+only a finite number of solutions, though this certainly must be true. Probably the greatest $n$ for which
+$v_1(n)=1$ is $n=330$.'' They listed the $29$ values $n<2500$ with $v_1(n)=1$:
+$n=1$--$4$, $6$--$8$, $10$, $12$, $15$, $16$, $18$, $22$, $24$, $26$, $30$, $36$, $42$, $46$, $48$, $60$, $70$,
+$78$, $80$, $96$, $120$, $190$, $222$, $330$.
+Guy's \emph{Unsolved Problems in Number Theory} \cite[B27]{Gu04} records the question in its third edition
+(2004), repeating that Erd\H{o}s and Selfridge were unable to prove that $v_1(n)=1$ has only finitely many
+solutions. The problem is Problem \#889 of the Erd\H{o}s problems database \cite{EP889}, and it is formalised
+in the Formal Conjectures repository \cite{FC}, where the variant \texttt{erdos\_889.variants.v1\_eq\_1\_finite}
+asks whether $\{n: v_1(n)=1\}$ is finite.
+
+Erd\H{o}s and Selfridge also introduced a variant $V(n;k)$, the number of primes $p\mid n+k$ whose exact
+prime-power component $p^{\alpha}\,\|\,n+k$ divides none of $n,\dots,n+k-1$, and asked the same question for
+$V_1(n)=1$ (perhaps with largest solution $80$). Kitamura \cite{Ki26} has given a Lean~4 proof that
+$\{n:V_1(n)=1\}$ is finite (repository dated 22 September 2026); its documentation states that it does not
+address the lowercase variant. Since $p\nmid n+i$ implies $p^\alpha\nmid n+i$, one has $v(n;k)\le V(n;k)$, so
+$V_1(n)\ge v_1(n)$ and finiteness of $\{n:v_1(n)=1\}$ implies finiteness of $\{n:V_1(n)=1\}$, not conversely.
+(In particular, Theorem~A below also shows that every solution of $V_1(n)=1$ is smaller than $N_0$.)
+
+\paragraph{What this note contains.} An explicit threshold $N_0$ with $\log\log N_0=45.28$ beyond which
+$v(n,k)\ge2$ for some $k\le10\log n$ (Theorem~A), and an explicit version uniform in $l$. An elementary lemma
+(Lemma~\ref{lem:R}) shows that if $v(n,k)\le1$ for all $k\le y$, then two of $n+1,\dots,n+y$ have the form
+$Wq^{e}$ with distinct primes $q$ and small cofactors $W$; Matveev's bound \cite{Ma00} applied to their quotient
+gives $\log n< K(\log\log n)^5$ with an explicit $K$.
+
+\paragraph{What is not new.} The qualitative statement that $\{n:v_1(n)=1\}$ is finite, with an effective
+(but not computed) bound, is a corollary of a published theorem: Langevin's 1981 bound for the number of
+$k$-smooth integers among $n+1,\dots,n+k$ \cite[Corollaire~1, (8)]{La81}, combined with a ten-line elementary
+lemma. We write out this deduction in Section~\ref{sec:langevin}; the same route also gives the qualitative
+uniform-in-$l$ statement. The method is also classical: Baker-type lower bounds applied to smooth numbers in
+blocks of consecutive integers go back to Tijdeman \cite{Ti73}, Ramachandra, Shorey and Tijdeman
+\cite{RST75,RST76} and Langevin \cite{La81}, and the device of assigning each prime to the term in which it occurs
+to the highest power is of Sylvester--Erd\H{o}s type. What this note adds is quantitative: an explicit threshold
+$\log\log N_0=45.28$ and an explicit uniform-in-$l$ threshold $48.82$. The threshold is far beyond any
+computation, so the conjecture that $330$ is the largest solution of $v_1(n)=1$ remains open, as does the main
+problem $v_0(n)\to\infty$.
+
+\section{Notation and statements}\label{sec:statements}
+
+Throughout, $\log$ is the natural logarithm and $p,q$ denote primes. For an integer $m\ge2$, $P(m)$ is its
+largest prime factor, and $P(1)=1$; $\omega(m)$ is the number of distinct prime factors of $m$; $v_p$ is the
+$p$-adic valuation; and $\pi(x)=\#\{p\le x\}$ for real $x$. Following \cite{ErSe67} and \cite{FC}, for integers
+$n\ge0$, $k\ge1$ and $l\ge1$ put
+\[
+v(n,k)=\#\{p : p\mid n+k,\ p\nmid n+i\ \text{for all } 0\le i\le k-1\},\qquad
+v_l(n)=\sup_{k\ge l}v(n,k)\in\mathbb{N}\cup\{\infty\}.
+\]
+
+\begin{lemma}\label{lem:v}
+For integers $n\ge0$ and $k\ge1$, $v(n,k)=\#\{p : p\mid n+k,\ p>k\}$.
+\end{lemma}
+
+\begin{proof}
+Let $p\mid n+k$. If $p\le k$, then $i:=k-p$ satisfies $0\le i\le k-1$ and $p\mid (n+k)-p=n+i$, so $p$ is not
+counted. If $p>k$ and $0\le i\le k-1$, then $(n+k)-(n+i)=k-i\in[1,k]$ is not divisible by $p$, so $p\nmid n+i$
+and $p$ is counted. Thus $v(n,k)\le1$ means that $n+k$ has at most one prime factor greater than $k$.
+\end{proof}
+
+\begin{namedthm}{Theorem A}
+Put $\ell_1:=45.28$ and $N_0:=\exp(\exp(\ell_1))$, so that $\log N_0=e^{45.28}=4.6223\cdot10^{19}$ $($to five
+figures$)$. For every integer $n\ge N_0$ there is an integer $k$ with $1\le k\le 10\log n$ and $v(n,k)\ge 2$.
+\end{namedthm}
+
+\begin{namedthm}{Corollary A1}
+Every $n$ with $v_1(n)=1$ satisfies $n<N_0$; in particular $\{n: v_1(n)=1\}$ is finite.
+\end{namedthm}
+
+\begin{proof}
+If $n\ge N_0$, Theorem~A gives $k\ge1$ with $v(n,k)\ge2$, so $v_1(n)\ge2$ and $v_1(n)\ne1$.
+\end{proof}
+
+In the terms of \cite{FC}, Corollary~A1 is a paper proof, not a Lean proof, that
+\texttt{Erdos889.\allowbreak erdos\_889.\allowbreak variants.\allowbreak v1\_eq\_1\_finite} holds with answer
+\texttt{True}. It depends on the
+published results of Matveev, Rosser--Schoenfeld and Robin (Sections~\ref{sec:baker}--\ref{sec:numerics}). The
+qualitative finiteness also follows from Langevin \cite{La81} with Lemma~\ref{lem:R}(i) (Section~\ref{sec:langevin}).
+
+\begin{namedthm}{Theorem A$_l$ (fixed $l$)}
+Let $1\le l\le 20$ and let $\ell_1(l)$ be as in Table~\ref{tab:perl} $($so $\ell_1(1)=45.28$, $\ell_1(2)=45.35$,
+\dots, $\ell_1(20)=45.58)$. Every integer $n$ with $\log\log n\ge\ell_1(l)$ has an integer $k$ with
+$l\le k\le 10\,l\log n$ and $v(n,k)\ge 2$.
+\end{namedthm}
+
+\begin{namedthm}{Theorem A$_{\mathrm{unif}}$ (uniform in $l$)}
+Let $l\ge1$ and $n$ be integers with $\log\log n\ge 48.82$ and $\log n\ge l$. Then there is an integer $k$ with
+$l\le k\le 10\,l\log n$ and $v(n,k)\ge2$. Equivalently, this holds for every $n\ge N(l)$, where
+\[
+N(l):=\max\bigl(\exp(e^{48.82}),\ \lceil e^{l}\rceil\bigr),\qquad e^{48.82}=1.593\cdot10^{21}.
+\]
+\end{namedthm}
+
+\begin{namedthm}{Corollary A$_l$}
+For every $l\ge1$ and every $n\ge N(l)$, $v_l(n)\ge2$.
+\end{namedthm}
+
+Corollary~A$_l$ is the level-$2$ case of \texttt{erdos\_889.variants.general} in \cite{FC}; that variant asks
+for $v_l(n)\to\infty$, which is not proved here. Section~\ref{sec:open} lists other questions that this note
+does not address.
+
+\section{The elementary reduction}\label{sec:reduction}
+
+\paragraph{Setting.} Fix integers $l\ge1$ and $n\ge2$ and a real number $y$ with $Y:=\lfloor y\rfloor\ge l+2$.
+Put $\Pi_l(n):=n(n+1)\cdots(n+l-1)$ and
+\[
+\omega_{l,y}(n):=\#\{p\le y: p\mid \Pi_l(n)\},\qquad \cP:=\{p\le y: p\nmid\Pi_l(n)\},\qquad
+|\cP|=\pi(y)-\omega_{l,y}(n).
+\]
+The hypothesis is
+\begin{equation}\tag{H}
+v(n,k)\le1\quad\text{for every integer } k \text{ with } l\le k\le y.
+\end{equation}
+Define
+\[
+A:=\pi(y)-2\,\omega_{l,y}(n)-\frac{2\log\bigl((Y-l-1)!\bigr)}{\log n},\qquad\text{and, when } A>1,\qquad
+T:=\frac{\log\bigl((Y-l-1)!\bigr)}{A-1}.
+\]
+
+\begin{lemma}[Lemma R]\label{lem:R}
+Assume \textup{(H)}.
+\begin{enumerate}
+\item[(i)] For $p\in\cP$ let $k_0(p):=\min\{k\ge l: p\mid n+k\}$. Then $l\le k_0(p)\le p-1\le Y-1$ and
+$P(n+k_0(p))=p$. The map $p\mapsto k_0(p)$ is injective. Hence $J:=k_0(\cP)\subseteq\{l,l+1,\dots,Y-1\}$ has
+$|J|=\pi(y)-\omega_{l,y}(n)$, and for $j\in J$ every prime factor of $n+j$ is at most $Y$.
+\item[(ii)] Assume $J\ne\emptyset$. For every prime $p\le Y$ fix $j_p\in J$ with
+$v_p(n+j_p)=\max_{j\in J}v_p(n+j)$. For $j\in J$ let
+\[
+U_j:=\prod_{p\le Y,\ j_p=j}p^{v_p(n+j)},\qquad W_j:=\prod_{p\le Y,\ j_p\ne j}p^{v_p(n+j)}.
+\]
+Then $n+j=U_jW_j$ for each $j\in J$, and $\prod_{j\in J}W_j\le (Y-l-1)!$.
+\item[(iii)] Let $s(j):=\omega(U_j)$, $J_0:=\{j\in J:s(j)=0\}$ and $J_1:=\{j\in J:s(j)=1\}$. Then
+$|J_0|\le\log((Y-l-1)!)/\log n$ and $|J_1|\ge\pi(y)-2\,\omega_{l,y}(n)-2|J_0|\ge A$.
+\item[(iv)] For $j\in J_1$, $U_j=q_j^{e_j}$ with $q_j$ a prime $\le Y$ and $e_j\ge1$. So $n+j=W_jq_j^{e_j}$ with
+$q_j\nmid W_j$. The map $j\mapsto q_j$ is injective on $J_1$.
+\item[(v)] If $A>1$, then $J\ne\emptyset$, and there are $j_1\ne j_2$ in $J_1$ with $\log W_{j_1}\le T$ and
+$\log W_{j_2}\le T$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Let $p\in\cP$. Among the $p$ consecutive integers $n,\dots,n+p-1$ there is a multiple $n+i$ of $p$, with
+$0\le i\le p-1$. If $p\le l$, this $n+i$ divides $\Pi_l(n)$, contradicting $p\nmid\Pi_l(n)$; so $p\ge l+1$.
+Since $p\nmid n+i$ for $i<l$, the multiple has $l\le i\le p-1$; hence $l\le k_0(p)\le p-1$. As $p\le y$ is an
+integer, $p\le Y$, so $k_0(p)\le Y-1<y$ and (H) gives $v(n,k_0(p))\le1$. By Lemma~\ref{lem:v} (note
+$k_0(p)\ge1$), $n+k_0(p)$ has at most one prime factor greater than $k_0(p)$. The prime $p$ is such a factor, so
+every other prime factor of $n+k_0(p)$ is at most $k_0(p)<p$, and $P(n+k_0(p))=p\le Y$. If $k_0(p)=k_0(p')$, then
+$p=P(n+k_0(p))=p'$; so the map is injective and $|J|=|\cP|$.
+
+(ii) By (i), $n+j=\prod_{p\le Y}p^{v_p(n+j)}$ for $j\in J$; splitting the primes $p\le Y$ according to whether
+$j_p=j$ gives $n+j=U_jW_j$. Fix a prime $p\le Y$ and $j\in J$ with $j\ne j_p$. Since
+$v_p(n+j)\le v_p(n+j_p)$, the power $p^{v_p(n+j)}$ divides both $n+j$ and $n+j_p$, hence divides
+$j-j_p\ne0$, and $v_p(n+j)\le v_p(|j-j_p|)$. Summing over $j\in J\setminus\{j_p\}$, a subset of
+$\{l,\dots,Y-1\}\setminus\{j_p\}$, and using that all terms are nonnegative,
+\[
+\sum_{j\in J,\ j\ne j_p}v_p(n+j)\le\sum_{\substack{i=l\\ i\ne j_p}}^{Y-1}v_p(|i-j_p|)
+=v_p\bigl((j_p-l)!\,(Y-1-j_p)!\bigr)\le v_p\bigl((Y-l-1)!\bigr),
+\]
+because $a!\,b!$ divides $(a+b)!$ and here $a+b=Y-l-1$. Therefore
+\[
+\prod_{j\in J}W_j=\prod_{p\le Y}p^{\sum_{j\in J,\,j\ne j_p}v_p(n+j)}\le\prod_{p\le Y}p^{v_p((Y-l-1)!)}=(Y-l-1)!,
+\]
+the last equality because every prime factor of $(Y-l-1)!$ is at most $Y$.
+
+(iii) For $j\in J_0$ we have $U_j=1$, so $W_j=n+j>n$. All $W_j\ge1$, so by (ii)
+$|J_0|\log n\le\sum_{j\in J_0}\log W_j\le\sum_{j\in J}\log W_j\le\log((Y-l-1)!)$. Next,
+$s(j)=\#\{p\le Y: j_p=j,\ v_p(n+j)\ge1\}$. Every prime $p\le Y$ has exactly one $j_p$, so these sets are
+pairwise disjoint subsets of the primes up to $Y$, and $\sum_{j\in J}s(j)\le\pi(Y)=\pi(y)$. With
+$J_{\ge2}:=J\setminus(J_0\cup J_1)$ this gives $|J_1|+2|J_{\ge2}|\le\pi(y)$, while
+$|J_0|+|J_1|+|J_{\ge2}|=|J|=\pi(y)-\omega_{l,y}(n)$. Eliminating $|J_{\ge2}|$ gives
+$|J_1|\ge\pi(y)-2\omega_{l,y}(n)-2|J_0|$, which is at least $A$ by the bound for $|J_0|$.
+
+(iv) If $s(j)=1$, there is exactly one prime $q=q_j\le Y$ with $j_q=j$ and $v_q(n+j)\ge1$; the other primes $p$
+with $j_p=j$ contribute $p^0=1$. So $U_j=q_j^{e_j}$ with $e_j:=v_{q_j}(n+j)\ge1$, and $q_j\nmid W_j$ because
+$W_j$ contains only primes $p$ with $j_p\ne j$. Finally $q_j$ determines $j=j_{q_j}$.
+
+(v) If $J=\emptyset$, then $\omega_{l,y}(n)=\pi(y)$ and $A\le-\pi(y)<1$; so $A>1$ forces $J\ne\emptyset$. By (iii),
+$r:=|J_1|\ge A>1$, so the integer $r$ is at least $2$. List the numbers $\log W_j$ $(j\in J_1)$ as
+$w_1\le w_2\le\dots\le w_r$ and let $j_1,j_2$ be indices giving $w_1,w_2$. All $w_i\ge0$, so by (ii)
+$(r-1)w_2\le w_2+\dots+w_r\le\sum_{j\in J}\log W_j\le\log((Y-l-1)!)$. Since $r-1\ge A-1>0$, we get
+$w_1\le w_2\le T$.
+\end{proof}
+
+\section{The Baker step}\label{sec:baker}
+
+\subsection{Matveev's theorem}
+We use Corollary~2.3 of Matveev \cite{Ma00} (Russian original p.~127, English translation p.~1219), in his
+notation and equation numbering, except that his number $n$ of logarithms is called $t$ here. Let $\mathbb{K}\subset\mathbb{C}$ be an
+algebraic number field of degree $D$ over $\mathbb{Q}$; put $\varkappa=1$ if $\mathbb{K}\subseteq\mathbb{R}$ and
+$\varkappa=2$ otherwise. Let $\alpha_1,\dots,\alpha_t\in\mathbb{K}^*$ with absolute logarithmic heights
+$h(\alpha_j)$, let $\ln\alpha_1,\dots,\ln\alpha_t$ be arbitrary fixed \emph{non-zero} values of the logarithms,
+let $b_1,\dots,b_t\in\mathbb{Z}$, and put
+\begin{gather*}
+\Lambda=b_1\ln\alpha_1+\dots+b_t\ln\alpha_t\quad(1.1),\qquad
+B=\max\Bigl\{1,\max_{1\le j\le t}\frac{|b_j|A_j}{A_t}\Bigr\}\quad(1.3),\qquad
+B^*=\max_{1\le j\le t}|b_j|\quad(1.4),\\
+A_j\ge\max\{D\,h(\alpha_j),\ |\ln\alpha_j|,\ 0.16\}\quad(2.4),\qquad \Omega=A_1\cdots A_t.
+\end{gather*}
+
+\begin{theorem}[{Matveev \cite[Corollary~2.3]{Ma00}}]\label{thm:matveev}
+If $\Lambda\ne0$, the $A_j$ satisfy $(2.4)$ and $B$ is given by $(1.3)$, then
+\[
+\ln|\Lambda|>-C_1(t)\,D^2\,\Omega\,\ln(eD)\,\ln(eB),\qquad
+C_1(t)=C_1(t,\varkappa)=\min\Bigl\{\frac1\varkappa\Bigl(\frac12et\Bigr)^{\varkappa}30^{t+3}t^{3.5},\ 2^{6t+20}\Bigr\},
+\]
+where $B$ may be replaced by $B^*$.
+\end{theorem}
+
+We use it only with $\mathbb{K}=\mathbb{Q}\subset\mathbb{R}$, so $D=1$, $\varkappa=1$ and $\ln(eD)=1$, with the
+real logarithms. For a rational number $a/b$ in lowest terms, $h(a/b)=\log\max(|a|,|b|)$. The constants are
+\begin{align*}
+C_1(3)&=\min\{\tfrac{3e}{2}\,30^6\,3^{3.5},\,2^{38}\}=\tfrac{3e}{2}\,30^6\,3^{3.5}=1.39007\ldots\cdot10^{11},\\
+C_1(2)&=\min\{e\,30^5\,2^{3.5},\,2^{32}\}=e\,30^5\,2^{3.5}=7.47318\ldots\cdot10^{8}.
+\end{align*}
+The frequently quoted simplified form $1.4\cdot30^{t+3}t^{4.5}D^2(1+\log D)(1+\log B)A_1\cdots A_t$ is weaker,
+since $1.4\cdot30^6\cdot3^{4.5}=1.4319\cdot10^{11}\ge C_1(3)$; using it would give $\ell_1=45.31$ in place of
+$45.28$.
+
+\subsection{Two smooth terms}
+
+\begin{proposition}\label{prop:B}
+In the setting of Section~\ref{sec:reduction}, assume \textup{(H)}, $A>1$ and $Y\le n$, and put $L:=\log n$.
+Then
+\begin{equation}\label{eq:41}
+L-\log Y< C_1(3)\,(\log Y)^2\,\max(T,0.16)\,(1+\log\Bbar),\qquad\text{where }\ \Bbar:=\frac{\log(n+Y)}{\log 2}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Take $j_1\ne j_2$ from Lemma~\ref{lem:R}(v) and write $W_i:=W_{j_i}$, $q_i:=q_{j_i}$, $e_i:=e_{j_i}$. Then
+$n+j_i=W_iq_i^{e_i}$, $q_1\ne q_2$ (Lemma~\ref{lem:R}(iv)), $q_i\le Y$, $e_i\ge1$ and $\log W_i\le T$ for
+$i=1,2$. Define, with real logarithms,
+\[
+\Lambda:=\log(n+j_1)-\log(n+j_2)=e_1\log q_1-e_2\log q_2+\log(W_1/W_2).
+\]
+Then $\Lambda\ne0$ because $j_1\ne j_2$. By the mean value theorem $|\Lambda|=|j_1-j_2|/\xi$ for some $\xi$
+between $n+j_1$ and $n+j_2$, so $\xi>n$; and $|j_1-j_2|\le Y-1-l<Y$. Hence $|\Lambda|<Y/n$, that is,
+\begin{equation}\label{eq:42}
+-\log|\Lambda|>L-\log Y.
+\end{equation}
+Since $q_i^{e_i}\le n+j_i<n+Y$, we have $e_i\le\log(n+Y)/\log q_i\le\Bbar$, so
+$B^*:=\max(e_1,e_2,1)\le\Bbar$; note $\Bbar\ge1$.
+
+\emph{Case 1: $W_1\ne W_2$.} Apply Theorem~\ref{thm:matveev} with $t=3$, $\alpha_1=q_1$, $\alpha_2=q_2$,
+$\alpha_3=W_1/W_2$, $b_1=e_1$, $b_2=-e_2$, $b_3=1$. The logarithms are non-zero since $q_i\ge2$ and
+$W_1/W_2\ne1$. We have $h(q_i)=\log q_i$. Writing $W_1/W_2=a/b$ in lowest terms, $a\mid W_1$ and $b\mid W_2$, so
+$h(W_1/W_2)\le\log\max(W_1,W_2)\le T$; also $|\log(W_1/W_2)|\le\max(\log W_1,\log W_2)\le T$ because both
+logarithms are nonnegative. So $A_1:=\log q_1$, $A_2:=\log q_2$ and $A_3:=\max(T,0.16)$ satisfy (2.4)
+($\log q_i\ge\log2>0.16$). Since $\Lambda\ne0$, Theorem~\ref{thm:matveev} with $B^*$ in place of $B$ gives
+\[
+-\log|\Lambda|<C_1(3)\log q_1\log q_2\max(T,0.16)(1+\log B^*)\le C_1(3)(\log Y)^2\max(T,0.16)(1+\log\Bbar).
+\]
+
+\emph{Case 2: $W_1=W_2$.} Then $\ln\alpha_3=0$ is not an admissible value, and we use two logarithms instead:
+$\Lambda=e_1\log q_1-e_2\log q_2\ne0$. Theorem~\ref{thm:matveev} with $t=2$, $\alpha_i=q_i$, $A_i=\log q_i$ gives
+\[
+-\log|\Lambda|<C_1(2)\log q_1\log q_2(1+\log B^*)\le 0.16\,C_1(3)(\log Y)^2(1+\log\Bbar),
+\]
+using $C_1(2)=7.47\cdot10^8\le0.16\,C_1(3)=2.22\cdot10^{10}$. This is at most the bound of Case~1.
+
+In both cases, combining with \eqref{eq:42} gives \eqref{eq:41}.
+\end{proof}
+
+\section{The numerical chain and \texorpdfstring{$N_0$}{N0}}\label{sec:numerics}
+
+Besides Theorem~\ref{thm:matveev} we use two explicit estimates: $x/\log x<\pi(x)$ for real $x\ge17$
+(Rosser--Schoenfeld \cite[Corollary~1, (3.5)]{RS62}), and $\omega(m)\le R\log m/\log\log m$ for $m\ge3$, where
+$R:=1.3841$ (Robin \cite[Th\'eor\`eme~11]{Ro83}).
+
+\subsection{Constants}
+Fix an integer $l\ge1$ and put $c:=10$. For real $\ell_1$ define
+\begin{equation}\label{eq:consts}
+\begin{aligned}
+m&:=\log(cl), & \kappa_1&:=1+\frac{m}{\ell_1}, & \kappa_2&:=1+\frac{1-\log\log2+e^{-\ell_1}}{\ell_1},\\
+\mu&:=\frac{2Rm}{c-2R}, & \rho&:=\frac{\ell_1+m-1}{\ell_1-\mu}, & \eps_1&:=\frac{3e^{-\ell_1}}{c(\ell_1+m-1)},\\
+\beta&:=2c+\frac{2c(m-1)+2R/\ell_1+6e^{-\ell_1}+1}{\ell_1}, &
+\eps_2&:=\frac{\beta\,\kappa_1\,\ell_1^2e^{-\ell_1}}{(c-2R)(1-\mu/\ell_1)}, &
+\kappa_3&:=\frac{c}{c-2R}\,\rho\,\kappa_1\,\frac{1+\eps_1}{1-\eps_2},\\
+K&:=C_1(3)\,\kappa_1^2\kappa_2\kappa_3+\frac{\kappa_1}{\ell_1^4}, &
+\varphi(\ell_1)&:=\ell_1-5\log\ell_1-\log K.
+\end{aligned}
+\end{equation}
+Here $-\log\log2=0.36651\ldots$. Note that $m\ge\log10>1$, and that $\kappa_3>1$ whenever $0<\eps_2<1$ and
+$\ell_1>\mu$.
+
+\begin{proposition}\label{prop:52}
+Let $l\ge1$, and let $\ell_1\ge10$ satisfy $\ell_1>\mu$, $\eps_2<1$ and $\varphi(\ell_1)\ge0$. Then every integer $n$
+with $\log\log n\ge\ell_1$ and $\log n\ge l$ has an integer $k$ with $l\le k\le 10\,l\log n$ and $v(n,k)\ge2$.
+\end{proposition}
+
+\begin{proof}
+Let $L:=\log n$, $\ell:=\log L\ge\ell_1\ge10$, $y:=clL$ and $Y:=\lfloor y\rfloor$. Suppose, for contradiction,
+that (H) holds: $v(n,k)\le1$ for every integer $k\in[l,y]$. Then $L\ge e^{10}$, so $y\ge10L\ge67$;
+$Y>y-1\ge l+2$; $Y\le y\le cL^2<e^L=n$ (as $l\le L$); $n\ge26$ and $l-1<n$; and $\log y=\ell+m$.
+
+\emph{S1 (primes).} By \cite[(3.5)]{RS62} with $x=y$: $\pi(y)>y/\log y=clL/(\ell+m)$.
+
+\emph{S2 ($\omega$).} Every prime dividing $\Pi_l(n)$ divides some $n+i$ with $0\le i\le l-1$, and $n+i\ge3$, so
+by \cite{Ro83}
+\[
+\omega_{l,y}(n)\le\sum_{i=0}^{l-1}\omega(n+i)\le\sum_{i=0}^{l-1}\frac{R\log(n+i)}{\log\log(n+i)}\le\frac{lR(L+1)}{\ell},
+\]
+using $\log(n+i)\le L+(l-1)/n\le L+1$ and $\log\log(n+i)\ge\log\log n=\ell>0$.
+
+\emph{S3 (factorial).} Let $G(x):=(x+1)\log x-x+1$. For integers $M\ge1$,
+$\log M!=\sum_{i=1}^{M-1}\log i+\log M\le\int_1^M\log t\,dt+\log M=G(M)$, and $G$ is increasing on $[1,\infty)$
+since $G'(x)=\log x+1/x>0$. With $M=Y-l-1\in[1,y-l-1]$,
+\[
+\log((Y-l-1)!)\le G(y-l-1)=(y-l)\log(y-l-1)-(y-l-1)+1\le y\log y-y+l+2=lLc(\ell+m-1)+l+2.
+\]
+
+\emph{S4 ($A$).} By S1--S3 and the definition of $A$ (with $\log n=L$),
+\[
+A-1\ge\frac{clL}{\ell+m}-\frac{2lRL}{\ell}-\frac{2lR}{\ell}-2cl(\ell+m-1)-\frac{2(l+2)}{L}-1=lL\,a(\ell)-E(\ell),
+\]
+where
+\[
+a(\ell):=\frac{c}{\ell+m}-\frac{2R}{\ell}=\frac{(c-2R)(\ell-\mu)}{\ell(\ell+m)},\qquad
+E(\ell):=\frac{2lR}{\ell}+2cl(\ell+m-1)+\frac{2(l+2)}{L}+1.
+\]
+Since $\ell\ge\ell_1>\mu$, $a(\ell)>0$. Using $1/l\le1$, $(l+2)/l\le3$, $1/L=e^{-\ell}\le e^{-\ell_1}$,
+$1/\ell\le1/\ell_1$ and $m-1>0$,
+\[
+\frac{E(\ell)}{l}\le2c\ell+\Bigl(2c(m-1)+\frac{2R}{\ell_1}+6e^{-\ell_1}+1\Bigr)\le\beta\ell,\qquad
+\frac1{a(\ell)}=\frac{\ell+m}{(c-2R)(1-\mu/\ell)}\le\frac{\kappa_1\ell}{(c-2R)(1-\mu/\ell_1)}.
+\]
+Hence $E(\ell)/(lL\,a(\ell))\le[\beta\kappa_1/((c-2R)(1-\mu/\ell_1))]\,\ell^2e^{-\ell}\le\eps_2$, because
+$\ell^2e^{-\ell}$ is decreasing for $\ell\ge2$. Therefore $A-1\ge lL\,a(\ell)(1-\eps_2)>0$.
+
+\emph{S5 ($T$).} By S3, $\log((Y-l-1)!)\le lLc(\ell+m-1)(1+\eps_1)$, since
+$(l+2)/(lLc(\ell+m-1))\le3e^{-\ell_1}/(c(\ell_1+m-1))=\eps_1$. With S4,
+\[
+T\le\frac{c(\ell+m-1)(1+\eps_1)}{a(\ell)(1-\eps_2)}
+=\frac{c}{c-2R}\cdot\frac{\ell+m-1}{\ell-\mu}\cdot\ell(\ell+m)\cdot\frac{1+\eps_1}{1-\eps_2}\le\kappa_3\ell^2,
+\]
+because $(\ell+m-1)/(\ell-\mu)$ is decreasing in $\ell$ (its derivative has the sign of $-(m-1+\mu)<0$), hence
+at most $\rho$, and $\ell+m\le\kappa_1\ell$. Also $0.16\le\kappa_3\ell^2$, so $\max(T,0.16)\le\kappa_3\ell^2$.
+
+\emph{S6 ($\Bbar$ and $\log Y$).} We have $\log(n+Y)\le L+Y/n\le L+1$ and $\log(L+1)\le\ell+1/L$, so
+\[
+1+\log\Bbar\le1+\ell+e^{-\ell_1}-\log\log2\le\kappa_2\ell,\qquad \log Y\le\log y=\ell+m\le\kappa_1\ell.
+\]
+
+\emph{S7 (conclusion).} All hypotheses of Proposition~\ref{prop:B} hold ($A>1$ by S4, and $Y\le n$). By
+\eqref{eq:41} and S5--S6,
+\[
+L<\kappa_1\ell+C_1(3)\,\kappa_1^2\ell^2\cdot\kappa_3\ell^2\cdot\kappa_2\ell\le K\ell^5,
+\]
+using $\kappa_1\ell\le(\kappa_1/\ell_1^4)\ell^5$. That is, $\log n<K(\log\log n)^5$. But
+$\psi(\ell):=\ell-5\log\ell$ has $\psi'(\ell)=1-5/\ell>0$ for $\ell>5$, so $\psi(\ell)\ge\psi(\ell_1)\ge\log K$,
+which means $L=e^\ell\ge K\ell^5$. This contradiction proves the proposition.
+\end{proof}
+
+\subsection{Proof of Theorem A}
+For $l=1$ and $\ell_1=45.28$ the script \texttt{n0\_compute.py} evaluates every quantity in \eqref{eq:consts} as
+an interval (mpmath interval arithmetic, 60 digits, outward rounding) and certifies from the interval endpoints
+every numerical inequality used above: $\varphi(\ell_1)\ge0$, $\ell_1\ge10$, $\ell_1>\mu$, $\eps_2<1$,
+$\kappa_3\ell_1^2\ge0.16$, $m>1$, $y\ge67$ and $C_1(2)\le0.16\,C_1(3)$. The decimal inputs $1.3841$ and $45.28$
+enter as enclosing intervals. The monotonicity facts are proved in the text. Table~\ref{tab:consts} lists the
+values, rounded for display.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+quantity & value & script name & quantity & value & script name\\
+\midrule
+$m=\log10$ & $2.30258509299$ & \texttt{m} & $\beta$ & $20.5987817363$ & \texttt{e1}\\
+$\kappa_1$ & $1.05085214428$ & \texttt{kappa1} & $\eps_2$ & $1.35404300089\cdot10^{-16}$ & \texttt{eps2}\\
+$\kappa_2$ & $1.03017917227$ & \texttt{kappa2} & $\kappa_3$ & $1.52457710226$ & \texttt{kappa3}\\
+$\mu$ & $0.881387214031$ & \texttt{mu} & $C_1(3)$ & $1.39007316922\cdot10^{11}$ & \texttt{C1(3)}\\
+$\rho$ & $1.04919010235$ & \texttt{ratio} & $K$ & $2.41092138023\cdot10^{11}$ & \texttt{K}\\
+$\eps_1$ & $1.39329644231\cdot10^{-22}$ & \texttt{eps1} & $\varphi(45.28)$ & $0.00722781770539>0$ & \texttt{phi}\\
+\bottomrule
+\end{tabular}
+\caption{The constants \eqref{eq:consts} for $l=1$, $c=10$, $\ell_1=45.28$.}\label{tab:consts}
+\end{table}
+
+So Proposition~\ref{prop:52} applies with $l=1$; the condition $\log n\ge1$ is automatic. Every $n$ with
+$\log\log n\ge45.28$, that is every $n\ge N_0=\exp(e^{45.28})$, has some $k$ with $1\le k\le10\log n$ and
+$v(n,k)\ge2$. This proves Theorem~A. \qed
+
+\medskip
+The value $45.28$ is the least multiple of $0.01$ passing the certificate; $45.27$ fails. The simplifications in
+S4--S7 cost less than $0.01$ in $\ell_1$: evaluated directly from S1--S3 and S6, the right-hand side of
+\eqref{eq:41} first falls below $L$ near $\ell\approx45.272$ (not used), and it is at most $K\ell^5$ at
+$\ell\in\{45.28,46,50,60,100,1000\}$, a check of the algebra in S4--S7.
+
+\section{The version uniform in \texorpdfstring{$l$}{l}}\label{sec:uniform}
+
+For fixed $l$, Proposition~\ref{prop:52} with the constants \eqref{eq:consts} gives the thresholds in
+Table~\ref{tab:perl}, which proves Theorem~A$_l$. They depend on $l$ only through $m=\log(10l)$ and grow slowly:
+$\ell_1(l)=45.95$, $46.53$, $47.54$ at $l=10^3,10^6,10^{12}$. For all $1\le l\le\log n$ at once,
+Proposition~\ref{prop:unif} gives the single threshold $\log\log n\ge48.82$.
+
+\begin{table}[ht]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}l*{10}{c}@{}}
+\toprule
+$l$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+$\ell_1(l)$ & 45.28 & 45.35 & 45.39 & 45.42 & 45.44 & 45.46 & 45.48 & 45.49 & 45.50 & 45.51\\
+\midrule
+$l$ & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20\\
+$\ell_1(l)$ & 45.52 & 45.53 & 45.54 & 45.54 & 45.55 & 45.56 & 45.56 & 45.57 & 45.57 & 45.58\\
+\bottomrule
+\end{tabular}
+\caption{Certified thresholds for fixed $l$ ($c=10$): $\ell_1(l)$ is the least multiple of $0.01$ passing the
+certificate of Proposition~\ref{prop:52}. Correspondingly $\log N(l)=e^{\ell_1(l)}$ runs from $4.622\cdot10^{19}$
+($l=1$) to $6.239\cdot10^{19}$ ($l=20$), and $K(l)$ from $2.411\cdot10^{11}$ to $3.154\cdot10^{11}$.}\label{tab:perl}
+\end{table}
+
+For the uniform version put $c=10$, $R=1.3841$, let $\kappa_2$ be as in \eqref{eq:consts}, and define
+\begin{equation}\label{eq:unif}
+\begin{gathered}
+\kappa_1^\unif:=2+\frac{\log c}{\ell_1},\qquad \mu^\unif:=\frac{2R\log c}{c-4R},\qquad
+\rho^\unif:=\frac{2\ell_1+\log c-1}{\ell_1-\mu^\unif},\qquad \eps_1^\unif:=\frac{3e^{-\ell_1}}{c(\ell_1+\log c-1)},\\
+\beta^\unif:=4c+\frac{2c(\log c-1)+2R/\ell_1+6e^{-\ell_1}+1}{\ell_1},\qquad
+\eps_2^\unif:=\frac{\beta^\unif\kappa_1^\unif\ell_1^2e^{-\ell_1}}{(c-4R)(1-\mu^\unif/\ell_1)},\\
+\kappa_3^\unif:=\frac{c}{c-4R}\,\rho^\unif\kappa_1^\unif\,\frac{1+\eps_1^\unif}{1-\eps_2^\unif},\qquad
+K^\unif:=C_1(3)(\kappa_1^\unif)^2\kappa_2\kappa_3^\unif+\kappa_1^\unif/\ell_1^4,\qquad
+\varphi^\unif(\ell_1):=\ell_1-5\log\ell_1-\log K^\unif.
+\end{gathered}
+\end{equation}
+
+\begin{proposition}\label{prop:unif}
+Suppose $c>4R$, $\ell_1\ge10$, $\ell_1>\mu^\unif$, $\eps_2^\unif<1$ and $\varphi^\unif(\ell_1)\ge0$. Then for every
+integer $l\ge1$ and every integer $n$ with $\log\log n\ge\ell_1$ and $\log n\ge l$, some $k$ with
+$l\le k\le c\,l\log n$ has $v(n,k)\ge2$.
+\end{proposition}
+
+\begin{proof}
+Repeat the proof of Proposition~\ref{prop:52}. Now $m=\log(cl)$ is not fixed; from $1\le l\le L$ we only know
+$\log c\le m\le\ell+\log c$. The preliminary facts and S1--S3 are unchanged. The later steps change as follows.
+
+\emph{S4.} $a(\ell)=c/(\ell+m)-2R/\ell$ is decreasing in $m$, so
+$a(\ell)\ge a^\unif(\ell):=c/(2\ell+\log c)-2R/\ell=(c-4R)(\ell-\mu^\unif)/(\ell(2\ell+\log c))>0$. Using
+$m\le\ell+\log c$, $E(\ell)/l\le2R/\ell_1+2c(2\ell+\log c-1)+6e^{-\ell_1}+1\le\beta^\unif\ell$ (as $\log c>1$).
+Also $1/a^\unif(\ell)\le\kappa_1^\unif\ell/((c-4R)(1-\mu^\unif/\ell_1))$. Hence
+$E/(lLa)\le E/(lLa^\unif)\le\eps_2^\unif$ and $A-1\ge lL\,a(\ell)(1-\eps_2^\unif)>0$.
+
+\emph{S5.} Since $m\ge\log c$, $(l+2)/(lLc(\ell+m-1))\le\eps_1^\unif$. Also
+$c(\ell+m-1)/a(\ell)\le c(2\ell+\log c-1)/a^\unif(\ell)\le\frac{c}{c-4R}\rho^\unif\kappa_1^\unif\ell^2$, because
+$(2\ell+\log c-1)/(\ell-\mu^\unif)$ is decreasing (its derivative has the sign of $-(2\mu^\unif+\log c-1)<0$).
+So $T\le\kappa_3^\unif\ell^2$, and $\kappa_3^\unif\ell_1^2\ge0.16$.
+
+\emph{S6.} $\log Y\le\ell+m\le2\ell+\log c\le\kappa_1^\unif\ell$. The bound $1+\log\Bbar\le\kappa_2\ell$ is
+unchanged; it uses $Y\le cL^2<n$.
+
+\emph{S7.} $L<K^\unif\ell^5$, which contradicts $\varphi^\unif(\ell_1)\ge0$ as before.
+\end{proof}
+
+With $c=10$ (and $4R=5.5364<10$) the script certifies $\ell_1=48.82$ (and $48.81$ fails), with
+$\kappa_1^\unif=2.04716$, $\mu^\unif=1.42800$, $\rho^\unif=2.08775$, $\beta^\unif=40.5553$,
+$\eps_2^\unif=2.87\cdot10^{-17}$, $\kappa_3^\unif=9.57515$, $K^\unif=5.73427\cdot10^{12}$ and
+$\varphi^\unif(48.82)=0.00182>0$; it also certifies $\ell_1>\mu^\unif$, $\eps_2^\unif<1$,
+$\kappa_3^\unif\ell_1^2\ge0.16$ and $\log c>1$. This proves Theorem~A$_{\mathrm{unif}}$: if $n\ge N(l)$ then $\log\log n\ge48.82$ and $\log n\ge l$.
+Corollary~A$_l$ follows as Corollary~A1 does. \qed
+
+\section{Remarks}\label{sec:remarks}
+
+\subsection{The Langevin route}\label{sec:langevin}
+The qualitative content of Corollary~A1 follows from a theorem of Langevin and the case $l=1$ of
+Lemma~\ref{lem:R}(i), restated here; this route was pointed out in the prior-art check for this note.
+
+\begin{lemma}\label{lem:G2}
+Let $n\ge1$ and $K\ge2$ be integers, and assume $v(n,k)\le1$ for every $1\le k\le K$. For each prime $p\le K$ with
+$p\nmid n$ let $k_0(p)$ be the least $k\ge1$ with $p\mid n+k$. Then $1\le k_0(p)\le p-1$, $P(n+k_0(p))=p$, and
+$p\mapsto k_0(p)$ is injective. Hence $\#\{1\le k\le K: P(n+k)\le K\}\ge\pi(K)-\omega(n)$.
+\end{lemma}
+
+\begin{proof}
+Since $p\nmid n$, one of $n+1,\dots,n+p-1$ is divisible by $p$, so $1\le k_0(p)\le p-1<p$ and $p$ is a prime
+factor of $n+k_0(p)$ greater than $k_0(p)$. As $v(n,k_0(p))\le1$, Lemma~\ref{lem:v} shows that $p$ is the only
+such factor; every other prime factor of $n+k_0(p)$ is at most $k_0(p)<p$, so $P(n+k_0(p))=p\le K$. This
+recovers $p$ from $k_0(p)$, so the map is injective, and the $\pi(K)-\omega(n)$ primes $p\le K$ with $p\nmid n$
+give that many distinct $k\in[1,K]$ with $P(n+k)\le K$.
+\end{proof}
+
+Langevin \cite[Corollaire~1]{La81} considers integers $n,k,a$ with $n>1$, $a\ge1$, $(n,a)=1$, $k\ge2$ and
+$a<n^{t_1}$ (his condition (1)). His constants $C$ and $c$ are effectively computable in terms of the parameters
+$t_1,\dots,t_6$ of his Th\'eor\`eme~1, which allows any real $t_1<1$; his Exemple (p.~242) takes $t_1=\frac12$,
+$t_2=1$, $t_3=\frac13$, $t_4=3$, $t_5=t_6=6$. Part (8) of Corollaire~1 states: for every $\eps>0$ there is an
+explicit $r(\eps)$, depending on $C$, $c$ and $\eps$, such that if $\log n/\log k\ge r(\eps)$ then
+\[
+\operatorname{card}\cY<\max\Bigl(2,\ (1+c+\eps)\,\pi(k)\,\frac{\log\log X}{\log X}\Bigr),\qquad
+X:=\frac{\log n}{(\log k)^2},
+\]
+where $\cY$ is the set of the numbers $n+ia$ $(1\le i\le k)$ with $P(n+ia)\le k$.
+
+\begin{proposition}\label{prop:langevin}
+Assuming \cite[Corollaire~1, (8)]{La81}, there is an effectively computable $N_1$ such that $v_1(n)\ge2$ for all
+$n\ge N_1$; in particular $\{n:v_1(n)=1\}$ is finite.
+\end{proposition}
+
+\begin{proof}
+Fix Langevin's example parameters (so $t_1=\frac12$) and $\eps=1$. For large $n$ put $k^*:=\lfloor10\log n\rfloor$
+and $a=1$; condition (1) holds since $1<n^{1/2}$. As $n\to\infty$, $\log n/\log k^*\to\infty$ and
+$X=\log n/(\log k^*)^2\to\infty$, so for large $n$ (8) applies and gives
+$\operatorname{card}\cY<\max(2,o(\pi(k^*)))$. Suppose $v(n,k)\le1$ for every $1\le k\le k^*$. Lemma~\ref{lem:G2}
+with $K=k^*$ gives $\operatorname{card}\cY\ge\pi(k^*)-\omega(n)$. By \cite{Ro83}, $\omega(n)\le R\log n/\log\log n$,
+and by \cite{RS62}, $\pi(k^*)>k^*/\log k^*$ with $k^*>10\log n-1$ and $\log k^*\le\log\log n+\log10$; hence
+$\omega(n)\le(R/10+o(1))\,\pi(k^*)$ and $\operatorname{card}\cY\ge(1-0.13841-o(1))\,\pi(k^*)$, which contradicts the
+upper bound for large $n$. So for all $n\ge N_1$ some $k\le10\log n$ has $v(n,k)\ge2$, and every constant involved
+is effective.
+\end{proof}
+
+With Lemma~\ref{lem:R}(i) in place of Lemma~\ref{lem:G2} and $k^*:=\lfloor10\,l\log n\rfloor$, the same argument
+gives Corollary~A$_l$ qualitatively, also uniformly for $1\le l\le\log n$: the numbers $n+j$ $(j\in J)$ lie in
+$\cY$, $\omega_{l,k^*}(n)\le(2R/10+o(1))\pi(k^*)$ and $X\ge L/(2\ell+\log10)^2\to\infty$.
+
+We have not refereed Langevin's proof; we rely on the statement as printed. With his example constants
+($C=\exp10^6$, $c=2000$ when $k>\exp10^4$) a rough estimate, which we have not verified, suggests that the
+condition $\log n/\log k^*\ge r(\eps)$ alone forces $\log\log n$ to be at least of order $10^6$.
+By contrast, the bound of Ramachandra, Shorey and Tijdeman \cite[Theorem~2]{RST76}, that at most $\pi(k)$ of
+$u+1,\dots,u+k$ are $k$-smooth when $u\ge\exp(C(\log k)^2)$, is exactly borderline against Lemma~\ref{lem:G2} and
+gives no contradiction by itself.
+
+\subsection{Sharper inputs and the constant 10}
+Three sharper inputs lower the threshold of Theorem~A to $\log\log n\ge44.96$, that is
+$\log N_0'=e^{44.96}=3.356\cdot10^{19}$, a factor $0.73$ below $\log N_0$: in S1 the bound
+$\pi(y)>y/(\log y-\frac12)$ for $y\ge67$ \cite[(3.3)]{RS62}; in S2 Robin's
+$\omega(m')\le\log m'/(\log\log m'-1.1714)$ for $m'\ge26$ \cite[Th\'eor\`eme~13]{Ro83}; and in Case~1 of
+Proposition~\ref{prop:B} Matveev's $B$ from (1.3) in place of $B^*$, with $\alpha_3=W_1/W_2$ ordered last and
+$A_3:=\kappa_3'\ell^2\ge T$. This gives $L<\kappa_1\ell+C_1(3)\kappa_1^2\kappa_3'\ell^4(\ell-d')$ with explicit
+constants ($\kappa_3'=1.39730$ and $d'=6.94609$ at $\ell_1=44.96$). The function
+$Q(\ell):=(\kappa_1\ell+C_1(3)\kappa_1^2\kappa_3'\ell^4(\ell-d'))e^{-\ell}$ is non-increasing for $\ell\ge\ell_1$
+(its log-derivative is at most $4/\ell+1/(\ell-d')-1<0$), and the script certifies $Q(44.96)=0.99329<1$ with all
+side conditions, including that the two-logarithm case is dominated; $44.95$ fails. The derivation is written out
+in the accompanying notes (\texttt{PROOF\_THEOREM\_A.md}, Section~7.2). We state Theorem~A with the simpler $45.28$.
+
+The constant $10$ is not essential. For fixed $l$ the argument works with any $c>2R=2.7682$, since then
+$a(\ell)>0$ for large $\ell$, with a threshold that grows as $c$ decreases towards $2R$; with Robin's
+Th\'eor\`eme~13 any $c>2$ works. The uniform version as written needs $c>4R$. We have not tried to optimise $c$ or
+the thresholds.
+
+\subsection{Finite data}\label{sec:finite}
+These computations are evidence only; none is used in the proofs.
+\emph{Lemma~\ref{lem:R}.} The script's check mode verifies every conclusion of Lemma~\ref{lem:R}(i)--(v) on every
+triple $(n,l,Y)$ with $3\le n\le10^6$, $l\in\{1,2,3\}$, $l+2\le Y\le150$ and $v(n,k)\le1$ for all $l\le k\le Y$:
+$91{,}709$ triples, $40{,}312$ of them with $|J_1|\ge2$, and no failure. The referee's separate implementation in
+exact integer arithmetic (not distributed) checked $207{,}874$ instances with $l\le4$ and $Y\le200$, also
+without failure.
+
+\emph{Least witnesses up to $10^7$.} For every $1\le n\le10^7$ the least $k\ge1$ with $v(n,k)\ge2$ was searched
+in the window $k\le\lfloor30\log(n+2)+30\rfloor$, which contains $[1,10\log n]$. Exactly $29$ values of $n$ have no
+such $k$ in the window, namely the $29$ values of Erd\H{o}s and Selfridge listed in the introduction; so for
+$2\le n\le10^7$ the conclusion of Theorem~A fails exactly at the $28$ values $2\le n\le330$ of that list. For every
+other $n\le10^7$ the least such $k$ is at most $11$, and $k=11$ occurs only at $n=210$ ($221=13\cdot17$) and
+$n=840$ ($851=23\cdot37$).
+
+\emph{Exception lists for $l\le20$.} For $l=1,2,3,5,8,13,20$ the numbers $n\le10^7$ with no
+$k\in[l,\lfloor40\log(n+2)+40\rfloor]$ satisfying $v(n,k)\ge2$ number $29$, $103$, $187$, $383$, $722$, $1531$,
+$2817$, with largest elements $330$, $1365$, $1365$, $2415$, $4895$, $11655$, $27714$. This truncates
+$\sup_{k\ge l}$: every $n$ not listed has $v_l(n)\ge2$, but a listed $n$ is only known to have no witness in the
+window.
+
+The witness computation was cross-checked against an independent brute-force program for $n\le2\cdot10^6$,
+and the two rows with least $k>10$ were re-verified, including minimality of $k$, by an independently written
+trial-division checker sharing no code with the generator.
+
+\subsection{Open questions not addressed}\label{sec:open}
+This note does not address the main problem $v_0(n)\to\infty$, nor $v_l(n)\to\infty$ for fixed $l$; nor
+$v_0(n)\ge3$ or $v_l(n)\ge3$ for all large $n$; nor the conjectures that $330$ is the largest $n$ with $v_1(n)=1$
+and that $80$ is the largest $n$ with $V_1(n)=1$. Since $N_0$ is far beyond computation, the set
+$\{n:v_1(n)=1\}$ is still not determined.
+
+\section*{Provenance and verification status}
+The proof in this note was found and written by an AI pipeline built on Claude models (Anthropic): Claude Opus
+for proof search and writing, an independent Claude referee working in a fresh context, and Claude Fable
+coordinating. The referee checked every step against the primary sources and recomputed the constants
+independently; its verdict was ``pass with repairs'', the repairs concerned wording and citations only, and they
+are incorporated here. This is a same-vendor review; no cross-vendor or human referee has checked the proof.
+The numerical constants were certified by interval arithmetic (\texttt{n0\_compute.py}, mpmath); the witness
+computation was checked by an independently written program. The author takes responsibility for the
+mathematics. There is no Lean formalisation; the proof uses Matveev's theorem, which is not available in Mathlib.
+The literature search was done by the same pipeline, in two passes without general web search. The following
+sources could not be consulted: Erd\H{o}s \cite[p.~178]{Er98}; Shorey and Tijdeman \cite{ST86}; Erd\H{o}s
+\cite{Er76}; Tijdeman's review in Math.\ Rev.\ 54 (1977), cited in \cite{La81} for the case $a=1$ of (8); and the
+Math.\ Rev.\ review of \cite{La81}. Any of them may already contain Theorem~A or its qualitative form. Code and
+data: \url{https://github.com/chy4pro/automath}, directory \texttt{problems/erdos889}.
+
+\begin{thebibliography}{RST76}\footnotesize\raggedright\setlength{\itemsep}{0.5pt}
+\bibitem[Er76]{Er76} P.~Erd\H{o}s, Problems and results on consecutive integers, \emph{Publ.\ Math.\ Debrecen}
+\textbf{23} (1976), 271--282.
+\bibitem[Er98]{Er98} P.~Erd\H{o}s, Some of my new and almost new problems and results in combinatorial number
+theory, in: \emph{Number Theory (Eger, 1996)}, de Gruyter, Berlin, 1998, 169--180.
+\bibitem[ErSe67]{ErSe67} P.~Erd\H{o}s and J.~L.~Selfridge, Some problems on the prime factors of consecutive
+integers, \emph{Illinois J.\ Math.} \textbf{11} (1967), 428--430.
+\bibitem[EP889]{EP889} T.~F.~Bloom, Erd\H{o}s Problem \#889, \url{https://www.erdosproblems.com/889},
+accessed 2026-09-25.
+\bibitem[FC]{FC} Google DeepMind, Formal Conjectures, file \texttt{FormalConjectures/ErdosProblems/889.lean},
+\url{https://github.com/google-deepmind/formal-conjectures}, accessed 2026-09-25.
+\bibitem[Gu04]{Gu04} R.~K.~Guy, \emph{Unsolved Problems in Number Theory}, 3rd ed., Problem Books in
+Mathematics, Springer, New York, 2004, Problem B27.
+\bibitem[Ki26]{Ki26} K.~Kitamura, \emph{A Lean 4 proof that the capital-$V_1$ exceptional set in Erd\H{o}s
+Problem 889 is finite}, GitHub repository \texttt{KitaKen1/erdos-889-capital-v1-finite}, created 2026-09-22,
+\url{https://github.com/KitaKen1/erdos-889-capital-v1-finite}, accessed 2026-09-25.
+\bibitem[La81]{La81} M.~Langevin, Facteurs premiers d'entiers en progression arithm\'etique, \emph{Acta Arith.}
+\textbf{39} (1981), 241--249.
+\bibitem[Ma00]{Ma00} E.~M.~Matveev, An explicit lower bound for a homogeneous rational linear form in the
+logarithms of algebraic numbers.~II, \emph{Izv.\ Ross.\ Akad.\ Nauk Ser.\ Mat.} \textbf{64} (2000), no.~6,
+125--180; English translation in \emph{Izv.\ Math.} \textbf{64} (2000), no.~6, 1217--1269.
+\bibitem[RST75]{RST75} K.~Ramachandra, T.~N.~Shorey and R.~Tijdeman, On Grimm's problem relating to
+factorisation of a block of consecutive integers, \emph{J.\ reine angew.\ Math.} \textbf{273} (1975), 109--124.
+\bibitem[RST76]{RST76} K.~Ramachandra, T.~N.~Shorey and R.~Tijdeman, On Grimm's problem relating to
+factorisation of a block of consecutive integers.~II, \emph{J.\ reine angew.\ Math.} \textbf{288} (1976),
+192--201.
+\bibitem[Ro83]{Ro83} G.~Robin, Estimation de la fonction de Tchebychef $\theta$ sur le $k$-i\`eme nombre premier
+et grandes valeurs de la fonction $\omega(n)$ nombre de diviseurs premiers de $n$, \emph{Acta Arith.} \textbf{42}
+(1983), 367--389.
+\bibitem[RS62]{RS62} J.~B.~Rosser and L.~Schoenfeld, Approximate formulas for some functions of prime numbers,
+\emph{Illinois J.\ Math.} \textbf{6} (1962), 64--94.
+\bibitem[ST86]{ST86} T.~N.~Shorey and R.~Tijdeman, \emph{Exponential Diophantine Equations}, Cambridge Tracts in
+Mathematics 87, Cambridge University Press, Cambridge, 1986.
+\bibitem[Ti73]{Ti73} R.~Tijdeman, On integers with many small prime factors, \emph{Compositio Math.} \textbf{26}
+(1973), 319--330.
+\end{thebibliography}
+
+\end{document}

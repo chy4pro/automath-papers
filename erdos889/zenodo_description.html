@@ -1,0 +1,44 @@
+<p>For integers n &ge; 0 and k &ge; 1 let v(n,k) be the number of prime factors of n+k that divide
+none of n, n+1, &hellip;, n+k&minus;1, equivalently the number of primes p &gt; k dividing n+k, and
+let v<sub>1</sub>(n) = sup<sub>k&ge;1</sub> v(n,k). Erd&#337;s and Selfridge (1967) expected
+v<sub>1</sub>(n) = 1 to have only finitely many solutions but could not prove it (Erd&#337;s Problem
+#889). We prove that every n &ge; N<sub>0</sub>, where log N<sub>0</sub> = e<sup>45.28</sup> &approx;
+4.62&times;10<sup>19</sup>, has some k &le; 10 log n with v(n,k) &ge; 2; hence every solution of
+v<sub>1</sub>(n) = 1 is smaller than N<sub>0</sub>. The proof combines an elementary counting lemma
+with Matveev&rsquo;s explicit lower bound for linear forms in logarithms, and every numerical
+inequality is certified by interval arithmetic. The same argument gives, for all integers l &ge; 1
+and n with log log n &ge; 48.82 and log n &ge; l, some k in [l, 10&thinsp;l&thinsp;log n] with
+v(n,k) &ge; 2. The qualitative finiteness also follows from a 1981 theorem of Langevin combined
+with an elementary lemma.</p>
+
+<p><b>What is new and what is not.</b> The explicit constant N<sub>0</sub> for Theorem A
+(log log N<sub>0</sub> = 45.28) and the explicit uniform-in-l statement with C<sub>0</sub> = 10 and
+N(l) = max(exp(e<sup>48.82</sup>), &lceil;e<sup>l</sup>&rceil;), together with sharper per-l
+thresholds for 1 &le; l &le; 20, are new as far as we could determine. The qualitative statement
+that {n : v<sub>1</sub>(n) = 1} is finite &mdash; with an effective but uncomputed bound &mdash; is
+not new: it follows from a 1981 theorem of Langevin on k-smooth integers among n+1, &hellip;, n+k
+combined with a short elementary lemma, a route this note writes out but did not discover from
+scratch. This note does not address the main problem v<sub>0</sub>(n) &rarr; &infin;, nor
+v<sub>l</sub>(n) &rarr; &infin; for fixed l, nor any lower bound of 3 or more; N<sub>0</sub> is far
+beyond computation, so the conjecture that 330 is the largest n with v<sub>1</sub>(n) = 1 remains
+open.</p>
+
+<p><b>Provenance and verification status.</b> The proof was found and written by an AI pipeline
+built on Claude models (Anthropic): a Claude Opus agent for proof search and writing, an
+independent Claude referee working in a fresh context, and a Claude Fable agent coordinating. The
+referee's verdict was PASS-WITH-REPAIRS &mdash; no mathematical gap was found in Theorem A, Theorem
+A<sub>l</sub>, Theorem A<sub>unif</sub>, Corollary A1 or Corollary A<sub>l</sub>; the repairs concerned
+wording and citations only and are incorporated in the text. This is a same-vendor review: no
+cross-vendor or human referee has checked the proof, and there is no Lean formalisation (the proof
+uses Matveev's theorem, which is not available in Mathlib). The numerical constants were certified
+by interval arithmetic (mpmath, 60 digits, outward rounding), and the witness computation up to
+10<sup>7</sup> was checked by an independently written program. The literature search was done by
+the same pipeline in two passes without general web search; the following sources could not be
+consulted and may already contain Theorem A or its qualitative form: Erd&#337;s, &ldquo;Some of my
+new and almost new problems and results in combinatorial number theory&rdquo;, in Number Theory
+(Eger, 1996), 1998, p. 178; and Shorey &amp; Tijdeman, Exponential Diophantine Equations, Cambridge
+University Press, 1986.</p>
+
+<p><b>Code and data.</b> Proof text, the interval-arithmetic script for N<sub>0</sub>
+(<code>n0_compute.py</code>), the witness table up to 10<sup>7</sup>, and the referee report are at
+<a href="https://github.com/chy4pro/automath/tree/main/problems/erdos889">https://github.com/chy4pro/automath/tree/main/problems/erdos889</a>.</p>
