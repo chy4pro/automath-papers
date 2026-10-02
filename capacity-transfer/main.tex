@@ -18,8 +18,7 @@
 \newcommand{\E}{\mathcal E}
 \newcommand{\TV}{\mathrm{TV}}
 \newcommand{\gam}{\frac{2\sqrt2}{3}}
-% Coordinator updates this one macro when the remaining reports are integrated.
-\newcommand{\RefereeStatus}{Three isolated Claude reports have now been received. The cosine sonar theorem, weak Sidon, bounded multiplicity, difference triangles, triangular sonar, Manhattan and general box bounds, and the kernel functional and perturbation have passed their respective mathematical reviews. The perturbed sonar consequence passed with editorial repairs, incorporated here. The all-$N$ square supplement has OpenAI in-team review and source-formula checking, but was not in the Claude referees' reading lists.}
+\newcommand{\RefereeStatus}{Four isolated Claude (Anthropic) reports have been received: on cosine sonar; the one-dimensional transfers; the two-dimensional transfers and perturbation; and this whole paper, including the all-$N$ square supplement. The first three passed their respective mathematical claims, with requested scope and editorial repairs incorporated. The whole-paper verdict was PASS-WITH-REPAIRS: no mathematical error was found in a theorem, proposition or lemma, and its notational and wording repairs have been applied. Claude also supplied the original scout derivations. These reviews are cross-vendor relative to the GPT-6 Astra (OpenAI) proofs, but share the scout's vendor; no vendor-independent or human review is claimed.}
 \makeatletter
 \renewcommand\section{\@startsection{section}{1}{\z@}{-2.6ex \@plus -.8ex \@minus -.2ex}{1.3ex \@plus .2ex}{\normalfont\large\bfseries}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}{-2.2ex \@plus -.6ex \@minus -.2ex}{1ex \@plus .2ex}{\normalfont\normalsize\bfseries}}
@@ -38,8 +37,9 @@ The argument preserves the exact column marginal in Cauchy--Schwarz.
 We also give explicit bounds for weak Sidon sets, bounded difference
 multiplicity, difference triangle sets, Manhattan configurations and
 Sidon sets in integer boxes. All remainders and onsets are specified.
-For the horizontal kernel functional $f(0)\int |t|f(t)\,dt$, the optimum
-among autocorrelations of nonnegative factors is $\pi^2/32$.
+For a mass-one kernel $g$, the horizontal functional
+$g(0)\int|t|g(t)\,dt$ has minimum $\pi^2/32$ among autocorrelations
+$g=h*\widetilde h$ of nonnegative $h$ with $\int h=1$.
 An explicit nonnegative positive-definite perturbation has a smaller
 value, so that constant is not the infimum in the full admissible class;
 the latter infimum remains open. Only the earlier ordinary Sidon bound,
@@ -52,8 +52,8 @@ interval capacity; signed measures; explicit bounds.
 We write $[N]=\{0,\ldots,N-1\}$; translation gives the same results for
 $\{1,\ldots,N\}$. A strong Sidon set in $\Z^d$ has distinct unordered
 pair sums, including repeated elements. Equivalently, every nonzero
-ordered difference has at most one representation: from $a-b=c-d\ne0$
-apply sum uniqueness to $a+d=c+b$, and conversely rearrange an equality
+ordered difference has at most one representation: from $a-b=a'-b'\ne0$
+apply sum uniqueness to $a+b'=a'+b$, and conversely rearrange an equality
 of sums. All roots are positive real roots. Integer parameters need not
 be perfect powers. The bounds below are uniform over the stated sets.
 
@@ -92,7 +92,7 @@ For every integer $N\ge90^4$ and every weak Sidon $A\subseteq[N]$,
  |A|<\sqrt N+\sqrt{8/3}\,N^{1/4}+2.
 \end{equation}
 \end{theorem}
-The best proved coefficient located in that audit is $\sqrt3-\eta$,
+The best proved coefficient of $N^{1/4}$ located in that audit is $\sqrt3-\eta$,
 with $\eta\ge0.0089$, in a bound with $O(1)$ remainder, from
 Balogh--F\"uredi--Roy~\cite[Theorem~5.1]{BFR21}. This is a citation to
 arXiv version~2, not an assertion that the Monthly version contains that theorem.
@@ -108,9 +108,9 @@ when $gD\ge120^4$.
 \end{theorem}
 This is the difference-multiplicity convention, not $B_2[g]$ sum
 multiplicity. Balogh--F\"uredi--Roy~\cite[Section~6, (6.1)]{BFR21}
-prove the coefficient $1$ with additive $1/2$.
+prove the second-order coefficient $1$ (of $(gN)^{1/4}$) with additive $1/2$.
 Carter--Hunter--O'Bryant~\cite{CHO25} give a smaller, explicitly
-$g$-dependent coefficient $1-\varepsilon_g/2$; their journal abstract
+$g$-dependent second-order coefficient $1-\varepsilon_g/2$; their journal abstract
 provides $\varepsilon_g\ge0.0062g^{-4}$. The arXiv and journal bounds
 are kept distinct in this comparison. Theorem~\ref{thm:gthin} is a
 routine rescaling of the earlier scalar Sidon inequality.
@@ -167,10 +167,12 @@ For $d=2$, every integer $N\ge1$ also satisfies
 \end{theorem}
 For each fixed $d$ the final term in~\eqref{eq:boxes} is lower order;
 no asymptotic uniformity in growing $d$ is asserted beyond its explicit
-hypotheses. In dimension two the located coefficients are $3/2$
+hypotheses. In dimension two the located coefficients of $N^{2/3}$ are $3/2$
 asymptotically, attributed to Robinson~\cite{Rob85}, and $1.9$ with
 remainder $1.6N^{1/3}+1$ for all $N$, attributed to Caicedo's 2016 thesis.
 Both were read only as secondary statements in Trujillo~\cite[pp.~1038--1039]{Tru23}.
+Bound~\eqref{eq:boxes-all} is smaller than that all-$N$ bound only for
+$N\ge32433$; no pointwise superiority for all $N$ is asserted.
 For $d\ge3$ the bounded audit did not establish the status of earlier
 explicit constants. These statements are source comparisons, not a
 claim of an exhaustive search.
@@ -185,9 +187,9 @@ second-order term for ordinary Sidon sets.
 We reproduce the analytic construction from~\cite{Chen26}. It supplies
 unit potential on a closed interval, with a finite signed measure of
 energy at most $L+2/3+200e^{-\alpha L}$, $\alpha=\log(4/3)$.
-The ordinary Sidon consequence of that paper has been checked in Lean;
-the present analytic construction and its transfers are not claimed
-as new formalised theorems.
+The ordinary Sidon consequence of that paper has been checked in Lean.
+Apart from that earlier Sidon bound, no statement in this note is
+claimed to be formalised in Lean.
 \subsection{Kernel and signed energy}\label{sec:kernel}
 
 Lebesgue measure on the real line is denoted by \(dt\). For an integrable
@@ -656,6 +658,9 @@ $C(L)=L+b+200e^{-\alpha L}$. Let $g$ be an even nonnegative
 positive-definite horizontal kernel, $\mu=\sum_i\delta_{(i,y_i)}$,
 $\lambda=\sum_{i=0}^{m-1}\delta_i$, and let $\rho$ be the pushforward
 of $\nu_{n/U}$ by $t\mapsto Ut$, without multiplying its mass.
+For a bounded kernel $K$ on $\R^j$ and finite signed measures write
+$E_K(\mu,\nu)=\iint K(x-y)\,d\mu(x)\,d\nu(y)$; thus $E_f=E$
+of Lemma~\ref{lem:2}.
 For $G(x,y)=g(x/T)f(y/U)$ set
 \begin{equation}\label{eq:marginal}
  \Lambda=\sum_{i,j=0}^{m-1}g((i-j)/T),\qquad
@@ -663,13 +668,16 @@ For $G(x,y)=g(x/T)f(y/U)$ set
  E_G(\lambda\otimes\rho,\lambda\otimes\rho)
        =\Lambda E_f(\nu_{n/U},\nu_{n/U}).
 \end{equation}
-When $m>0$, $g(0)>0$ ensures $\Lambda>0$. Signed Cauchy--Schwarz gives
+When $m>0$, $g(0)>0$ ensures $\Lambda>0$. Signed Cauchy--Schwarz and
+Lemma~\ref{lem:6} give
 \begin{equation}\label{eq:marginal-bound}
  \Lambda\le C(n/U)E_G(\mu,\mu)\qquad(0<U\le n).
 \end{equation}
 For the autocorrelations below this is an $L^2$ Gram inequality: the
 scaled factors are $T^{-1/2}h_g(\cdot/T)$ and
-$U^{-1/2}h(\cdot/U)$. Bounded kernels and finite total variations
+$U^{-1/2}h(\cdot/U)$, where $g=h_g*\widetilde h_g$; here
+$h_g=\ind_{[0,1]}$ for the triangle and $h_g=h_c$ for the cosine
+kernel below. Bounded kernels and finite total variations
 justify the product integrals. Kernel nonnegativity, separately,
 allows completion of missing differences. The exact column marginal
 makes~\eqref{eq:marginal} possible. A prescribed marginal in another
@@ -677,7 +685,8 @@ product problem gives the same argument; an unrestricted projection
 cannot be substituted for a prescribed one.
 
 \subsection{The triangular horizontal kernel}
-Take $g(t)=(1-|t|)_+$ and an integer $1\le V\le m$. Exact summation gives
+Take $g(t)=(1-|t|)_+$ and $T=V$ for an integer $1\le V\le m$.
+Exact summation gives
 \begin{equation}\label{eq:triangle-sandwich}
  \Lambda=mV-\frac{V^2-1}{3},\qquad
  E_G(\mu,\mu)\le\frac43m+(V-1)(U+4/3).
@@ -712,7 +721,8 @@ $x^3/(2x^2+1)\ge x/2-1/(4x)$. With $Y=x^3+2x^2+3x$,
  \quad t=x-16.
 \]
 It is positive for $x\ge48$. Division by $1-q>0$ proves
-\eqref{eq:sonar-ramp}, without a preliminary asymptotic bound on $m$.
+\eqref{eq:sonar-ramp} in Theorem~\ref{thm:sonar}, without a preliminary
+asymptotic bound on $m$.
 
 \subsection{The cosine autocorrelation}
 Let $h_c(t)=(\pi/2)\sin(\pi t)\ind_{[0,1]}(t)$ and $g=h_c*\widetilde h_c$.
@@ -777,7 +787,8 @@ The final error is at most
 $x^{-2}+(2/3)x^{-3}+(8/3)x^{-4}+(8/3)x^{-5}<1$.
 Consequently $Y(1-u)-B_c\ge13x/54-85/9>0$.
 This proves~\eqref{eq:sonar-cos} for every real $x\ge160$.
-Finally $3v<2$ follows from $(22/7)^2<32/3$.
+Finally $3v<2$ follows from $(22/7)^2<32/3$, so the coefficient in
+\eqref{eq:sonar-cos} is smaller than that in~\eqref{eq:sonar-ramp}.
 
 \subsection{The first-moment functional and its precise scope}
 \begin{proposition}\label{prop:factor}
@@ -806,13 +817,14 @@ equation gives the sine density on one interval; outside it $h=0$
 almost everywhere. Translation and dilation are the only freedoms.
 \end{proof}
 
-The leading expression in~\eqref{eq:cos-linear} is
-$MT+b_yU+aa_y n^2/(TU)$. Its AM--GM minimum is
-$3[(aM)(a_yb_y)]^{1/3}n^{2/3}$. For the fixed vertical ramp,
-$a_yb_y=8/9$, so~\eqref{eq:factor-optimum} proves that the best
-leading coefficient of this particular template over nonnegative
-horizontal factors is $3(\pi^2/36)^{1/3}$, when its lattice errors
-are lower order. This does not concern non-product two-dimensional
+After solving~\eqref{eq:cos-linear} for $m$, the excess over $n$ is
+$MT+bU+aa_2n^2/(TU)$ plus lower-order terms. Its AM--GM minimum is
+$3[(aM)(a_2b)]^{1/3}n^{2/3}$. For the fixed vertical ramp,
+$a_2b=8/9$, so~\eqref{eq:factor-optimum} shows that, with the vertical
+ramp fixed, no horizontal kernel that is the autocorrelation of a
+nonnegative unit-mass factor makes the AM--GM minimum of this leading
+expression smaller than $3(\pi^2/36)^{1/3}n^{2/3}$.
+This does not concern non-product two-dimensional
 kernels or inequalities using additional information.
 
 For completeness, the separate one-dimensional theorem of~\cite{Chen26}
@@ -924,7 +936,8 @@ and
 \]
 For the second estimate, each shifted $|t|b_\delta(t\mp2)$ has
 variation at most $1+(2+\delta)2a_0/\delta$, and the central term
-has variation at most $2$.
+$2|t|b_\delta(t)$ has variation at most $4$, twice the variation of
+$|s|g(s)$.
 Adjacent-cell comparisons give
 $|\sum_d g_\theta(d/T)-T|\le3$ and
 $\sum_d|d|g_\theta(d/T)\le MT^2+3T$.
@@ -1021,7 +1034,7 @@ Consequently, with $k=|A|\ge2$,
 \end{equation}
 For $k=0,1$ the last bound holds directly. The diagonal energy remains
 $4k/3$ even though diagonal sums are excluded from weak Sidonicity.
-The capacity lemma therefore gives
+Lemma~\ref{lem:6} therefore gives
 \[
  k^2\le(N/T+2/3+200e^{-\alpha N/T})(T+4k).
 \]
@@ -1071,7 +1084,7 @@ and the lattice majorant give, at every $0<T\le N$,
  \le\frac43k+gT.
 \]
 Only the nonzero differences receive the factor $g$.
-Substitute $S=gT$, $X=gN$ in the capacity inequality; every
+Substitute $S=gT$, $X=gN$ in the inequality of Lemma~\ref{lem:6}; every
 $0<S\le X$ is allowed. It becomes~\eqref{eq:scalar}, and
 Lemma~\ref{lem:scalar} proves~\eqref{eq:gthin}.
 Translation to the closed interval $[0,D]$ proves the diameter version.
@@ -1084,7 +1097,7 @@ $gD\ge k(k-1)/2\ge207376795>120^4$, so the explicit inverse is
 
 \subsection{Difference triangle sets}
 Let the scope be $m$ and put $K=k+1$. For $0<T\le m$, apply the
-capacity lemma separately to each row measure
+capacity bound in Lemma~\ref{lem:6} separately to each row measure
 $\mu_i=\sum_{j=0}^k\delta_{a_{ij}/T}$. Summation, using the single
 shared budget for all positive within-row differences, gives
 \[
@@ -1191,8 +1204,7 @@ a^4\sqrt2D^3/(8T)&\le&(128/27)x.
 \end{array}
 \]
 Their sum is at most $(18529/2160)x<9x$, proving
-Theorem~\ref{thm:manhattan}. In particular an unspecified lower-order
-error has not been silently deleted.
+Theorem~\ref{thm:manhattan}.
 
 \subsection{Integer boxes and a sharper lattice estimate}
 For $T\ge1$ let $n_0=\lfloor T\rfloor$, $\eta=T-n_0$ and
@@ -1268,12 +1280,12 @@ Consequently
 \]
 The final comparison holds for all $d\ge2$ because
 $5d^2/4-3d/2-9/32$ is positive at $2$ and increasing.
-Multiplication by $K$ proves~\eqref{eq:boxes}.
+Multiplication by $K$ proves~\eqref{eq:boxes} in Theorem~\ref{thm:boxes}.
 AM--GM on $(dbt+a^dt^{-d})/2$ explains the chosen scale and
 coefficient. This optimizes the retained product inequality only.
 
 \subsection{A two-dimensional bound for every positive integer}
-For $A\subseteq[N]^2$, take an integer $T\ge1$ and
+For a strong Sidon $A\subseteq[N]^2$ with $k=|A|$, take an integer $T\ge1$ and
 $r(z)=\#\{a\in A:z\in a+[T]^2\}$. It is supported on
 $[N+T-1]^2$. Write $M=N+T-1$. Window intersections give exactly
 \[
@@ -1315,11 +1327,12 @@ point $N=120^3$.
 
 \section{Verification status and limits}\label{sec:verification}
 The transfer scout derivations were supplied by Claude (Anthropic).
-GPT-6 Astra (OpenAI) independently examined those derivations, repaired
+GPT-6 Astra (OpenAI) examined those derivations, repaired
 the combinatorial and remainder arguments where needed, and wrote the
 complete explicit proofs. The cosine functional proof and admissible
 perturbation were derived in this informed proof-writing process,
-followed by independent OpenAI in-team review. These transfers were
+followed by a separate same-vendor (OpenAI) review in the same workflow.
+These transfers were
 not clean-room attacks. The author takes responsibility for the mathematics.
 
 \RefereeStatus
@@ -1346,6 +1359,8 @@ it does not automatically formalise any new analytic transfer here.
 The dependency-free JavaScript checkers supplement the proofs with
 exact BigInt arithmetic. They check finite combinatorial conventions,
 lattice identities, scale substitutions, and rational error envelopes.
+They are available under \texttt{problems/capacity\_transfer/} in
+the accompanying repository.
 The recorded executions all returned PASS:
 \begin{center}\small
 \begin{tabular}{@{}p{0.28\textwidth}p{0.65\textwidth}@{}}
