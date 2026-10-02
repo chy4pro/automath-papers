@@ -4,7 +4,7 @@ Zenodo: v1 https://doi.org/10.5281/zenodo.23103980 (2026-10-02 13:37 UTC); v2 ad
 
 Haoyu Chen — independent researcher.
 
-**Local draft.** LaTeX compilation by the coordinator is pending. This directory contains a paper source and supporting drafts; no publication, DOI, or compiled PDF is asserted.
+**Published.** Zenodo, all versions: [10.5281/zenodo.23103979](https://doi.org/10.5281/zenodo.23103979) (v1 10.5281/zenodo.23103980; v2 10.5281/zenodo.23105891, which adds the optimality section). `main.pdf` in this directory is v2.
 
 ## Statement
 
@@ -59,7 +59,7 @@ The argument was found by a clean-room GPT-6 Astra agent. The proof and audit co
 | --- | --- |
 | `main.tex` | LaTeX paper source; coordinator compilation pending. |
 | `README.md` | Statement, scope, reproducibility instructions, and review status. |
-| `zenodo_description.html` | Local draft of a possible record description. |
+| `zenodo_description.html` | Text of the Zenodo record description (v2). |
 
 The proof, checker, dated source comparison, and exploratory numerical scan are in the repository's `problems/erdos30/` directory, linked above.
 
