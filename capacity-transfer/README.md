@@ -13,6 +13,8 @@ DONE — paper-level repairs applied to the source and public description. TeX c
 
 # Interval capacity and second-order bounds for distinct-difference configurations
 
+**Published 2026-10-03:** Zenodo [10.5281/zenodo.23112229](https://doi.org/10.5281/zenodo.23112229) (`main.pdf`, 17 pages). Lean: four of the bounds (bounded multiplicity, weak Sidon, triangular sonar, difference triangles) are kernel-checked in [`lean/sidon30`](https://github.com/chy4pro/automath/tree/main/lean/sidon30) (CI run 37076247531, commit 2f981a7).
+
 - `main.tex`: self-contained article, using the same standard packages as the ordinary Sidon paper.
 - `zenodo_description.html`: public metadata, with exact bounds and scope qualifications.
 - Licence: CC0 1.0.

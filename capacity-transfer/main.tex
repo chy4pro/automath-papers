@@ -42,8 +42,11 @@ $g(0)\int|t|g(t)\,dt$ has minimum $\pi^2/32$ among autocorrelations
 $g=h*\widetilde h$ of nonnegative $h$ with $\int h=1$.
 An explicit nonnegative positive-definite perturbation has a smaller
 value, so that constant is not the infimum in the full admissible class;
-the latter infimum remains open. Only the earlier ordinary Sidon bound,
-not the transfers proved here, has been formalised in Lean.
+the latter infimum remains open. The bounded-multiplicity, weak Sidon,
+triangular sonar and difference-triangle bounds have been kernel-checked
+in Lean~4 with Mathlib, as has the earlier ordinary Sidon bound; the
+cosine sonar bound, the Manhattan and box bounds and the kernel
+functional results are not formalised.
 \end{abstract}
 \noindent\textit{Keywords:} sonar sequences; Sidon sets; distinct differences;
 interval capacity; signed measures; explicit bounds.
@@ -1339,22 +1342,30 @@ not clean-room attacks. The author takes responsibility for the mathematics.
 
 The referee verdicts are mathematical model reviews, not independent
 human referee reports. Source-formula checking of this manuscript is
-separate from those reviews. No new Lean formalisation is claimed for
-sonar, weak Sidon, bounded multiplicity, difference triangles,
-Manhattan configurations, boxes, or the kernel functional.
-The earlier ordinary Sidon theorem
-\[
- |A|\le\sqrt N+(2\sqrt2/3)N^{1/4}+1,\qquad N\ge120^4,
-\]
-with diagonal sums included, has been kernel-checked in Lean
-v4.34.0-rc1 with Mathlib commit
-\texttt{de5ce8a9}.
+separate from those reviews.
+
+\begin{sloppypar}
+Four of the bounds have been formalised and kernel-checked in Lean
+v4.34.0-rc1 with Mathlib commit \texttt{de5ce8a9}, in the same project
+as the earlier ordinary Sidon theorem
+$|A|\le\sqrt N+(2\sqrt2/3)N^{1/4}+1$ ($N\ge120^4$):
+\texttt{g\_thin\_second\_order} (Theorem~\ref{thm:gthin}),
+\texttt{weakSidon\_second\_order} (Theorem~\ref{thm:weak}),
+\texttt{sonar\_triangle\_bound} (the triangular bound
+\eqref{eq:sonar-ramp} of Theorem~\ref{thm:sonar}), and
+\texttt{difference\_triangle\_scope\_bound} and \texttt{difference\_\allowbreak triangle\_\allowbreak expanded\_\allowbreak bound} (Theorem~\ref{thm:dts}).
+The statements are in the files \texttt{TransferStatement.lean} and
+\texttt{DifferenceTriangle\allowbreak Statement.lean}; each theorem's reported
+axioms are only \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound}, enforced by \texttt{\#guard\_msgs} gates checked
+on GitHub Actions (run 37076247531, commit \texttt{2f981a7}).
 The public source at the checked revision is available
-\href{https://github.com/chy4pro/automath/tree/f8e97665f26ea40ec867d8d054d352b5fc5ec56c/lean/sidon30}{in the accompanying repository}.
-The final theorem's reported axioms are only
-\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}.
-This formalisation concerns that specific finite Sidon inequality;
-it does not automatically formalise any new analytic transfer here.
+\href{https://github.com/chy4pro/automath/tree/2f981a7/lean/sidon30}{in the accompanying repository}.
+The Lean proofs were written by GPT-6 Astra after the paper. The cosine
+sonar bound \eqref{eq:sonar-cos}, the Manhattan and box bounds, the
+all-$N$ square supplement and the kernel functional results are not
+formalised.
+\end{sloppypar}
 
 The dependency-free JavaScript checkers supplement the proofs with
 exact BigInt arithmetic. They check finite combinatorial conventions,
