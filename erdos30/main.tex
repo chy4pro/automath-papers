@@ -1,0 +1,1071 @@
+% Paper v1; same-vendor review PASS; two isolated cross-vendor referees (Claude Opus) PASS, 2026-10-02.
+\documentclass[10pt]{article}
+\usepackage[hmargin=1in,vmargin=0.9in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={An explicit second-order bound for Sidon sets},
+  pdfauthor={Haoyu Chen}, pdfsubject={Finite Sidon sets; Erdos Problem 30}}
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}{-2.6ex \@plus -.8ex \@minus -.2ex}{1.3ex \@plus .2ex}{\normalfont\large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}{-2.2ex \@plus -.6ex \@minus -.2ex}{1ex \@plus .2ex}{\normalfont\normalsize\bfseries}}
+\makeatother
+
+\title{An explicit second-order bound for Sidon sets}
+\author{Haoyu Chen\\ Independent researcher}
+\date{October 2, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $F(N)$ be the largest size of a Sidon subset of $\{1,\ldots,N\}$,
+with diagonal pair sums included. We prove
+$F(N)\le\sqrt N+(2\sqrt2/3)N^{1/4}+1$ for every integer $N\ge120^4$.
+The proof uses weighted Erd\H{o}s--Tur\'an energy with
+$h(t)=2(1-t)\mathbf1_{[0,1]}(t)$ and an exact boundary correction of $2/3$;
+an elementary contraction estimate makes the remainder explicit.
+Reported coefficients run from Lindstr\"om's $1$ through Hou--Zhao's
+$0.94349\ldots$ to unrefereed repository claims near $0.94324$ and
+$0.94301$; the present coefficient is $0.942809\ldots$.
+Erd\H{o}s's conjecture $F(N)=\sqrt N+O_\varepsilon(N^\varepsilon)$
+for every $\varepsilon>0$ remains untouched.
+\end{abstract}
+
+\noindent\textit{Keywords:} Sidon sets; distinct differences; finite energy;
+explicit bounds; boundary correction.
+
+\section{Introduction}\label{sec:introduction}
+
+A Sidon set of integers has distinct unordered two-term sums, including
+sums in which the two summands agree. Write $F(N)$ for the largest
+cardinality of such a set in $\{1,\ldots,N\}$. Translation gives the same
+maximum on $\{0,\ldots,N-1\}$. The problem of bounding $F(N)$ goes back
+to Erd\H{o}s and Tur\'an~\cite{ET41}, who proved
+$F(N)\le\sqrt N+O(N^{1/4})$. Lindstr\"om~\cite{Lind69} gave the explicit
+bound $F(N)<\sqrt N+N^{1/4}+1$, valid for every positive integer $N$.
+Cilleruelo~\cite{Cil10} reduced its additive constant to $1/2$.
+The reproductions and proofs in Balogh--F\"uredi--Roy~\cite{BFR23}
+also record these two explicit statements.
+
+Table~\ref{tab:history} gives a source-qualified progression of second-order
+coefficients at the scale $\sqrt N+cN^{1/4}$. Where a source states a
+uniform $O(1)$ remainder or a stronger form, the table indicates it;
+no additional remainder assertion is assigned here to an announcement.
+A coefficient with an unspecified $O(1)$ is not a printed numerical pair
+of additive constant and onset. Publication years and preprint years are
+listed separately when they differ. The table includes unrefereed
+announcements and repository claims as such, and does not certify their
+computational certificates.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.31\textwidth}p{0.19\textwidth}p{0.43\textwidth}@{}}
+\toprule
+Source & Coefficient $c$ & Form and status\\
+\midrule
+Erd\H{o}s--Tur\'an (1941)~\cite{ET41}
+& unspecified & $O(N^{1/4})$; journal article\\
+Lindstr\"om (1969)~\cite{Lind69}
+& $1$ & additive $+1$, every $N\ge1$; journal article\\
+Cilleruelo (2010)~\cite{Cil10}
+& $1$ & additive $+1/2$, every $N\ge1$; journal article\\
+Balogh--F\"uredi--Roy (2021/2023)~\cite{BFR23}
+& $0.998$ & no additive term for all sufficiently large $N$; journal article\\
+O'Bryant (2022/2024)~\cite{OB24}
+& $0.99703$ & no additive term for all sufficiently large $N$; journal article\\
+Carter--Hunter--O'Bryant (2023/2025)~\cite{CHO25}
+& $0.98183$ & $O(1)$ remainder; journal article\\
+AlphaEvolve collaboration (2025)~\cite{AE25}
+& $0.97633$ & rounded safe coefficient; unrefereed announcement\\
+Hou--Zhao v1 (July 2026)~\cite{HZ26}
+& $0.9460052\ldots$ & $O(1)$ remainder; preprint\\
+Hou--Zhao v3 (September 2026)~\cite{HZ26}
+& $0.9434925907\ldots$ & $O(1)$ remainder; preprint\\
+JoshMadeiros (August 2026)~\cite{Josh26}
+& $\approx0.94324445$ & $c<0.94325$; $O(1)$; unrefereed forum claim\\
+Wu, q1 (August 2026)~\cite{Wu26}
+& $\approx0.94324253$ & $c<0.94325$; $O(1)$; unrefereed repository claim\\
+Wu, q2 (August 2026)~\cite{Wu26}
+& $\approx0.94300617$ & $c<0.94301$; $O(1)$; unrefereed repository claim\\
+This note
+& $2\sqrt2/3$ & additive $+1$ for every $N\ge120^4$; review status below\\
+\bottomrule
+\end{tabular}
+\caption{Selected coefficient history. The initial date is the preprint or
+announcement date when a later journal date is also displayed. Decimal
+entries retain the scope and status of their cited sources.}
+\label{tab:history}
+\end{table}
+
+Carter--Hunter--O'Bryant~\cite{CHO25} state a diameter bound
+$k^2-1.96365k^{3/2}-O(k)$ for a $k$-element Sidon set, yielding the safe
+cardinality coefficient $0.98183$ in the table. The 2025 collaboration of
+Carter, Georgiev, G\'omez-Serrano, Hunter, O'Bryant, Tao and Wagner reported
+a diameter coefficient $1.9526463099204112$; half that value explains the
+rounded safe entry $0.97633$~\cite{AE25}. These comparisons concern
+asymptotic coefficients: the difference between diameter $N-1$ and
+interval parameter $N$ does not affect that coefficient, but must be
+retained when asserting a specified additive constant.
+
+The present note gives a complete proof with the numerical additive
+constant and onset printed in the theorem. It uses the autocorrelation
+of a decreasing linear weight. An exact correction on a half-line has
+excess mass $1/3$; joining two copies gives the boundary term $2/3$.
+A quantitative elementary contraction controls the tails. The auxiliary
+measure on a finite interval is signed, which is permitted because the
+energy comparison is an $L^2$ Cauchy--Schwarz inequality. No theorem about
+renewal processes is needed.
+
+Erd\H{o}s's conjecture asks for
+$F(N)=\sqrt N+O_\varepsilon(N^\varepsilon)$ for every $\varepsilon>0$;
+see the problem record~\cite{EP30}. The estimate proved here retains the
+exponent $1/4$ and does not resolve that conjecture. The source comparison
+above makes no claim that the displayed list is exhaustive or that the
+method has a universal optimality barrier.
+
+\section{Statement}\label{sec:statement}
+
+A finite set of integers \(A\) is a \textbf{Sidon set} if the map
+
+\[
+\{(a,b)\in A^2:a\le b\}\longrightarrow\mathbb Z,
+\qquad (a,b)\longmapsto a+b
+\]
+
+is injective. In particular, the pairs \((a,a)\) are included: equality
+\(a+b=c+d\), with \(a\le b\) and \(c\le d\), requires \(a=c\) and \(b=d\).
+
+\begin{theorem}\label{thm:main} For every integer \(N\ge207\,360\,000\) and every Sidon set
+\(A\subseteq\{1,\ldots,N\}\),
+
+\begin{equation}
+\boxed{|A|\le\sqrt N+\frac{2\sqrt2}{3}N^{1/4}+1.}
+\label{eq:s1-1}
+\end{equation}
+\end{theorem}
+
+All powers and square roots in this document are positive real ones. In
+particular, there is no requirement that \(N\) be a fourth power. The onset is
+\(207\,360\,000=120^4\).
+
+\begin{lemma}[equivalent difference convention]\label{lem:1} The Sidon condition is
+equivalent to
+
+\begin{equation}
+a-b=c-d\ne0,\qquad a,b,c,d\in A
+\quad\Longrightarrow\quad (a,b)=(c,d).
+\label{eq:s1-2}
+\end{equation}
+
+Here the differences are indexed by ordered pairs, and zero differences are
+excluded. Equivalently, each positive integer is the difference \(a-b\), with
+\(a,b\in A\) and \(a>b\), at most once.
+
+\end{lemma}
+
+\begin{proof} Suppose first that pair sums, including diagonal sums, are unique.
+The equality \(a-b=c-d\ne0\) gives \(a+d=c+b\). Equality of the two unordered
+pairs with multiplicities gives either \(a=c,d=b\), as required, or
+\(a=b,d=c\). The latter possibility contradicts the nonzero difference.
+
+Conversely, suppose \eqref{eq:s1-2} holds, and let \(a+b=c+d\). If \(a=c\), then
+\(b=d\). Otherwise \(a-c=d-b\ne0\), so \eqref{eq:s1-2}, applied to the ordered pairs
+\((a,c)\) and \((d,b)\), gives \(a=d,c=b\). Thus the unordered pairs with
+multiplicities agree. Restricting both pairs to increasing order proves the
+stated Sidon condition, including when a pair is diagonal. Finally, a
+negative difference becomes a positive one on reversing both ordered pairs;
+hence uniqueness of positive differences is equivalent to \eqref{eq:s1-2}. \end{proof}
+
+Translation preserves these conditions. We may consequently replace \(A\)
+by \(A-1\subseteq\{0,\ldots,N-1\}\) when proving \eqref{eq:s1-1}.
+
+\section{Kernel and energy}\label{sec:kernel}
+
+Lebesgue measure on the real line is denoted by \(dt\). For an integrable
+function \(v\) and a measure \(\mu\), write
+
+\[
+(v*\mu)(x)=\int v(x-t)\,d\mu(t)
+\]
+
+whenever the integral exists. A finite signed real measure means one with
+finite total variation \(\|\mu\|_{\rm TV}=|\mu|(\mathbb R)\).
+
+Set
+
+\begin{equation}
+h(t)=2(1-t)\mathbf1_{[0,1]}(t),\qquad
+\widetilde h(t)=h(-t),\qquad f=h*\widetilde h.
+\label{eq:s2-1}
+\end{equation}
+
+The specified value \(h(0)=2\) will be convenient in a pointwise identity.
+
+\begin{lemma}[kernel and Cauchy inequality]\label{lem:2} The function \(f\) is even and
+
+\begin{equation}
+f(x)=
+\begin{cases}
+\displaystyle\frac43-2|x|+\frac23|x|^3,&|x|\le1,\\
+0,&|x|>1.
+\end{cases}
+\label{eq:s2-2}
+\end{equation}
+
+It is nonnegative, nonincreasing on \([0,\infty)\), and satisfies
+
+\begin{equation}
+f(0)=\|h\|_2^2=\frac43,
+\qquad \int_{\mathbb R}h(t)\,dt=1,
+\qquad \int_{\mathbb R}f(t)\,dt=1.
+\label{eq:s2-3}
+\end{equation}
+
+For finite signed real measures define
+
+\[
+E(\mu,\nu)=\iint f(x-y)\,d\mu(x)\,d\nu(y).
+\]
+
+Then
+
+\begin{equation}
+E(\mu,\nu)=\int_{\mathbb R}(h*\mu)(t)(h*\nu)(t)\,dt,
+\qquad E(\mu,\mu)\ge0,
+\label{eq:s2-4}
+\end{equation}
+
+and
+
+\begin{equation}
+|E(\mu,\nu)|^2\le E(\mu,\mu)E(\nu,\nu).
+\label{eq:s2-5}
+\end{equation}
+
+\end{lemma}
+
+\begin{proof} The autocorrelation is even by a change of variable. For
+\(0\le x\le1\), its value is
+
+\[
+4\int_0^{1-x}(1-s-x)(1-s)\,ds
+=\frac43-2x+\frac23x^3;
+\]
+
+for \(x>1\) the two supports have no overlap of positive length. This proves
+\eqref{eq:s2-2}. Nonnegativity also follows directly from the integral of the two
+nonnegative factors. On \([0,1]\) the derivative is \(-2+2x^2\le0\), and
+outside this interval the function is zero. Integrating \(h\) and \(h^2\)
+gives \eqref{eq:s2-3}; the mass of \(f\) is \((\int h)^2=1\) by Tonelli's theorem.
+
+For any finite signed measure, Cauchy--Schwarz with respect to \(|\mu|\)
+gives
+
+\[
+\int |h*\mu|^2\le
+\|\mu\|_{\rm TV}
+\int\!\int |h(t-x)|^2\,d|\mu|(x)\,dt
+=\|\mu\|_{\rm TV}^2\|h\|_2^2.
+\]
+
+Thus \(h*\mu\in L^2\). Moreover,
+\(\int |h(t-x)h(t-y)|\,dt\le\|h\|_2^2\), so the corresponding triple
+integral against \(|\mu|\) and \(|\nu|\) is finite. Fubini's theorem is
+therefore applicable. Its inner integral is \(f(x-y)\), which proves
+\eqref{eq:s2-4}. Applying the usual Cauchy--Schwarz inequality in real \(L^2\) proves
+\eqref{eq:s2-5}. This argument allows either measure to be signed. \end{proof}
+
+\section{The half-line correction}\label{sec:halfline}
+
+Let \(U\) be the probability measure with density
+\(v_1=\mathbf1_{[0,1)}\), and let \(U^{*0}=\delta_0\). Define
+
+\begin{equation}
+g_+=\frac12\sum_{n=0}^{\infty}U^{*n}.
+\label{eq:s3-1}
+\end{equation}
+
+The following construction proves everything needed about this measure;
+no renewal theorem is used.
+
+\begin{lemma}[local finiteness and exact potential]\label{lem:3} The measure \(g_+\) is
+locally finite, supported on \([0,\infty)\), and
+
+\begin{equation}
+h*g_+=\mathbf1_{[0,\infty)},
+\qquad (f*g_+)(x)=1\quad(x\ge0).
+\label{eq:s3-2}
+\end{equation}
+
+\end{lemma}
+
+\begin{proof} For \(n\ge1\), let \(v_n\) be the density of \(U^{*n}\).
+Convolution gives representatives satisfying, for \(t\ge0\),
+
+\begin{equation}
+0\le v_n(t)\le\frac{t^{n-1}}{(n-1)!}.
+\label{eq:s3-3}
+\end{equation}
+
+For \(n=1\) this is the bound \(v_1\le1\). If it holds at \(n\), then
+
+\[
+v_{n+1}(t)=\int_0^{\min(1,t)}v_n(t-s)\,ds
+\le\int_0^t\frac{(t-s)^{n-1}}{(n-1)!}\,ds
+=\frac{t^n}{n!}.
+\]
+
+For every fixed \(R\ge0\), it follows that
+\(U^{*n}([0,R])\le R^n/n!\). The sum in \eqref{eq:s3-1} consequently has finite mass
+on every bounded interval.
+
+For a direct proof of the first identity in \eqref{eq:s3-2}, put
+\(H=\mathbf1_{[0,\infty)}\). The definitions give the pointwise identity
+\(h/2=H-U*H\). Thus each finite partial sum telescopes:
+
+\begin{equation}
+\frac12\sum_{n=0}^m h*U^{*n}
+=H-U^{*(m+1)}*H.
+\label{eq:s3-4}
+\end{equation}
+
+For \(t\ge0\), the last term on the right is between zero and
+\(t^{m+1}/(m+1)!\), by \eqref{eq:s3-3}, and this tends to zero. For \(t<0\), both
+sides vanish. The nonnegative partial sums on the left converge to
+\(h*g_+\), proving the identity. This also fixes its value at \(t=0\).
+
+Tonelli's theorem allows association of the nonnegative convolutions.
+For \(x\ge0\),
+
+\[
+(f*g_+)(x)
+=(\widetilde h*(h*g_+))(x)
+=\int_{-1}^0\widetilde h(y)H(x-y)\,dy
+=\int_{-1}^0\widetilde h(y)\,dy=1.
+\]
+
+All the integrals against \(g_+\) here are locally finite because their
+kernels have compact support. \end{proof}
+
+Write
+
+\begin{equation}
+g_+=\frac12\delta_0+\frac12u(t)\mathbf1_{[0,\infty)}(t)\,dt,
+\qquad u(t)=\sum_{n=1}^{\infty}v_n(t)\quad(t\ge0).
+\label{eq:s3-5}
+\end{equation}
+
+Use the right-continuous representative of \(u\). In particular,
+
+\begin{equation}
+u(0)=1,\quad u(t)=e^t\ (0\le t<1),\quad u(1)=e-1.
+\label{eq:s3-6}
+\end{equation}
+
+The left limit at 1 is \(e\), and must not be substituted for \(u(1)\) in
+the recurrence below. To justify these regularity claims, the series in
+\eqref{eq:s3-5} converges uniformly on compact intervals by \eqref{eq:s3-3}. For \(n\ge2\),
+the density \(v_n(t)=\int_{t-1}^t v_{n-1}(s)\,ds\), with densities set
+to zero for \(s<0\), is continuous. Only \(v_1\) has a jump at 1. For
+\(0\le t<1\), the induction proving \eqref{eq:s3-3} gives equality. At \(t=1\),
+\(v_1(1)=0\) and \(v_n(1)=1/(n-1)!\) for \(n\ge2\). These observations
+prove \eqref{eq:s3-6} and the stated representative convention.
+
+\begin{lemma}[quantitative convergence of the density]\label{lem:4} For almost every
+\(t\ge0\),
+
+\begin{equation}
+|u(t)-2|\le(e-1)(3/4)^{\lfloor t\rfloor}
+<2(3/4)^{\lfloor t\rfloor}.
+\label{eq:s3-7}
+\end{equation}
+
+\end{lemma}
+
+\begin{proof} Summing the convolution recurrence for the densities yields
+\(u=v_1+U*u\). Thus
+
+\begin{equation}
+u(t)=\int_{t-1}^t u(s)\,ds\qquad(t\ge1).
+\label{eq:s3-8}
+\end{equation}
+
+This includes \(t=1\) with the right-continuous value in \eqref{eq:s3-6}. On
+\((1,\infty)\), this identity makes \(u\) locally absolutely continuous,
+and \(u'(t)=u(t)-u(t-1)\) almost everywhere. Fix an integer \(n\ge1\).
+Solving this first-order equation on \([n,n+1]\) gives
+
+\[
+u(n+x)=e^xu(n)-\int_0^x e^{x-y}u(n-1+y)\,dy
+\qquad(0\le x\le1).
+\]
+
+Since \(u(n)=\int_0^1u(n-1+y)\,dy\), this becomes
+
+\begin{equation}
+u(n+x)=\int_0^1K_x(y)u(n-1+y)\,dy,
+\qquad
+K_x(y)=e^x-\mathbf1_{\{y\le x\}}e^{x-y}.
+\label{eq:s3-9}
+\end{equation}
+
+For \(0\le x,y\le1\), the kernel is nonnegative, and
+
+\[
+\int_0^1 K_x(y)\,dy=e^x-\int_0^x e^{x-y}\,dy=1.
+\]
+
+For \(y\in[1/2,1]\), it also satisfies \(K_x(y)\ge1/2\). Indeed, if
+\(y>x\), its value is \(e^x\ge1\). If \(y\le x\), its value is
+\(e^{x-y}(e^y-1)\ge e^{1/2}-1>1/2\), using the exponential series.
+
+Let \([m_n,M_n]\) be the smallest closed interval containing the essential
+range of \(u\) on \([n,n+1)\). Here essential extrema ignore sets of
+Lebesgue measure zero. Initially \([m_0,M_0]=[1,e]\). Equation \eqref{eq:s3-9} first
+implies that these closed intervals are nested. For the width estimate,
+every \(K_x(y)\,dy\) contains the common measure
+
+\[
+w(y)\,dy=\frac12\mathbf1_{[1/2,1]}(y)\,dy
+\]
+
+of mass \(1/4\). Put
+\(c_n=\int_0^1w(y)u(n-1+y)\,dy\). The remaining nonnegative measure
+has mass \(3/4\), so every value in \eqref{eq:s3-9} lies between
+\(c_n+(3/4)m_{n-1}\) and \(c_n+(3/4)M_{n-1}\). Consequently,
+
+\[
+[m_n,M_n]\subseteq[m_{n-1},M_{n-1}],
+\qquad M_n-m_n\le\frac34(M_{n-1}-m_{n-1}).
+\]
+
+The nested closed intervals therefore meet in a single real number \(c\),
+and
+
+\begin{equation}
+|u(t)-c|\le(e-1)(3/4)^{\lfloor t\rfloor}
+\label{eq:s3-10}
+\end{equation}
+
+almost everywhere. This also provides a uniform essential bound and
+essential uniform convergence to \(c\) as \(t\to\infty\).
+
+For \(t>1\), the atom in \eqref{eq:s3-5} contributes nothing to \(h*g_+(t)\), so
+Lemma~\ref{lem:3} gives
+
+\[
+1=\frac12\int_0^1 h(s)u(t-s)\,ds.
+\]
+
+Letting \(t\to\infty\) in this integral, \eqref{eq:s3-10} and \(\int h=1\) imply
+\(1=c/2\). Thus \(c=2\). Finally, \(e<3\): in its series
+\(e=2+\sum_{j\ge2}1/j!\), the tail is strictly smaller than
+\(\sum_{j\ge2}2^{-(j-1)}=1\). This proves \eqref{eq:s3-7}. \end{proof}
+
+\begin{lemma}[size, tail, and mass of the correction]\label{lem:5} Define the signed
+measure supported on \([0,\infty)\)
+
+\begin{equation}
+q=g_+-\mathbf1_{[0,\infty)}(t)\,dt
+=\frac12\delta_0+r(t)\mathbf1_{[0,\infty)}(t)\,dt,
+\qquad r(t)=\frac12u(t)-1.
+\label{eq:s3-11}
+\end{equation}
+
+It is a finite signed measure, and, with \(\alpha=\log(4/3)\),
+
+\begin{equation}
+|r(t)|\le(3/4)^{\lfloor t\rfloor}\quad\hbox{almost everywhere},
+\qquad \|q\|_{\rm TV}\le\frac92,
+\label{eq:s3-12}
+\end{equation}
+
+\begin{equation}
+|q|((L,\infty))\le6e^{-\alpha L}\qquad(L\ge1),
+\label{eq:s3-13}
+\end{equation}
+
+and
+
+\begin{equation}
+q(\mathbb R)=\frac13.
+\label{eq:s3-14}
+\end{equation}
+
+\end{lemma}
+
+\begin{proof} The first bound follows from Lemma~\ref{lem:4}. Integration on unit intervals
+then gives
+
+\[
+\|q\|_{\rm TV}\le\frac12+\sum_{n=0}^\infty(3/4)^n=\frac92.
+\]
+
+For \(L\ge1\), the atom at zero is outside \((L,\infty)\), and
+
+\[
+|q|((L,\infty))
+\le\sum_{n=\lfloor L\rfloor}^\infty(3/4)^n
+=4(3/4)^{\lfloor L\rfloor}
+\le\frac{16}{3}e^{-\alpha L}
+\le6e^{-\alpha L}.
+\]
+
+It remains to compute the signed mass, not just its absolute bound. For
+\(s>0\), Tonelli's theorem and the product rule for Laplace transforms of
+nonnegative convolutions give
+
+\begin{equation}
+\begin{aligned}
+\int e^{-st}\,dg_+(t)
+&=\frac12\sum_{n=0}^\infty
+\left(\int_0^1e^{-st}\,dt\right)^n\\
+&=\frac1{2\left(1-(1-e^{-s})/s\right)}.
+\end{aligned}
+\label{eq:s3-15}
+\end{equation}
+
+The geometric series converges since \(0<\int_0^1e^{-st}\,dt<1\).
+Taylor's formula for the exponential, as \(s\downarrow0\), gives
+
+\[
+\phi(s):=1-\frac{1-e^{-s}}s
+=\frac s2-\frac{s^2}6+O(s^3).
+\]
+
+This use of \(O(s^3)\) concerns only a limit: for \(0<s\le1\), Taylor's
+remainder after the cubic term of \(e^{-s}\) has absolute value at most
+\(s^4/24\), which supplies the displayed bound directly. Subtracting the
+Laplace transform \(1/s\) of half-line Lebesgue measure gives
+
+\[
+\int e^{-st}\,dq(t)
+=\frac1{2\phi(s)}-\frac1s
+=\frac{s-2\phi(s)}{2s\phi(s)}
+\longrightarrow\frac13.
+\]
+
+Because \(q\) has finite total variation and is supported on the
+nonnegative half-line, \(|e^{-st}|\le1\) there. Dominated convergence for
+the finite measure \(|q|\) shows that the limit is \(q(\mathbb R)\), proving
+\eqref{eq:s3-14}. \end{proof}
+
+\subsection{Joining two half-lines}\label{sec:finite}
+
+\begin{lemma}[finite-interval energy bound]\label{lem:6} Let \(L\ge1\), and let \(\mu\)
+be any finite positive measure supported on the closed interval \([0,L]\).
+If \(k=\mu(\mathbb R)\), then
+
+\begin{equation}
+E(\mu,\mu)\ge
+\frac{k^2}{L+\frac23+200e^{-\alpha L}},
+\qquad \alpha=\log(4/3).
+\label{eq:s4-1}
+\end{equation}
+
+\end{lemma}
+
+\begin{proof} Let \(q_L\) be the pushforward of \(q\) by the reflection
+\(t\mapsto L-t\), and set
+
+\begin{equation}
+\nu_L=\mathbf1_{[0,L]}(t)\,dt+q+q_L.
+\label{eq:s4-2}
+\end{equation}
+
+This is a finite signed real measure, with
+
+\begin{equation}
+\nu_L(\mathbb R)=L+\frac23.
+\label{eq:s4-3}
+\end{equation}
+
+Let \(g_-^L\) denote the same reflection of \(g_+\). As locally finite
+measures,
+
+\begin{equation}
+\nu_L=g_++g_-^L-dt.
+\label{eq:s4-4}
+\end{equation}
+
+Indeed, the two half-line Lebesgue measures sum to full-line Lebesgue
+measure plus Lebesgue measure on \([0,L]\); endpoints do not change those
+Lebesgue measures. The atoms of \(q\) at 0 and of \(q_L\) at \(L\) remain
+included in \eqref{eq:s4-2}. Since \(f\) is compactly supported, \eqref{eq:s4-4} may be
+convolved locally with \(f\). Lemma~\ref{lem:3} and evenness of \(f\) give, for
+\(0\le x\le L\),
+
+\begin{equation}
+V_L(x):=(f*\nu_L)(x)=1+1-\int f=1.
+\label{eq:s4-5}
+\end{equation}
+
+This holds also at both endpoints. For every real \(x\), nonnegativity
+and mass one of \(f\), together with Lemma~\ref{lem:5}, imply
+
+\begin{equation}
+|V_L(x)|\le1+\|f\|_\infty
+(\|q\|_{\rm TV}+\|q_L\|_{\rm TV})
+\le1+\frac43\cdot9=13.
+\label{eq:s4-6}
+\end{equation}
+
+Outside \([0,L]\), the only measure in \eqref{eq:s4-2} on \((L,\infty)\) is the
+tail of \(q\); on \(( -\infty,0)\) it is the reflection of the same tail.
+In particular there are no excluded endpoint atoms. Thus \eqref{eq:s3-13} gives
+
+\[
+|\nu_L|(\mathbb R\setminus[0,L])\le12e^{-\alpha L}.
+\]
+
+By \eqref{eq:s4-3}, \eqref{eq:s4-5}, and \eqref{eq:s4-6},
+
+\begin{equation}
+\begin{aligned}
+\left|E(\nu_L,\nu_L)-\left(L+\frac23\right)\right|
+&=\left|\int_{\mathbb R\setminus[0,L]}(V_L(x)-1)\,d\nu_L(x)\right|\\
+&\le14\cdot12e^{-\alpha L}
+=168e^{-\alpha L}
+\le200e^{-\alpha L}.
+\end{aligned}
+\label{eq:s4-7}
+\end{equation}
+
+Also \(E(\mu,\nu_L)=\int V_L\,d\mu=k\). Lemma~\ref{lem:2} now gives
+
+\[
+k^2\le E(\mu,\mu)E(\nu_L,\nu_L)
+\le E(\mu,\mu)\left(L+\frac23+200e^{-\alpha L}\right).
+\]
+
+The denominator is positive and \(E(\mu,\mu)\ge0\), proving \eqref{eq:s4-1}.
+There is no assumption that \(\nu_L\) is positive. \end{proof}
+
+\section{The discrete inequality}\label{sec:discrete}
+
+\begin{lemma}[Sidon energy upper bound]\label{lem:7} For every integer \(N\ge1\),
+every Sidon set \(A\subseteq\{0,\ldots,N-1\}\), and every real
+\(0<T\le N\), writing \(k=|A|\) gives
+
+\begin{equation}
+\boxed{
+k^2\le
+\left(\frac NT+\frac23+200e^{-\alpha N/T}\right)
+\left(T+\frac43k\right).
+}
+\label{eq:s5-1}
+\end{equation}
+
+\end{lemma}
+
+\begin{proof} Put \(L=N/T\ge1\) and
+\(\mu=\sum_{a\in A}\delta_{a/T}\). Its mass is \(k\), and its support
+lies in \([0,L]\). In fact its right endpoint is at most \((N-1)/T\);
+using the larger interval of length \(N/T\) is permitted in Lemma~\ref{lem:6}.
+
+Let \(D_+(A)\) denote the set of positive differences of elements of
+\(A\). Lemma~\ref{lem:1} says that each such difference occurs for exactly one
+ordered pair. The zero differences are precisely the \(k\) diagonal
+ordered pairs. Evenness of \(f\) therefore gives the exact identity
+
+\begin{equation}
+E(\mu,\mu)=\frac43k+2\sum_{d\in D_+(A)}f(d/T)
+\le\frac43k+2\sum_{d=1}^{\infty}f(d/T).
+\label{eq:s5-2}
+\end{equation}
+
+The inequality uses nonnegativity of \(f\). For every integer \(d\ge1\),
+monotonicity on the positive half-line implies
+
+\[
+f(d/T)\le T\int_{(d-1)/T}^{d/T}f(s)\,ds.
+\]
+
+Summing, and using evenness and \(\int f=1\), yields
+
+\[
+\sum_{d=1}^{\infty}f(d/T)
+\le T\int_0^\infty f(s)\,ds=\frac T2.
+\]
+
+Only finitely many summands can be nonzero. It follows that
+\(E(\mu,\mu)\le T+4k/3\). Combining this with \eqref{eq:s4-1} proves \eqref{eq:s5-1}.
+This proof applies also to the empty set and to singleton sets. \end{proof}
+
+\section{Explicit constants and onset}\label{sec:onset}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+
+Let
+
+\begin{equation}
+x=N^{1/4},\quad T=\sqrt2\,x^3,\quad
+\gamma=\frac{2\sqrt2}{3},\quad
+\varepsilon=200e^{-\alpha x/\sqrt2}.
+\label{eq:s6-1}
+\end{equation}
+
+For \(x\ge120\) the interval parameter \(L=N/T=x/\sqrt2\) is at least
+one, so Lemma~\ref{lem:7} applies. Expanding its right side gives
+\(P_\varepsilon(k)\le0\), where
+
+\begin{equation}
+P_\varepsilon(z)=
+z^2-\left(\gamma x+\frac89+\frac43\varepsilon\right)z
+-x^4-\gamma x^3-\sqrt2\,\varepsilon x^3.
+\label{eq:s6-2}
+\end{equation}
+
+For clarity, the coefficient of \(z\) comes from
+\((4/3)(x/\sqrt2+2/3+\varepsilon)\), and the constant term comes from
+\(-(x/\sqrt2+2/3+\varepsilon)\sqrt2 x^3\).
+
+We next establish a uniform bound for the error with all numerical
+comparisons explicit. The integral formula for the logarithm gives
+
+\[
+\alpha=\int_1^{4/3}\frac{dt}{t}\ge\frac14.
+\]
+
+Since \(\sqrt2\le3/2\), it follows that
+\(\alpha/\sqrt2\ge1/6\). The derivative of \(x e^{-x/6}\) is
+\(e^{-x/6}(1-x/6)\), so it is nonpositive for \(x\ge6\). Consequently,
+for every real \(x\ge120\),
+
+\begin{equation}
+\varepsilon x
+\le200xe^{-x/6}
+\le24000e^{-20}
+<\frac{24000}{2^{20}}
+=\frac{375}{16384}
+<\frac1{32}.
+\label{eq:s6-3}
+\end{equation}
+
+Here \(e>2\) follows from its series, and the last comparison is the
+integer inequality \(375\cdot32=12000<16384\). Equivalently,
+\(24000\cdot32=768000<1048576=2^{20}\).
+
+This is the reason for the convenient choice \(x_0=120\), hence
+\(N_0=120^4=207\,360\,000\): it makes the exponent \(x_0/6=20\) and
+proves \eqref{eq:s6-3} by integer arithmetic. This onset is not claimed minimal.
+The argument is uniform beyond the onset, rather than a check at one
+point. More explicitly, the controlling envelope
+
+\[
+H(N)=200N^{1/4}\exp(-N^{1/4}/6)
+\]
+
+has derivative
+
+\begin{equation}
+H'(N)=50N^{-3/4}\exp(-N^{1/4}/6)
+\left(1-\frac{N^{1/4}}6\right)\le0
+\qquad(N\ge6^4).
+\label{eq:s6-4}
+\end{equation}
+
+The actual quantity \(\varepsilon x\) is also decreasing there, since
+\(\alpha/\sqrt2\ge1/6\). Thus no larger \(N\) can violate the error bound
+used in \eqref{eq:s6-3}.
+
+Put \(y=x^2+\gamma x+1\). Using \(\gamma^2=8/9\), direct expansion gives
+
+\begin{equation}
+P_0(y)=\frac{10}{9}x^2+\frac{\gamma}{9}x+\frac19\ge x^2.
+\label{eq:s6-5}
+\end{equation}
+
+Also \(\gamma<1\), since \(\gamma^2=8/9<1\). For \(x\ge1\),
+\(y\le x^2+x+1\le3x^2\). Hence \eqref{eq:s6-3} implies
+
+\begin{equation}
+\begin{aligned}
+\varepsilon\left(\frac43y+\sqrt2\,x^3\right)
+&<\frac1{32x}\left(4x^2+\frac32x^3\right)\\
+&=\frac x8+\frac{3x^2}{64}
+\le\frac{11x^2}{64}.
+\end{aligned}
+\label{eq:s6-6}
+\end{equation}
+
+The last step uses \(x\le x^2\), valid for \(x\ge1\). Combining
+\eqref{eq:s6-2}, \eqref{eq:s6-5}, and \eqref{eq:s6-6} now proves, for every real \(x\ge120\),
+
+\begin{equation}
+P_\varepsilon(y)
+=P_0(y)-\varepsilon\left(\frac43y+\sqrt2\,x^3\right)
+>\frac{53}{64}x^2>0.
+\label{eq:s6-7}
+\end{equation}
+
+The quadratic \(P_\varepsilon\) has leading coefficient 1 and strictly
+negative constant term. Its two real roots have opposite signs: this also
+follows directly from its positive discriminant and negative root product.
+Therefore, on \([0,\infty)\), the condition \(P_\varepsilon(k)\le0\)
+places \(k\) at or below the unique positive root. Since \(y>0\) and
+\(P_\varepsilon(y)>0\), that root is strictly smaller than \(y\).
+We have proved
+
+\[
+k<x^2+\gamma x+1
+=\sqrt N+\frac{2\sqrt2}{3}N^{1/4}+1.
+\]
+
+Translating the original set as in Section~\ref{sec:statement} proves \eqref{eq:s1-1}. In particular,
+the stated non-strict bound follows from a strict bound on the real right
+side. \end{proof}
+
+\section{Where \texorpdfstring{$2\sqrt2/3$}{2 sqrt(2)/3} comes from}\label{sec:constant}
+
+Two exact constants determine this coefficient in the retained scalar
+energy inequality:
+
+\begin{equation}
+a=f(0)=\frac43,
+\qquad b=2q(\mathbb R)=\frac23.
+\label{eq:s7-1}
+\end{equation}
+
+The first is the diagonal cost per point in \eqref{eq:s5-2}. The second is the sum
+of the two half-line excess masses in \eqref{eq:s4-3}. Apart from the explicitly
+controlled exponential error, \eqref{eq:s5-1} has right side
+
+\begin{equation}
+\left(\frac NT+b\right)(T+ak)
+=N+bT+\frac{aNk}{T}+abk.
+\label{eq:s7-2}
+\end{equation}
+
+To read its second-order scale, put \(N=x^4\),
+\(T=t x^3\) for a fixed \(t>0\), and \(k=x^2+cx+O(1)\). The terms of
+order \(x^3\) in the two sides of the inequality are respectively
+\(2cx^3\) and \((bt+a/t)x^3\). The resulting upper coefficient is
+
+\begin{equation}
+c(t)=\frac12\left(bt+\frac at\right)
+=\frac t3+\frac{2}{3t}.
+\label{eq:s7-3}
+\end{equation}
+
+For \(t>0\),
+
+\[
+bt+\frac at-2\sqrt{ab}
+=\left(\sqrt{bt}-\sqrt{a/t}\right)^2\ge0.
+\]
+
+Thus the minimum in \eqref{eq:s7-3} is
+\(\sqrt{ab}=2\sqrt2/3\), attained precisely at
+\(t=\sqrt{a/b}=\sqrt2\). This gives the scale chosen in \eqref{eq:s6-1}.
+For fixed \(t\), the exponential term has argument \(-\alpha x/t\), so
+it contributes no term at this order; Section~\ref{sec:onset} supplies its fully
+effective treatment for the selected \(t\).
+
+A precise limitation statement is also possible. It concerns \textbf{only the
+scalar inequalities \eqref{eq:s5-1}, with this kernel and these retained energy
+estimates}. It does not concern all arguments using this kernel, all
+boundary corrections, or all Sidon methods.
+
+To prove this limited statement, for each \(N>0\) let \(\kappa_N>0\) be
+the solution of
+
+\begin{equation}
+\kappa_N=\sqrt N+\sqrt{ab\,\kappa_N}.
+\label{eq:s7-4}
+\end{equation}
+
+Writing \(x=N^{1/4}\) and \(\gamma=\sqrt{ab}\) gives explicitly
+
+\begin{equation}
+\kappa_N
+=\left(\frac{\gamma+\sqrt{\gamma^2+4x^2}}2\right)^2
+=x^2+\gamma\sqrt{x^2+\gamma^2/4}+\frac{\gamma^2}{2}.
+\label{eq:s7-5}
+\end{equation}
+
+For every \(T>0\), the elementary square inequality gives
+
+\[
+bT+\frac{aN\kappa_N}{T}\ge2\sqrt{abN\kappa_N}.
+\]
+
+Consequently,
+
+\begin{equation}
+\begin{aligned}
+\left(\frac NT+b\right)(T+a\kappa_N)
+&\ge N+2\sqrt{abN\kappa_N}+ab\kappa_N\\
+&=\left(\sqrt N+\sqrt{ab\kappa_N}\right)^2
+=\kappa_N^2.
+\end{aligned}
+\label{eq:s7-6}
+\end{equation}
+
+Equality occurs at \(T=\sqrt{aN\kappa_N/b}\). In particular,
+\(\kappa_N\) satisfies the entire collection of these scalar
+inequalities simultaneously, even if one allows every \(T>0\) and removes
+the nonnegative exponential error. It therefore also satisfies \eqref{eq:s5-1} for
+every allowed \(0<T\le N\).
+
+Formula \eqref{eq:s7-5} gives the exact remainder identity
+
+\begin{equation}
+\kappa_N-x^2-\gamma x
+=\frac{\gamma^2}{2}
++\frac{\gamma^3}{4\bigl(\sqrt{x^2+\gamma^2/4}+x\bigr)}.
+\label{eq:s7-7}
+\end{equation}
+
+Thus \(\kappa_N=x^2+\gamma x+O(1)\). Even imposing integrality on a scalar
+\(k\) does not change this leading limitation: for each fixed \(T\),
+the inequality in \(k\) is a monic quadratic inequality with negative
+constant term, so it holds on the full interval from zero to its positive
+root. It therefore holds at \(\lfloor\kappa_N\rfloor\), simultaneously
+for all \(T\), including with the exponential error restored. These
+integers still equal \(x^2+\gamma x+O(1)\). For large \(N\) they also lie
+between 0 and \(N\).
+
+It follows that these scalar inequalities alone cannot imply
+\(k\le\sqrt N+cN^{1/4}+C\) for any fixed \(c<\gamma\) and fixed \(C\):
+the admissible scalar values \(\lfloor\kappa_N\rfloor\) eventually
+violate that conclusion. These are scalar comparison values, \textbf{not
+constructed Sidon sets}. Improving an earlier estimate, retaining more
+information about the differences, or choosing another kernel lies outside
+this limitation statement. No general method barrier is claimed.
+
+
+\section{Remarks}\label{sec:remarks}
+
+\subsection{A numerical kernel scan: non-rigorous evidence}
+An exploratory discretization considered the minimum energy of signed
+measures of mass one supported on $[0,L]$, for $L=4,8,16$, with
+approximately $100$--$200$ grid points per unit interval. It used
+$1/E_{\min}-L$ as an estimate of a boundary constant $b$ and compared
+$\sqrt{ab}$, where $a=f(0)$. For the normalized weights
+$h_p(t)=(p+1)(1-t)^p\mathbf1_{[0,1]}(t)$, the recorded approximate
+scores were
+\[
+\begin{array}{c|rrrrrrr}
+p&0&1/2&0.8&1&1.2&1.5&2\\\hline
+\sqrt{ab}\text{ (reported)}&1.0000&0.9487&0.9435&0.9428&0.9433&0.9449&0.9487.
+\end{array}
+\]
+The linear weight had a sampled boundary estimate $0.6687$, compared
+with the exact $2/3$ proved above. The scan also reported scores near
+$0.9470$ and $0.9446$ for normalized cosine and squared-cosine weights.
+These are floating-point observations, without certified discretization
+or rounding errors. They do not establish a local minimum in a
+continuous family, optimality over kernels, or a limit of a general
+method. None of these observations is used in the theorem or in the
+scalar limitation statement of Section~\ref{sec:constant}.
+
+\subsection{The same numerical constant in a different ruler problem}
+Gupta and O'Bryant~\cite[Definition~2 and Theorem~3]{GO26} define an LM
+ruler by requiring that a positive distance $d$ have at most $d-1$
+representations. For an $n$-element LM ruler
+$\{0=\ell_1<\cdots<\ell_n\}$ they prove
+\[
+\ell_n\ge\sqrt{8/9}\,(n-1)^{3/2}.
+\]
+Thus the number $\sqrt{8/9}=2\sqrt2/3$ occurs there as well. This is a
+numerical coincidence between the stated constants: the multiplicity
+condition, main scale, and conclusion differ. No implication between
+that LM-ruler theorem and the Sidon cardinality bound of this note is
+asserted.
+
+\subsection{Analytic inputs and finite checks}
+The proof uses only standard real analysis: Tonelli and Fubini under the
+nonnegativity and absolute-integrability conditions verified in the text;
+monotone and dominated convergence; Cauchy--Schwarz in real $L^2$;
+absolute continuity of indefinite integrals of locally integrable
+functions and its integrating-factor consequence; completeness of the
+real numbers for nested compact intervals; and elementary exponential,
+logarithmic, and quadratic calculations. The factorial majorant proves
+compact uniform convergence of the density series. No external result
+about Sidon sets, renewal processes, or extremal constants is an input
+to the proof.
+
+The accompanying audit script \texttt{check\_sidon\_bound.py} uses exact
+fractions and integer square roots for rational enclosures and finite
+sanity checks. A JavaScript translation was executed for the reported
+finite checks, including maxima on intervals of lengths at most $60$;
+the Python deliverable itself was not executed in the drafting environment.
+These finite computations are not used to prove the theorem. In
+particular, numerical grids do not replace the all-$N$ monotonicity
+argument in Section~\ref{sec:onset}.
+
+\section*{Provenance and verification status}
+The argument was found by a clean-room GPT-6 Astra agent (OpenAI), then
+expanded and examined in informed same-vendor adversarial reviews.
+The source proof, the standalone expansion, and the finite-audit code
+received same-vendor review; this is the completed mathematical review
+status of the present draft. Cross-vendor referee reports by Claude
+Opus (Anthropic): two isolated reports dated 2026-10-02, both \emph{PASS} with no repair required: referee~A re-derived every display and checked the exact potential of the capacity lemma numerically; referee~B reconstructed the main inequality independently from the statement and the constant, and tested every intermediate inequality on about $1.2\cdot10^5$ Sidon sets (all maximum Sidon sets for $N\le60$, Singer and Bose--Chowla sets for prime powers $q\le127$, Mian--Chowla prefixes, random and adversarial sets) without a violation. Both referees note that the onset $120^4$ is a convenient sufficient value: the same inequalities already give the stated bound for $N\ge4\,540\,589$ (numerical evaluation, not certified here).
+No independent human referee report, Lean formalization, or other kernel
+verification is claimed. The author takes responsibility for the
+mathematics. Bibliographic statements and unrefereed numerical claims
+are distinguished in the introduction; citing a claim does not certify
+its proof or computational certificate.
+
+\begin{thebibliography}{Josh26}\footnotesize\raggedright\setlength{\itemsep}{0.5pt}
+\bibitem[ET41]{ET41} P.~Erd\H{o}s and P.~Tur\'an, On a problem of Sidon in additive number theory, and on some related problems,
+\emph{J. London Math. Soc.} (1) \textbf{16} (1941), no.~4, 212--215,
+\href{https://doi.org/10.1112/jlms/s1-16.4.212}{doi:10.1112/jlms/s1-16.4.212}.
+\bibitem[Lind69]{Lind69} B.~Lindstr\"om, An inequality for $B_2$-sequences,
+\emph{J. Combin. Theory} \textbf{6} (1969), no.~2, 211--212,
+\href{https://doi.org/10.1016/S0021-9800(69)80124-9}{doi:10.1016/S0021-9800(69)80124-9}.
+\bibitem[Cil10]{Cil10} J.~Cilleruelo, Sidon sets in $\mathbb N^d$,
+\emph{J. Combin. Theory Ser. A} \textbf{117} (2010), no.~7, 857--871,
+\href{https://doi.org/10.1016/j.jcta.2009.12.003}{doi:10.1016/j.jcta.2009.12.003}.
+\bibitem[BFR23]{BFR23} J.~Balogh, Z.~F\"uredi and S.~Roy, An upper bound on the size of Sidon sets,
+\emph{Amer. Math. Monthly} \textbf{130} (2023), no.~5, 437--445,
+\href{https://doi.org/10.1080/00029890.2023.2176667}{doi:10.1080/00029890.2023.2176667};
+preprint \href{https://arxiv.org/abs/2103.15850v2}{arXiv:2103.15850v2},
+17 June 2021 (v1: 29 March 2021).
+\bibitem[OB24]{OB24} K.~O'Bryant, On the size of finite Sidon sets,
+\emph{Ukrains'kyi Matematychnyi Zhurnal} \textbf{76} (2024), no.~8, 1192--1206,
+\href{https://doi.org/10.3842/umzh.v76i8.7858}{doi:10.3842/umzh.v76i8.7858};
+preprint \href{https://arxiv.org/abs/2207.07800v2}{arXiv:2207.07800v2},
+25 July 2022 (v1: 16 July 2022).
+\bibitem[CHO25]{CHO25} D.~Carter, Z.~Hunter and K.~O'Bryant, On the diameter of finite Sidon sets,
+\emph{Acta Math. Hungar.} \textbf{175} (2025), no.~1, 108--126,
+\href{https://doi.org/10.1007/s10474-024-01499-8}{doi:10.1007/s10474-024-01499-8};
+preprint \href{https://arxiv.org/abs/2310.20032v1}{arXiv:2310.20032v1},
+30 October 2023.
+\bibitem[AE25]{AE25} T.~Tao, Comment on \emph{Mathematical exploration and discovery at scale},
+\emph{What's new}, 11 November 2025, 5:52 pm (site-displayed time),
+\url{https://terrytao.wordpress.com/2025/11/05/mathematical-exploration-and-discovery-at-scale/#comment-689052}.
+Unrefereed announcement; attribution and safe rounded coefficient also recorded at
+\url{https://teorth.github.io/optimizationproblems/constants/5a.html}.
+Accessed 2 October 2026.
+\bibitem[HZ26]{HZ26} J.~Hou and H.~Zhao, An Improved Upper Bound for Finite Sidon Sets via Vector-Valued Smoothing,
+preprint, \href{https://arxiv.org/abs/2607.01169v3}{arXiv:2607.01169v3},
+4 September 2026 (v1: 1 July 2026; v2: 5 July 2026).
+\bibitem[Josh26]{Josh26} J.~Madeiros (JoshMadeiros), An improved constant in the second-order term:
+$h(N)\le N^{1/2}+0.94325N^{1/4}+O(1)$,
+comment on Erd\H{o}s Problem \#30, 17 August 2026, 12:14 (site-displayed time),
+\url{https://www.erdosproblems.com/forum/thread/30#post-8482}.
+Unrefereed forum claim; accessed 2 October 2026.
+\bibitem[Wu26]{Wu26} wustep (Stephen Wu), \emph{q2---grow free histograms from the q1 mix},
+\texttt{maths} GitHub repository, 27 August 2026,
+commit \texttt{da2440b68979b78d201182118d30ca418e3c2001},
+\url{https://github.com/wustep/maths/blob/da2440b68979b78d201182118d30ca418e3c2001/problems/sidon-second-term/compute/q2/README.md}.
+The q1 and q2 statements are also recorded in
+\url{https://github.com/wustep/maths/blob/da2440b68979b78d201182118d30ca418e3c2001/problems/sidon-second-term/PROBLEM.md}.
+Unrefereed repository claims; accessed 2 October 2026.
+\bibitem[GO26]{GO26} A.~Gupta and K.~O'Bryant, Optimal Diameters of High Multiplicity $g$-Golomb Rulers,
+preprint, \href{https://arxiv.org/abs/2605.14229v1}{arXiv:2605.14229v1},
+14 May 2026.
+\bibitem[EP30]{EP30} T.~F.~Bloom, Erd\H{o}s Problem \#30,
+\url{https://www.erdosproblems.com/30}, accessed 2 October 2026.
+\end{thebibliography}
+
+\end{document}

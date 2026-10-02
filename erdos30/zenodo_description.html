@@ -1,0 +1,23 @@
+<p><b>An explicit second-order bound for Sidon sets</b><br>
+Haoyu Chen (independent researcher).</p>
+
+<p><b>Local draft.</b> Coordinator compilation is pending. This description does not assert a publication, DOI, or compiled PDF.</p>
+
+<p>Let F(N) be the maximum cardinality of a Sidon subset of {1,&hellip;,N}, with all sums a+b for a&le;b distinct, including doubled sums. We prove that, for every integer N&ge;120<sup>4</sup>=207,360,000,</p>
+
+<p style="text-align: center;">F(N) &le; &radic;N + (2&radic;2/3)N<sup>1/4</sup> + 1.</p>
+
+<p>The proof uses a weighted Erd&#337;s&ndash;Tur&aacute;n energy argument with h(t)=2(1&minus;t) on [0,1], zero elsewhere, and its autocorrelation. An exact half-line construction supplies a total boundary correction of 2/3. The additive constant and onset are explicit, and a monotonicity argument covers all larger N. Erd&#337;s's conjecture F(N)=&radic;N+O<sub>&epsilon;</sub>(N<sup>&epsilon;</sup>) for every &epsilon;&gt;0 remains open.</p>
+
+<p><b>Comparison and scope.</b> A bounded public-source comparison dated 2026-10-02 found no statement subsuming the displayed theorem in the sources searched. Located comparison coefficients include 0.9434925907&hellip; in the <a href="https://arxiv.org/abs/2607.01169v3">Hou&ndash;Zhao preprint</a> and 0.943006169985179&hellip; in an <a href="https://github.com/wustep/maths/blob/da2440b68979b78d201182118d30ca418e3c2001/problems/sidon-second-term/compute/q2/README.md">unrefereed repository claim</a>, both with an O(1) remainder. The repository certificate was not replayed. This comparison does not establish priority or novelty of the proof mechanism. The same number 2&radic;2/3 occurs in a different <a href="https://arxiv.org/abs/2605.14229">LM-ruler diameter theorem of Gupta&ndash;O'Bryant</a>; its objects and conclusion differ.</p>
+
+<p>The limitation proved in the note concerns only the retained scalar inequalities with this kernel and these estimates. An exploratory floating-point scan of other kernels is non-rigorous numerical evidence: it supplies no proof step and certifies no local or global optimum over a kernel family.</p>
+
+<p><b>Verification and reproducibility.</b> The accompanying standard-library Python checker uses exact rational arithmetic, radical enclosures, and a proved rational majorant for the exponential error. It is designed to check the final inequalities at the onset and on a larger grid, and to determine maximum Sidon cardinalities for every 1&le;N&le;60 by complete branch-and-bound. Budget exhaustion is reported as incomplete with exit status 2. Small-set checks concern universal energy inequalities and do not extend the theorem below its onset.</p>
+
+<p>The Python deliverable has not been executed in the drafting environment; a coordinator run is pending. Separately executed JavaScript translations completed the N&le;60 search in 91,104 nodes, agreed with literal subset enumeration through N=18, and passed exact-rational numerical and finite-energy checks. These translation checks are distinct from execution of the Python file and from a kernel proof. From this paper directory, the reproducibility command is <code>python3 ../../../problems/erdos30/check_sidon_bound.py</code>; adding <code>--max-n 60 --node-budget 0 --seconds 0</code> removes both exact-search budgets.</p>
+
+<p><b>Provenance and review status.</b> The argument was found by a clean-room GPT-6 Astra agent. The proof and audit code received informed same-vendor adversarial review, with a PASS for the current standalone proof and code after a precision repair in the checker. <b>Cross-vendor Claude Opus referee verdicts: PLACEHOLDER &mdash; pending; insert the received verdicts and any incorporated repairs.</b> There is no Lean formalization, and independent human verification is not asserted. Haoyu Chen takes responsibility for the mathematical claims, exposition, and attribution.</p>
+
+<p><b>Files and license.</b> The local draft consists of <code>main.tex</code>, <code>README.md</code>, and this description. The standalone proof, checker, dated source comparison, and exploratory scan are in the repository's <code>problems/erdos30/</code> directory. CC0 (public domain dedication), following the collection's default.</p>
+<p><b>Cross-vendor refereeing (2026-10-02).</b> Two isolated Claude Opus referees returned PASS with no repair required (line-by-line re-derivation; independent reconstruction plus numerical tests on about 1.2·10<sup>5</sup> Sidon sets). No human referee and no Lean formalization yet. Proof, checker, referee reports and the source comparison: <a href="https://github.com/chy4pro/automath/tree/main/problems/erdos30">https://github.com/chy4pro/automath/tree/main/problems/erdos30</a>.</p>
