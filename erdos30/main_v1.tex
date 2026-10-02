@@ -1,11 +1,11 @@
-% Paper v2; bound: two cross-vendor referees PASS; optimality: referee A PASS-WITH-REPAIRS (applied), referee B PASS. 2026-10-02.
+% Paper v1; same-vendor review PASS; two isolated cross-vendor referees (Claude Opus) PASS, 2026-10-02.
 \documentclass[10pt]{article}
 \usepackage[hmargin=1in,vmargin=0.9in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={An explicit second-order bound for Sidon sets and the limit of the fixed-kernel energy method},
+\hypersetup{pdftitle={An explicit second-order bound for Sidon sets},
   pdfauthor={Haoyu Chen}, pdfsubject={Finite Sidon sets; Erdos Problem 30}}
 \numberwithin{equation}{section}
 \newtheorem{theorem}{Theorem}[section]
@@ -17,7 +17,7 @@
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}{-2.2ex \@plus -.6ex \@minus -.2ex}{1ex \@plus .2ex}{\normalfont\normalsize\bfseries}}
 \makeatother
 
-\title{An explicit second-order bound for Sidon sets and the limit of the fixed-kernel energy method}
+\title{An explicit second-order bound for Sidon sets}
 \author{Haoyu Chen\\ Independent researcher}
 \date{October 2, 2026}
 
@@ -31,11 +31,6 @@ $F(N)\le\sqrt N+(2\sqrt2/3)N^{1/4}+1$ for every integer $N\ge120^4$.
 The proof uses weighted Erd\H{o}s--Tur\'an energy with
 $h(t)=2(1-t)\mathbf1_{[0,1]}(t)$ and an exact boundary correction of $2/3$;
 an elementary contraction estimate makes the remainder explicit.
-We also prove the sharp bound
-$\liminf_{L\to\infty}(C_f(L)-L)\ge8/(9f(0))$ for nonnegative normalized
-kernels, giving a limitation for every choice of scale in the
-fixed-kernel scalar capacity method with full difference sums under a
-unit-slope hypothesis.
 Reported coefficients run from Lindstr\"om's $1$ through Hou--Zhao's
 $0.94349\ldots$ to unrefereed repository claims near $0.94324$ and
 $0.94301$; the present coefficient is $0.942809\ldots$.
@@ -127,23 +122,6 @@ A quantitative elementary contraction controls the tails. The auxiliary
 measure on a finite interval is signed, which is permitted because the
 energy comparison is an $L^2$ Cauchy--Schwarz inequality. No theorem about
 renewal processes is needed.
-
-Theorem~\ref{thm:optimality} proves the sharp bound
-$\liminf_{L\to\infty}(C_f(L)-L)\ge8/(9f(0))$ without assuming that a
-finite capacity intercept exists; the ramp attains equality. The
-proof uses nonnegative boundary trials and an exact weak-derivative
-certificate, permitting signed autocorrelation factors and unbounded
-support. Under the separate unit-slope condition, the scalar method
-using the full difference sum cannot improve its second-order
-coefficient by any choice of scale.
-This does not limit all weighted Erd\H{o}s--Tur\'an arguments or
-resolve the original conjecture.\footnote{Changes from v1:
-Section~\ref{sec:optimality} adds the complete fixed-kernel optimality
-proof and positive-capacity attainment estimate. Referee A's all-scale
-repair and liminf and sampling strengthenings are applied. The v1
-statements and proofs, including the certified onset $120^4$, are
-unchanged; the numerical scan is replaced by the rigorous theorem.
-Cross-vendor referee A: PASS-WITH-REPAIRS, repairs applied; referee B: PASS.}
 
 Erd\H{o}s's conjecture asks for
 $F(N)=\sqrt N+O_\varepsilon(N^\varepsilon)$ for every $\varepsilon>0$;
@@ -964,493 +942,30 @@ information about the differences, or choosing another kernel lies outside
 this limitation statement. No general method barrier is claimed.
 
 
-\section{Optimality of the constant within the fixed-kernel capacity method}
-\label{sec:optimality}
-
-Here $f$ continues to denote the ramp autocorrelation in
-\eqref{eq:s2-2}; a general kernel is denoted by $\varphi$. Let
-$C_0(\mathbb R)$ denote the continuous functions tending to zero at
-infinity. For an even nonnegative kernel
-$\varphi\in C_0(\mathbb R)\cap L^1(\mathbb R)$ with
-$\int\varphi=1$ and $a=\varphi(0)>0$, define
-\begin{equation}
- E_\varphi(\mu,\nu)=\iint\varphi(x-y)\,d\mu(x)\,d\nu(y),\qquad
- C_\varphi(L)=\left(\min_{\substack{\mu\ge0,\ \mu(\mathbb R)=1\\
-                    \operatorname{supp}\mu\subseteq[0,L]}}
-                    E_\varphi(\mu,\mu)\right)^{-1}.
- \label{eq:opt-capacity}
-\end{equation}
-The interval is closed, and the measures are nonnegative Borel measures.
-Weak compactness of its probability measures and continuity of the
-kernel give a minimum. It is strictly positive: $\varphi\ge a/2$
-near zero, and a finite partition into intervals of smaller diameter
-bounds every energy below by $(a/2)\sum_j\mu(I_j)^2$, uniformly away
-from zero. Nonnegativity permits discarding the cross-interval terms.
-
-\begin{theorem}[universal positive-capacity bound]\label{thm:optimality}
-Let $\varphi$ have the properties just stated and define the extended
-real number
-\[
- \beta=\liminf_{L\to\infty}\bigl(C_\varphi(L)-L\bigr).
-\]
-Then
-\begin{equation}
- \boxed{\beta\ge\frac8{9a},\qquad a=\varphi(0).}
- \label{eq:opt-bound}
-\end{equation}
-No finite intercept, unit-slope condition, positive definiteness, or
-sampling assumption is required. If, in particular,
-\begin{equation}
- C_\varphi(L)=L+b+o(1)\qquad(L\longrightarrow\infty)
- \quad\hbox{with finite }b,
- \label{eq:opt-intercept}
-\end{equation}
-then $\beta=b$ and $ab\ge8/9$.
-The general result applies to every real
-$h\in L^1(\mathbb R)\cap L^2(\mathbb R)$ with $\int h=1$ and
-$\varphi=h*\widetilde h\ge0$, including signed $h$ and kernels of
-unbounded support, without assuming \eqref{eq:opt-intercept}.
-\end{theorem}
-
-\begin{theorem}[attainment by the ramp]\label{thm:opt-attainment}
-For the kernel $f$ in \eqref{eq:s2-2}, with $\alpha=\log(4/3)$,
-every real $L\ge1$ satisfies
-\begin{equation}
- \begin{split}
- L+\frac23-168e^{-\alpha L}-192e^{-2\alpha L}
- &\le C_f(L)\le L+\frac23+168e^{-\alpha L},\\
- \left|C_f(L)-L-\frac23\right|&\le360e^{-\alpha L}.
- \end{split}
- \label{eq:opt-ramp-remainder}
-\end{equation}
-Thus $a=4/3$, $\beta=b=2/3$, and $a\beta=ab=8/9$. Moreover,
-$\sum_{d\ge1}f(d/T)\le T/2$ for every $T>0$. Hence $8/9$ is the
-infimum even when the kernels in Theorem~\ref{thm:optimality} are
-restricted to autocorrelations satisfying the sampling condition
-$\sum_{d\ge1}\varphi(d/T)\le T/2+O(1)$ as $T\to\infty$.
-\end{theorem}
-
-\subsection{Positive capacity and its necessary first moment}
-For a finite nonnegative measure $\nu$ supported on $[0,L]$, write
-$M(\nu)=\nu(\mathbb R)$. Scaling each probability measure and maximizing
-$2c-c^2E_\varphi(\mu,\mu)$ over $c\ge0$ gives
-\begin{equation}
- C_\varphi(L)=\sup_{\substack{\nu\ge0\\
-                      \operatorname{supp}\nu\subseteq[0,L]}}
-       \{2M(\nu)-E_\varphi(\nu,\nu)\}.
- \label{eq:opt-variational}
-\end{equation}
-The zero measure may be included. For Lebesgue measure $\lambda_L$
-on $[0,L]$, evenness and mass one give
-\[
- E_\varphi(\lambda_L,\lambda_L)
- =\int_{\mathbb R}(L-|t|)_+\varphi(t)\,dt
- =L-\int_{\mathbb R}\min\{|t|,L\}\varphi(t)\,dt.
-\]
-Consequently \eqref{eq:opt-variational} and monotone convergence give
-\begin{equation}
- \begin{gathered}
- M_1(L):=\int_{\mathbb R}\min\{|t|,L\}\varphi(t)\,dt,\qquad
- C_\varphi(L)\ge L+M_1(L),\\
- m_1:=\int_{\mathbb R}|t|\varphi(t)\,dt\le\beta.
- \end{gathered}
- \label{eq:opt-first-moment}
-\end{equation}
-If $m_1=\infty$, then $\beta=\infty$, proving
-Theorem~\ref{thm:optimality} in this case. If $m_1<\infty$, the
-boundary energy expansion below applies without any assumption that
-$\beta$ is finite or the excess has a limit. A finite intercept is
-the special case $\beta=b$ and implies $m_1\le b<\infty$.
-
-\subsection{An exact boundary-correlation certificate}
-We retain $U$, $g_+$ and $q$ from Section~\ref{sec:halfline}:
-$U$ is the uniform probability measure,
-$2g_+=\sum_{n\ge0}U^{*n}$ is the full renewal measure, and
-$q=g_+-H_+(t)\,dt$, where $H_+=\mathbf1_{[0,\infty)}$ and
-$H_-(t)=H_+(-t)$. Put $m=q(\mathbb R)=1/3$ and retain the density
-$r=u/2-1$ from \eqref{eq:s3-11}. The nested ranges in the proof of
-Lemma~\ref{lem:4} lie in $[1,e]$, so
-\begin{equation}
- u(t)\ge1\quad\hbox{almost everywhere on }[0,\infty).
- \label{eq:opt-positive-density}
-\end{equation}
-Lemmas~\ref{lem:3}--\ref{lem:5} give exponential decay of $r$, finite
-total variation of $q$, and its exact mass. Set
-\[
- R(s)=2g_+([0,s])\quad(s\ge0),\qquad R(s)=0\quad(s<0).
-\]
-It is nonnegative, is at least one for $s\ge0$, and has a jump of
-one at zero. The renewal equation gives, almost everywhere for $s>0$,
-\begin{equation}
- R'(s)=R(s)-R(s-1),\qquad
- R(s)=2s+\frac23+O(e^{-\alpha s})\quad(s\to\infty).
- \label{eq:opt-renewal-cumulative}
-\end{equation}
-Indeed $R'=u$; the mass of $2g_+$ between $s-1$ and $s$ equals
-$u(s)$, including the atom when $s<1$. Values at $s=1$ do not affect
-this assertion. The asymptotic follows from $2g_+=2H_+(t)\,dt+2q$
-and Lemma~\ref{lem:5}.
-
-For $t>0$ put $J(t)=q([t,\infty))$, and use a tilde for reflection
-of a finite measure by $t\mapsto-t$. Define the even locally finite
-signed measure
-\begin{equation}
- B=[-|t|+2m+2J(|t|)]\,dt+2q*\widetilde q.
- \label{eq:opt-B-definition}
-\end{equation}
-The value of $J(0)$ is immaterial.
-
-\begin{lemma}[boundary-correlation identity]\label{lem:opt-certificate}
-As locally finite signed measures,
-\begin{equation}
- \boxed{B=\frac12\delta_0
-       -\frac12\mathbf1_{\{|t|>1\}}R(|t|-1)\,dt.}
- \label{eq:opt-certificate}
-\end{equation}
-In particular its density away from the atom at zero is nonpositive.
-\end{lemma}
-
-\begin{proof}
-Weak derivatives are interpreted against compactly supported smooth
-test functions. Let $D$ denote differentiation, let $\tau_1$ translate
-to the right by one, and put $\mathcal A=D-I+\tau_1$.
-Differentiating $(\delta_0-U)*g_+=(1/2)\delta_0$, with
-$U'=\delta_0-\delta_1$, yields
-\[
- \mathcal A g_+=\frac12\delta'_0,\qquad
- \mathcal A H_+=\delta_0-U,\qquad
- \mathcal A q=U-\delta_0+\frac12\delta'_0.
-\]
-Functions also denote their Lebesgue-density measures here. The
-convolutions below are defined: $q$ has finite total variation, an
-exponentially decreasing density, and one atom; convolution with a
-half-line indicator is bounded. The last identity expresses $q'$ as
-a finite signed measure plus one derivative of an atom, justifying
-commutation of the weak derivatives below.
-
-Almost everywhere $H_-*q+H_+*\widetilde q=m+J(|t|)$, so
-\[
- B=-|t|\,dt+2H_-*q+2H_+*\widetilde q+2q*\widetilde q.
-\]
-Apply $\mathcal A$ on $q$ in the second and fourth terms and on
-$H_+$ in the third. Since $H_-*\delta'_0=-\delta_0$,
-\begin{align*}
- \mathcal A B
- &=\mathcal A(-|t|)+2H_-*(U-\delta_0+\tfrac12\delta'_0)\\
- &\quad+2(\delta_0-U)*\widetilde q
-      +2(U-\delta_0+\tfrac12\delta'_0)*\widetilde q\\
- &=\mathcal A(-|t|)+2(H_-*U-H_-)-\delta_0+(\widetilde q)'.
-\end{align*}
-The two ordinary functions on the last line cancel: on $(0,1)$ they
-are $2(t-1)$ and $2(1-t)$, respectively, and both vanish elsewhere.
-We obtain the exact identity
-\begin{equation}
- B'-B+\tau_1B=(\widetilde g_+)'.
- \label{eq:opt-B-delay}
-\end{equation}
-
-The only atom of $B$ has mass $2(1/2)^2=1/2$ at zero. Write
-$B=(1/2)\delta_0+D_0(t)\,dt$, where $D_0$ is even. For $t>0$,
-\begin{equation}
- D_0(t)=-t+2m+2J(t)+r(t)
-           +2\int_0^\infty r(s)r(s+t)\,ds.
- \label{eq:opt-D-density}
-\end{equation}
-Thus $D_0(t)=-t+2m+O(e^{-\alpha t})$ as $t\to\infty$.
-The right side of \eqref{eq:opt-B-delay} is supported on the
-nonpositive half-line, so on $(0,1)$
-\[
- D_0'(t)=D_0(t)-D_0(1-t).
-\]
-This first implies local absolute continuity. The derivative of
-$D_0(t)-D_0(1-t)$ is zero, and this difference changes sign under
-$t\mapsto1-t$. Hence it vanishes, and $D_0$ is a constant $d$ on
-$(0,1)$. The translated atom gives a jump of $-1/2$ at $t=1$.
-For $t>1$ the equation is $D_0'=D_0-D_0(\,\cdot-1)$, with no
-further jumps. The unit jump and delay equation of $R$, and uniqueness
-successively on unit intervals, imply
-\[
- D_0(t)=d-\frac12R(t-1)\qquad(t>1).
-\]
-By \eqref{eq:opt-renewal-cumulative}, its large-$t$ constant term is
-$d+2/3$. By \eqref{eq:opt-D-density}, it is $2m=2/3$. Thus $d=0$,
-proving the identity.
-\end{proof}
-
-\subsection{Positive trials and the universal bound}
-\begin{proof}[Proof of Theorem~\ref{thm:optimality}]
-The case $m_1=\infty$ was proved above. Assume henceforth that
-$m_1<\infty$; $\beta$ may still be infinite.
-Restrict $q$ to $q^{[L]}$ on $[0,L]$, let $\rho_L(t)=L-t$, and set
-\begin{equation}
- \sigma_L=\lambda_L+q^{[L]}+(\rho_L)_*q^{[L]}.
- \label{eq:opt-positive-trial}
-\end{equation}
-Its endpoint atoms have mass $1/2$, and its interior density is
-\[
- 1+r(x)+r(L-x)=\frac12u(x)+\frac12u(L-x)-1\ge0
-\]
-by \eqref{eq:opt-positive-density}. It is therefore nonnegative for
-every $L>0$, with mass $L+2m+o(1)=L+2/3+o(1)$.
-
-We retain every term in its energy expansion. The uniform part is
-$L-m_1+o(1)$ by \eqref{eq:opt-first-moment}. At a fixed $y\ge0$ the
-uniform potential tends to
-\[
- \int_0^\infty\varphi(x-y)\,dx
- =\frac12+\int_0^y\varphi(t)\,dt,
-\]
-and is bounded by one. Dominated convergence against $|q|$, followed
-by Fubini, shows that the two endpoints and both orders of each
-uniform--boundary cross term together contribute
-\[
- 2m+4\int_0^\infty\varphi(t)J(t)\,dt+o(1).
-\]
-The two same-end self-energies contribute
-$2\int\varphi\,d(q*\widetilde q)+o(1)$, since $\varphi$ is bounded
-and $q$ has finite total variation. The opposite-end cross term tends
-to zero: for fixed $x,y\ge0$, $\varphi(x+y-L)\to0$, and dominated
-convergence applies against $|q|\times|q|$. Restrictions to $[0,L]$
-converge in total variation and introduce no further term. Altogether,
-\begin{equation}
- \begin{split}
- E_\varphi(\sigma_L,\sigma_L)
- &=L+\int_{\mathbb R}\varphi(t)\,dB(t)+o(1)\\
- &=L+\frac a2
-   -\frac12\int_{|t|>1}\varphi(t)R(|t|-1)\,dt+o(1).
- \end{split}
- \label{eq:opt-energy-expansion}
-\end{equation}
-The integral against the linear-growth density converges by
-\eqref{eq:opt-first-moment}. Insert this nonnegative trial into
-\eqref{eq:opt-variational}, subtract $L$, and take the lower limit:
-\begin{equation}
- \beta\ge\frac43-\frac a2
-       +\frac12\int_{|t|>1}\varphi(t)R(|t|-1)\,dt
- \ge\frac43-\frac a2.
- \label{eq:opt-unit-bound}
-\end{equation}
-
-For $\ell>0$ apply this to $\varphi_\ell(t)=\ell\varphi(\ell t)$.
-Its mass is one and its value at zero is $\ell a$. Pushing probability
-measures forward under $x\mapsto\ell x$ gives the exact identities
-\[
- C_{\varphi_\ell}(L)=\frac{C_\varphi(\ell L)}{\ell},\qquad
- \beta(\varphi_\ell)=\frac{\beta(\varphi)}{\ell},
-\]
-the second in the extended real numbers. Changing variables in the
-tail integral and multiplying by $\ell$,
-\begin{equation}
- \beta\ge\frac{4\ell}{3}-\frac{a\ell^2}{2}
-       +\frac\ell2\int_{|t|>\ell}\varphi(t)
-                         R(|t|/\ell-1)\,dt
- \ge\frac{4\ell}{3}-\frac{a\ell^2}{2}.
- \label{eq:opt-scaled-bound}
-\end{equation}
-The final quadratic is maximized at $\ell=4/(3a)$, with value
-$8/(9a)$. This proves \eqref{eq:opt-bound}; the finite-intercept
-corollary follows by setting $\beta=b$.
-\end{proof}
-
-\subsection{Attainment for the positive capacity}
-\begin{proof}[Proof of Theorem~\ref{thm:opt-attainment}]
-Lemma~\ref{lem:2} gives $f(0)=4/3$ and $\int f=1$. Let $L\ge1$,
-reflect $q$ to $q_L$ as in Lemma~\ref{lem:6}, and set
-\[
- \eta_L=\lambda_L+q+q_L,\qquad d_L=L+\frac23,\qquad
- V_L=f*\eta_L,\qquad z_L=e^{-\alpha L}.
-\]
-This finite signed measure has mass $d_L$. As in \eqref{eq:s4-4},
-it is the sum of $g_+$ and its reflection minus full-line Lebesgue
-measure. Lemma~\ref{lem:3} gives $V_L=1$ on the closed interval
-$[0,L]$. Nonnegativity and mass one of $f$, its maximum $4/3$, and
-$\|q\|_{\rm TV}\le9/2$ give
-\[
- |V_L(x)|\le1+2\cdot\frac43\cdot\frac92=13
- \qquad(x\in\mathbb R).
-\]
-Write $\eta_L=\sigma_L+\tau_L$, where $\sigma_L$ is its restriction
-to $[0,L]$. It is exactly the nonnegative trial in
-\eqref{eq:opt-positive-trial}. The exterior part consists of two
-correction tails, so Lemma~\ref{lem:5} gives
-\[
- \|\tau_L\|_{\rm TV}\le12z_L,\qquad
- \left|E_f(\eta_L,\eta_L)-d_L\right|
- =\left|\int_{\mathbb R\setminus[0,L]}(V_L-1)\,d\eta_L\right|
- \le168z_L.
-\]
-For every probability measure $\mu$ on $[0,L]$,
-$E_f(\mu,\eta_L)=1$. Cauchy--Schwarz from Lemma~\ref{lem:2} implies
-\[
- C_f(L)\le E_f(\eta_L,\eta_L)\le d_L+168z_L.
-\]
-For the lower bound, $V_L=1$ on the support of $\sigma_L$ gives
-$E_f(\eta_L,\sigma_L)=M(\sigma_L)$. Expanding
-$\eta_L=\sigma_L+\tau_L$ yields the exact identity
-\[
- 2M(\sigma_L)-E_f(\sigma_L,\sigma_L)
- =E_f(\eta_L,\eta_L)-E_f(\tau_L,\tau_L).
-\]
-The last energy is at most
-$(4/3)\|\tau_L\|_{\rm TV}^2\le192z_L^2$. Use $\sigma_L$ in
-\eqref{eq:opt-variational} to obtain
-\[
- C_f(L)\ge d_L-168z_L-192z_L^2\ge d_L-360z_L.
-\]
-This proves the positive-capacity asymptotic and remainder without
-assuming equality with a signed-measure capacity. Finally,
-monotonicity and the cellwise integral comparison of Lemma~\ref{lem:7}
-give, for every $T>0$,
-\[
- \sum_{d\ge1}f(d/T)\le T\int_0^\infty f(t)\,dt=\frac T2.
-\]
-Thus the ramp satisfies every admissibility condition and attains
-$ab=8/9$.
-\end{proof}
-
-\subsection{Sampling and the limitation for every choice of scale}
-The capacity theorem requires no hypothesis on the leading slope.
-For the method limitation impose the separate condition
-\begin{equation}
- \limsup_{L\to\infty}\frac{C_\varphi(L)}L\le1.
- \label{eq:opt-unit-slope}
-\end{equation}
-A finite intercept in \eqref{eq:opt-intercept} implies this condition.
-We state it explicitly as a hypothesis of the method limitation.
-Define the extended lattice sum
-\[
- S_T=\sum_{d\in\mathbb Z}\varphi(d/T)\in(0,\infty].
-\]
-
-\begin{remark}[sampling lower bound]\label{rem:opt-sampling-lower}
-Condition \eqref{eq:opt-unit-slope} forces $S_T\ge T$ for every $T>0$.
-If $S_T=\infty$ this is immediate. Otherwise the probability measure
-$\mu_n=n^{-1}\sum_{j=0}^{n-1}\delta_{j/T}$ gives, by nonnegativity,
-\[
- E_\varphi(\mu_n,\mu_n)
- =\frac1{n^2}\sum_{|d|<n}(n-|d|)\varphi(d/T)\le\frac{S_T}n,
- \qquad C_\varphi((n-1)/T)\ge\frac n{S_T}.
-\]
-Divide by $(n-1)/T$ and let $n\to\infty$; \eqref{eq:opt-unit-slope}
-gives $1\ge T/S_T$. No upper sampling bound is required.
-\end{remark}
-
-For a Sidon set of size $k$ in $\{1,\ldots,N\}$, nonnegative
-majorization of its distinct ordered differences therefore gives
-\begin{equation}
- \begin{split}
- k^2
- &\le C_\varphi(N/T)
-          \left(ak+2\sum_{d\ge1}\varphi(d/T)\right)\\
- &=C_\varphi(N/T)\bigl(a(k-1)+S_T\bigr).
- \end{split}
- \label{eq:opt-sidon-scalar}
-\end{equation}
-An infinite lattice sum makes this inequality uninformative.
-
-\begin{lemma}[simultaneous comparison for all scales]\label{lem:opt-all-scales}
-Let $\beta=\liminf_{L\to\infty}(C_\varphi(L)-L)$.
-For every real $\theta<\sqrt{a\beta}$, with $\beta=\infty$
-permitting every finite $\theta$, all sufficiently large $N$ satisfy
-\begin{equation}
- \begin{gathered}
- x=N^{1/4},\qquad k_N=\lfloor x^2+\theta x\rfloor,\\
- k_N^2\le C_\varphi(N/T)\bigl(a(k_N-1)+T\bigr)
-       \qquad\hbox{for every }T>0.
- \end{gathered}
- \label{eq:opt-all-scales}
-\end{equation}
-The threshold in $N$ is independent of $T$.
-\end{lemma}
-
-\begin{proof}
-Choose a finite $B$ with $0<B<\beta$ and $\sqrt{aB}>\theta$;
-Theorem~\ref{thm:optimality} ensures $\beta>0$. Put $L=N/T$ and
-$c(L)=C_\varphi(L)-L$. The definition of liminf gives $L_0>0$
-such that $c(L)\ge B$ for $L\ge L_0$.
-The uniform trial gives $c(L)\ge M_1(L)>0$ for every $L>0$, where
-$M_1$ is defined in \eqref{eq:opt-first-moment}. For $0<L\le L_0$,
-\[
- \frac{M_1(L)}L
- =\int_{\mathbb R}\min\{|t|/L,1\}\varphi(t)\,dt
- \ge\frac{M_1(L_0)}{L_0}=:\eta>0.
-\]
-The ratio also tends to one as $L\downarrow0$, by dominated convergence.
-For large $N$ we have $k_N\ge1$, so throughout this range
-\[
- C_\varphi(L)\bigl(N/L+a(k_N-1)\bigr)
- \ge N(1+\eta)>k_N^2.
-\]
-For $L\ge L_0$, expansion and AM--GM give, uniformly in $L$,
-\begin{align*}
- (L+c(L))\bigl(N/L+a(k_N-1)\bigr)
- &\ge N+\frac{NB}L+a(k_N-1)L\\
- &\ge N+2\sqrt{aBN(k_N-1)}\\
- &=x^4+2\sqrt{aB}\,x^3+O(x^2).
-\end{align*}
-Since $k_N^2=x^4+2\theta x^3+O(x^2)$ and $\sqrt{aB}>\theta$,
-this exceeds $k_N^2$ for all large $N$. The error constants do not
-depend on $L$, proving the simultaneous assertion.
-\end{proof}
-
-Under \eqref{eq:opt-unit-slope}, Remark~\ref{rem:opt-sampling-lower}
-and Lemma~\ref{lem:opt-all-scales} show that these integers satisfy
-every exact majorized inequality \eqref{eq:opt-sidon-scalar}
-simultaneously. They are scalar comparison integers, \emph{not}
-constructed Sidon sets. No choice $T=T(N)$, nor simultaneous use of
-all $T$, can therefore force a smaller coefficient: for any proposed
-$c<\sqrt{a\beta}$ and fixed additive constant, choose
-$c<\theta<\sqrt{a\beta}$ and the comparison integers eventually
-violate that conclusion. The universal floor is $2\sqrt2/3$.
-For a finite intercept, $\beta=b$, so the comparison
-$\lfloor x^2+(\sqrt{ab}-\varepsilon)x\rfloor$ works for every
-$\varepsilon>0$. The argument also covers nonconvergent capacity
-excess under \eqref{eq:opt-unit-slope}; if $\beta=\infty$, every
-finite comparison coefficient survives.
-
-To produce an asymptotic upper bound, the additional assumptions
-$C_\varphi(L)=L+b+o(1)$ with finite $b$ and
-\[
- \sum_{d\ge1}\varphi(d/T)\le T/2+O(1)\qquad(T\to\infty)
-\]
-give $k^2\le C_\varphi(N/T)(ak+T+O(1))$.
-For $x=N^{1/4}$ and $T=tx^3$ with fixed $t>0$, its positive root is
-\[
- x^2+\frac12(bt+a/t)x+o(x).
-\]
-This is an upper bound on cardinalities, not an assertion about the
-size of arbitrary Sidon sets. Optimizing over $t$ gives $\sqrt{ab}$;
-the all-scale argument above supplies the stronger limitation.
-An $o(1)$ capacity remainder gives only an $o(N^{1/4})$ remainder,
-whereas $C_\varphi(L)\le L+b+O(1/L)$ and a bounded sampling error
-suffice for an additive $O(1)$. The ramp remainder is stronger.
-
-The method limitation concerns fixed kernels, scalar positive capacity,
-nonnegative majorization by the full infinite lattice difference sum,
-and the unit-slope hypothesis \eqref{eq:opt-unit-slope}. The capacity lower bound itself
-needs no slope hypothesis. No claim is made for replacing the full sum
-by a truncated sum restricted to $d\le N$. This is not a barrier for
-all weighted Erd\H{o}s--Tur\'an arguments, extra variance or missing-difference
-information, other counting majorants, or arbitrary $N$-dependent
-kernels without uniform control. It does not resolve the original
-conjecture or assert a lattice-restricted capacity extension.
-No uniqueness is proved: equality $a\beta=8/9$ forces
-$\varphi(t)=0$ for $|t|>4/(3a)$ by \eqref{eq:opt-scaled-bound}
-and $R\ge1$, but this does not characterize all equality kernels.
-Signed-probability capacity can be larger, even infinite; it cannot
-replace the positive capacity here.
-
 \section{Remarks}\label{sec:remarks}
 
-\subsection{The earlier numerical kernel scan}
-The exploratory numerical scan is superseded, within the stated scope, by Theorem~\ref{thm:optimality}.
-
-\begin{remark}[numerical onset, not certified]\label{rem:numerical-onset}
-Numerical evaluation of the same inequalities gives the stated Sidon
-bound already for $N\ge4\,540\,589$. This evaluation is not certified
-here and does not replace the proved onset $120^4=207\,360\,000$ in
-Theorem~\ref{thm:main}.
-\end{remark}
+\subsection{A numerical kernel scan: non-rigorous evidence}
+An exploratory discretization considered the minimum energy of signed
+measures of mass one supported on $[0,L]$, for $L=4,8,16$, with
+approximately $100$--$200$ grid points per unit interval. It used
+$1/E_{\min}-L$ as an estimate of a boundary constant $b$ and compared
+$\sqrt{ab}$, where $a=f(0)$. For the normalized weights
+$h_p(t)=(p+1)(1-t)^p\mathbf1_{[0,1]}(t)$, the recorded approximate
+scores were
+\[
+\begin{array}{c|rrrrrrr}
+p&0&1/2&0.8&1&1.2&1.5&2\\\hline
+\sqrt{ab}\text{ (reported)}&1.0000&0.9487&0.9435&0.9428&0.9433&0.9449&0.9487.
+\end{array}
+\]
+The linear weight had a sampled boundary estimate $0.6687$, compared
+with the exact $2/3$ proved above. The scan also reported scores near
+$0.9470$ and $0.9446$ for normalized cosine and squared-cosine weights.
+These are floating-point observations, without certified discretization
+or rounding errors. They do not establish a local minimum in a
+continuous family, optimality over kernels, or a limit of a general
+method. None of these observations is used in the theorem or in the
+scalar limitation statement of Section~\ref{sec:constant}.
 
 \subsection{The same numerical constant in a different ruler problem}
 Gupta and O'Bryant~\cite[Definition~2 and Theorem~3]{GO26} define an LM
@@ -1467,12 +982,6 @@ that LM-ruler theorem and the Sidon cardinality bound of this note is
 asserted.
 
 \subsection{Analytic inputs and finite checks}
-The following description of analytic inputs and finite checks concerns
-the original upper-bound proof in Sections~\ref{sec:statement}--\ref{sec:constant}.
-Section~\ref{sec:optimality} additionally uses weak derivatives against
-smooth compactly supported test functions and the convolution identities
-proved in Lemma~\ref{lem:opt-certificate}.
-
 The proof uses only standard real analysis: Tonelli and Fubini under the
 nonnegativity and absolute-integrability conditions verified in the text;
 monotone and dominated convergence; Cauchy--Schwarz in real $L^2$;
@@ -1494,26 +1003,12 @@ particular, numerical grids do not replace the all-$N$ monotonicity
 argument in Section~\ref{sec:onset}.
 
 \section*{Provenance and verification status}
-The explicit Sidon upper bound in v1 was found by a clean-room GPT-6
-Astra agent (OpenAI), then expanded and examined in informed same-vendor
-adversarial reviews. Its source proof, standalone expansion, and finite-audit
-code received same-vendor review. Cross-vendor referee reports on that
-upper bound by Claude Opus (Anthropic): two isolated reports dated
-2026-10-02, both \emph{PASS} with no repair required: referee~A re-derived every display and checked the exact potential of the capacity lemma numerically; referee~B reconstructed the main inequality independently from the statement and the constant, and tested every intermediate inequality on about $1.2\cdot10^5$ Sidon sets (all maximum Sidon sets for $N\le60$, Singer and Bose--Chowla sets for prime powers $q\le127$, Mian--Chowla prefixes, random and adversarial sets) without a violation. Both referees note that the onset $120^4$ is a convenient sufficient value: the same inequalities already give the stated bound for $N\ge4\,540\,589$ (numerical evaluation, not certified here).
-
-The new optimality theorem in Section~\ref{sec:optimality} was found by
-two isolated clean-room GPT-6 Astra agents (OpenAI). Same-vendor
-self-audit, informed route review, and final integration reviews returned
-\emph{PASS}. These are mathematical derivations and reviews, not
-numerical evidence of optimality. The earlier Claude verdicts concern
-the v1 upper bound and do not apply to this new theorem.
-Cross-vendor referee A (Claude Opus): \textbf{PASS-WITH-REPAIRS,
-repairs applied}. The core proof was accepted; the all-scale scope
-argument and the liminf and sampling strengthenings were independently
-checked and incorporated. The referee's reported numerical checks were
-not rerun here and are not numerical certificates.
-Cross-vendor referee~B (Claude Opus, isolated, 2026-10-02): \emph{PASS}; it reconstructed the lower bound independently from the statement, arriving at the same trial measure, and found no kernel below $8/9$ among about thirty named kernels and four optimised parametric families.
-
+The argument was found by a clean-room GPT-6 Astra agent (OpenAI), then
+expanded and examined in informed same-vendor adversarial reviews.
+The source proof, the standalone expansion, and the finite-audit code
+received same-vendor review; this is the completed mathematical review
+status of the present draft. Cross-vendor referee reports by Claude
+Opus (Anthropic): two isolated reports dated 2026-10-02, both \emph{PASS} with no repair required: referee~A re-derived every display and checked the exact potential of the capacity lemma numerically; referee~B reconstructed the main inequality independently from the statement and the constant, and tested every intermediate inequality on about $1.2\cdot10^5$ Sidon sets (all maximum Sidon sets for $N\le60$, Singer and Bose--Chowla sets for prime powers $q\le127$, Mian--Chowla prefixes, random and adversarial sets) without a violation. Both referees note that the onset $120^4$ is a convenient sufficient value: the same inequalities already give the stated bound for $N\ge4\,540\,589$ (numerical evaluation, not certified here).
 No independent human referee report, Lean formalization, or other kernel
 verification is claimed. The author takes responsibility for the
 mathematics. Bibliographic statements and unrefereed numerical claims

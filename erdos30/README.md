@@ -1,6 +1,6 @@
 # An explicit second-order bound for Sidon sets
 
-Zenodo: https://doi.org/10.5281/zenodo.23103980 (published 2026-10-02).
+Zenodo: v1 https://doi.org/10.5281/zenodo.23103980 (2026-10-02 13:37 UTC); v2 adds the optimality theorem v2 https://doi.org/10.5281/zenodo.23105891 ; concept DOI (always the latest) https://doi.org/10.5281/zenodo.23103979.
 
 Haoyu Chen — independent researcher.
 
@@ -66,3 +66,8 @@ The proof, checker, dated source comparison, and exploratory numerical scan are 
 ## License
 
 CC0 (public domain dedication), following the collection's default.
+
+
+## Version 2 (2026-10-02)
+
+Adds the optimality theorem (the constant 2√2/3 is the limit of the fixed-kernel scalar capacity method), with two further cross-vendor referee reports: `problems/erdos30/REFEREE_KERNEL_A_20261002.md` (PASS-WITH-REPAIRS, applied) and `REFEREE_KERNEL_B_20261002.md` (PASS). `main_v1.tex` is the v1 source.
