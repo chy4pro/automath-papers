@@ -43,15 +43,15 @@ The default exact-search budget is 5,000,000 nodes and 120 seconds. A budget sto
 python3 ../../../problems/erdos30/check_sidon_bound.py --max-n 60 --node-budget 0 --seconds 0
 ```
 
-**The Python deliverable has not been executed in the drafting environment; its run by the coordinator is pending.** Executed JavaScript translations separately completed the $N\le60$ search in 91,104 nodes, agreed with literal subset enumeration through $N=18$, and passed exact-rational numerical and finite-energy checks, including the adaptive-precision regression at $N=2^{400}$. These are translation checks, not an execution of the Python file. Details and counts are recorded in the [standalone proof](../../../problems/erdos30/SIDON_BOUND_PROOF.md).
+The Python deliverable was not executed in the drafting environment; the coordinator and both cross-vendor referees later ran it (exit code 0). Before that, executed JavaScript translations separately completed the $N\le60$ search in 91,104 nodes, agreed with literal subset enumeration through $N=18$, and passed exact-rational numerical and finite-energy checks, including the adaptive-precision regression at $N=2^{400}$. These are translation checks, not an execution of the Python file. Details and counts are recorded in the [standalone proof](../../../problems/erdos30/SIDON_BOUND_PROOF.md).
 
 ## Review and provenance
 
-The argument was found by a clean-room GPT-6 Astra agent. The proof and audit code received informed same-vendor adversarial review; the current standalone proof and code received a PASS after a precision repair in the checker. The LaTeX conversion also passed same-vendor formula comparison and static structure checks; it has not been compiled. These reviews and finite computations are distinct from kernel formalization.
+The argument was found by a clean-room GPT-6 Astra agent. The proof and audit code received informed same-vendor adversarial review; the current standalone proof and code received a PASS after a precision repair in the checker. The LaTeX conversion also passed same-vendor formula comparison and static structure checks; the PDF in this directory was compiled from it afterwards. These reviews and finite computations are distinct from kernel formalization.
 
 **Cross-vendor referees (Claude Opus, two isolated reports, 2026-10-02): PASS and PASS, no repair required.** Reports: `problems/erdos30/REFEREE_CLAUDE_A_20261002.md`, `problems/erdos30/REFEREE_CLAUDE_B_20261002.md` in https://github.com/chy4pro/automath .
 
-There is no Lean formalization, and independent human verification is not asserted. Haoyu Chen takes responsibility for the paper's mathematical claims, exposition, and attribution.
+**Lean formalization (2026-10-02): the upper-bound theorem is kernel-checked.** `sidon_second_order` in [`lean/sidon30`](https://github.com/chy4pro/automath/tree/main/lean/sidon30) states the bound for every natural $N\ge120^4$ and every Sidon set $A\subseteq\{1,\dots,N\}$ (diagonal sums included), with coefficient $2\sqrt2/3$ and additive constant $1$; it builds against a pinned Mathlib on GitHub Actions ([run 37060176909](https://github.com/chy4pro/automath/actions/runs/37060176909), commit `f8e9766`) and depends only on `propext`, `Classical.choice`, `Quot.sound`. The formal proof was written by GPT-6 Astra (Codex) after the paper; the kernel-optimality theorem of v2 is **not** formalized. Independent human verification is not asserted. Haoyu Chen takes responsibility for the paper's mathematical claims, exposition, and attribution.
 
 ## Files
 
