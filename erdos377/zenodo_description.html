@@ -1,0 +1,32 @@
+<p>Let B<sub>n</sub> = C(2n,n). Theorem 4 of Erd&#337;s, Graham, Ruzsa and Straus, <i>On the prime
+factors of C(2n,n)</i>, Math. Comp. 29 (1975), 83&ndash;92, states for &alpha; &lt; 1 that
+#{m &le; n<sup>&alpha;</sup> : m &#8740; B<sub>n</sub>} = c(&alpha;)n<sup>&alpha;</sup> + o(n<sup>&alpha;</sup>)
+with c(&alpha;) &rarr; 1 as &alpha; &rarr; 0, and that c(&alpha;) can be explicitly calculated. As printed,
+the statement has no &ldquo;almost all n&rdquo; qualifier (it occurs only in the preceding display), and
+the constant that tends to 1 is the <i>divisor</i> constant, not the nondivisor one.</p>
+
+<p>For every fixed 0 &lt; &alpha; &le; 1/2 we prove that the proportions of m &le; n<sup>&alpha;</sup>
+that divide, and that do not divide, B<sub>n</sub> converge in natural density to explicit constants
+c<sub>D</sub>(&alpha;) and c<sub>N</sub>(&alpha;) = 1 &minus; c<sub>D</sub>(&alpha;), given by an absolutely
+convergent alternating series of simplex integrals with an effective truncation bound; c<sub>N</sub>(&alpha;)
+&rarr; 0 and c<sub>D</sub>(&alpha;) &rarr; 1 as &alpha; &rarr; 0. Neither proportion has a limit along all n in
+this range (n = 2<sup>h</sup> makes every multiple of 4 a nondivisor). Certified rational enclosures are
+given at &alpha; = 1/2, 1/3, 1/4, 1/5, e.g. c<sub>N</sub>(1/2) &isin; [0.160401041573, 0.160401748642].
+The localized moment input taken from the 1975 paper is proved here in the uniform form that the
+argument needs. Nothing is claimed for 1/2 &lt; &alpha; &lt; 1, and no effective exceptional-set rate in n
+is given. This note does not address Erd&#337;s Problem #377 itself (boundedness of the sum of 1/p over
+primes p &le; n not dividing B<sub>n</sub>).</p>
+
+<p><b>Literature.</b> In a bounded search completed on 10 October 2026 we did not locate an earlier
+published correction of the printed Theorem 4, or an earlier explicit evaluation of these densities;
+the MathSciNet review of the 1975 paper was not accessible to us. Related results on densities of
+indices n with divisibility properties of B<sub>n</sub> (Pomerance 2015 and 2026, Sanna 2018,
+Ford&ndash;Konyagin 2021) concern a different quantity.</p>
+
+<p><b>Provenance and verification status.</b> The theorem, its proof and the certified evaluation
+were found by a GPT-6 Astra agent (OpenAI) and revised by GPT-6 Astra to apply the referees'
+repairs. Two isolated cross-vendor referees (Claude Opus, Anthropic) reviewed the proof in three
+rounds and returned PASS after the repairs; each reran the certificate program with byte-identical
+output and computed the constants by an independent method. A separate Claude verifier reproduced
+the certificates and checked the table, the code and the quoted numbers. No Lean formalisation.
+Code and certificate outputs: https://github.com/chy4pro/automath-papers/tree/main/erdos377</p>

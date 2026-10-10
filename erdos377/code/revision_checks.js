@@ -86,6 +86,26 @@ for(let n=0;n<=4096;n++) {
 }
 console.log(`${valuations} exact binomial valuations matched floor sums and digit carries (n=0..512; p=${primes.join(',')}).`);
 console.log(`${powersOfTwo} exact binary-power valuations equal one (n=2^h, h=0..12).`);
+let nestedCases=0;
+for(const Qn of [2,3,8,32])for(const m of [1,2,3]) {
+  if(Qn===32&&m===3)continue;
+  for(const offset of [0,1])for(const tail of [0,1]) {
+    const w=[Qn+offset];
+    while(w.length<m)w.push(Qn*w[w.length-1]+1);
+    const X=Qn*w[m-1]+tail;
+    let count=0;
+    for(let n=1;n<=X;n++)if(w.every(v=>2*(n%v)<v))count++;
+    const denominator=w.reduce((a,v)=>a*BigInt(v),1n);
+    const numerator=w.reduce((a,v)=>a*BigInt(Math.ceil(v/2)),1n);
+    const abs=x=>x<0n?-x:x;
+    assert(abs(BigInt(count)*denominator-BigInt(X)*numerator)*BigInt(Qn)
+      <=BigInt(7*(m-1)+1)*BigInt(X)*denominator);
+    assert(abs(BigInt(count)*(1n<<BigInt(m))-BigInt(X))*BigInt(Qn)
+      <=8n*BigInt(m)*BigInt(X)*(1n<<BigInt(m)));
+    nestedCases++;
+  }
+}
+console.log(`${nestedCases} exact nested-scale counts passed both bounds (Q=2,3,8,32; m=1..3, excluding Q=32,m=3; offsets/tails 0,1; X<=33825).`);
 const ratio=new F(10,9).mul(new F(27,20)).mul(new F(27,20)).div(new F(4,3));
 assert.equal(ratio.n,243n);assert.equal(ratio.d,160n);
 console.log('Printed-display endpoint example checked exactly: ratio 243/160 > 1.');
@@ -130,7 +150,15 @@ for(let i=0;i<stripped.length;i++){
 assert.equal(depth,0);
 assert.equal((stripped.match(/\$/g)||[]).length%2,0);
 assert(!/(?<!\\)\b(?:quad|qquad)\b/.test(stripped));
-assert(tex.includes('\\section{Related work}\n% COORDINATOR: filled from the literature check'));
-console.log(`LaTeX static check passed: balanced braces/environments/dollar delimiters; ${labels.length} unique labels; all references resolved; exact Related work placeholder retained. This is not a TeX compilation.`);
+const relatedStart=tex.indexOf('\\section{Related work}');
+const statementStart=tex.indexOf('\\section{Statement and constants}');
+const provenanceStart=tex.indexOf('\\section*{Provenance and verification status}');
+const bibliographyStart=tex.indexOf('\\begin{thebibliography}');
+assert(relatedStart>=0&&relatedStart<statementStart);
+assert(statementStart<provenanceStart&&provenanceStart<bibliographyStart);
+assert(tex.slice(relatedStart,statementStart).replace(/%[^\n]*/g,'').includes('\\cite{'));
+assert(tex.slice(provenanceStart,bibliographyStart).includes('\\ref{lem:local}'));
+assert(labels.includes('lem:nested'));
+console.log(`LaTeX static check passed: balanced braces/environments/dollar delimiters; ${labels.length} unique labels; all references resolved; populated Related work and Provenance sections present in order; lem:nested present. This is not a TeX compilation.`);
 const cpu=process.cpuUsage(cpuStart);
 console.log(`Cost: wall ${(Number(process.hrtime.bigint()-start)/1e9).toFixed(3)} s; process CPU ${((cpu.user+cpu.system)/1e6).toFixed(3)} s. No workers, solver, network, or external dependencies.`);

@@ -1,9 +1,3 @@
-% STATUS: DONE -- author revision; all required referee repairs are applied.
-% Related work and provenance added by the coordinator from the AUT-103 literature check, 2026-10-10.
-% Neither a TeX engine nor Python was available in the revision environment.
-% The companion REVISION_REPORT.md records the proof audit and exact checks.
-% Session lineage: fresh AUT-106 author-revision session, 2026-10-10;
-% based only on the specified record, referee reports, scans, and certification files.
 \documentclass[10pt]{article}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[T1]{fontenc}
@@ -36,8 +30,8 @@ divide, $\binom{2n}{n}$. The constants have absolutely convergent integral
 series and effective truncation bounds. The nondivisor constant tends to
 zero as $\alpha\downarrow0$, whereas the divisor constant tends to one.
 Neither proportion has a limit along all integers $n$ in this range.
-We specify the localized moment input from the 1975 paper, prove its
-required consequence, and give certified numerical intervals. No claim
+We prove the uniform prime counts needed for the localized moment
+calculation and give certified numerical intervals. No claim
 is made for $1/2<\alpha<1$, or for an effective exceptional-set rate in $n$.
 \end{abstract}
 
@@ -168,7 +162,9 @@ Moreover $\cn(\alpha)\to0$ and $\cd(\alpha)\to1$ as $\alpha\downarrow0$.
 \begin{remark}[Effectiveness and scope]\label{rem:scope}
 The constant can be enclosed to any prescribed rational accuracy when
 $\alpha$ is rational, and for a computable real $\alpha$ when an
-approximation procedure for $\alpha$ is supplied. All numerical error
+approximation procedure for $\alpha$ is supplied. This is a claim about
+the construction in Section~\ref{sec:numerics}; the supplied program
+implements $\alpha=1/s$ for integers $s\geq2$. All numerical error
 bounds below are explicit. We give no effective onset or rate for the
 exceptional sets in $n$. The quantifiers in Theorem~\ref{thm:main} are for
 each fixed $\alpha$ and $\eta$, not uniformly in them. Nothing is claimed
@@ -237,7 +233,8 @@ The union bound therefore proves the pointwise sandwich
 \end{equation}
 
 \subsection{The localized moment calculation}\label{subsec:local}
-We state precisely the analytic inputs. Write
+We distinguish the printed counts from the uniform bounds proved below.
+Write
 \[
  \begin{aligned}
  A_1(p;X)&=\#\{p\leq n\leq X:p\nmid B_n\},\\
@@ -245,28 +242,132 @@ We state precisely the analytic inputs. Write
  \end{aligned}
 \]
 Changing a strict upper endpoint in a printed count to $n\leq X$
-changes its normalized value by at most $1/X$ and does not change any
-of the following uniform limits.
-The single-prime estimate is the last, unnumbered display on p.~86 of
-\cite{EGRS}, immediately following (4): for each fixed $r\geq1$ and
-$\epsilon>0$,
+changes its normalized value by at most $1/X$.
+On p.~86 of \cite{EGRS}, immediately following (4), the text says
+``for each $p$ with $x^{1/(r+1)+\epsilon}<p<x^{1/r-\epsilon}$'',
+and the last, unnumbered display is
 \begin{equation}\label{eq:input1}
- A_1(p;X)/X\longrightarrow2^{-r}
- \quad\hbox{uniformly for }X^{1/(r+1)+\epsilon}<p<X^{1/r-\epsilon}.
+ A(p;x)=x/2^r+o(x).
 \end{equation}
-The class-III pair estimate is the unnumbered display immediately below
-condition (5) on p.~88. For distinct primes in bands indexed by $r,t$,
+Here the printed $A(p;x)$ counts $p\leq n<x$ with $p\nmid B_n$.
+For the class-III calculation on p.~88, take
+$x^{1/(r+1)}<p\leq x^{1/r}$ and
+$x^{1/(t+1)}<q\leq x^{1/t}$, with $p\ne q$, and
 order the powers $p^i$ ($1\leq i\leq r$) and $q^j$ ($1\leq j\leq t$)
-as $w_1<\cdots<w_{r+t}$. With the individual bands trimmed as in
-\eqref{eq:input1}, its needed form is
+as $w_1<\cdots<w_{r+t}$. The printed condition (5) is
+\[
+ \frac{w_{i+1}}{w_i}>x^\epsilon\ (1\leq i<r+t),\qquad
+ \frac{x}{w_{r+t}}>x^\epsilon.
+\]
+The text then says ``then we see by (1) that'', followed by
 \begin{equation}\label{eq:input2}
- \begin{gathered}
- \frac{A_2(p,q;X)}X\longrightarrow2^{-(r+t)}
- \quad\hbox{uniformly if}\\
- \frac{w_{i+1}}{w_i}>X^\epsilon\ (1\leq i<r+t),\qquad
- \frac{X}{w_{r+t}}>X^\epsilon.
- \end{gathered}
+ A(p,q;x)=\frac{x}{2^{r+t}}+o(x).
 \end{equation}
+Neither quoted display prints a uniformity assertion. The $o(x)$
+terms here are part of the quotations; we do not use them as uniform
+remainders. We now prove the uniform bounds needed for the prime
+summations, independently of statement (1) of \cite{EGRS}.
+
+\begin{lemma}[Counting on nested scales]\label{lem:nested}
+Let $X,m$ be positive integers and let $Q\geq2$ be real. Suppose the
+positive integers $w_1<\cdots<w_m$ satisfy
+\[
+ w_1\geq Q,\qquad w_{i+1}/w_i\geq Q\ (1\leq i<m),\qquad X/w_m\geq Q.
+\]
+If $C(X;w_1,\ldots,w_m)$ counts the integers $1\leq n\leq X$ for
+which $n\bmod w_i<w_i/2$ for every $i$, then
+\begin{equation}\label{eq:nested}
+ \left|C(X;w_1,\ldots,w_m)-2^{-m}X\right|\leq\frac{8mX}{Q}.
+\end{equation}
+In particular $Q=X^\epsilon$ gives an error at most
+$8mX^{1-\epsilon}$, uniformly over every collection of moduli satisfying
+the displayed hypotheses.
+\end{lemma}
+\begin{proof}
+Put $h_i(n)=\ind_{\{n\bmod w_i<w_i/2\}}$ and
+$c_i=\lceil w_i/2\rceil/w_i$. Each consecutive block of $w_i$
+integers contains exactly $c_iw_i$ accepted residues. Splitting any
+interval $I$ of consecutive integers into complete blocks and one
+remainder of length less than $w_i$ therefore proves
+\begin{equation}\label{eq:perioderror}
+ \left|\sum_{n\in I}(h_i(n)-c_i)\right|\leq w_i.
+\end{equation}
+For $i<m$, let $H_{i+1}(n)=\prod_{j=i+1}^m h_j(n)$ on
+$\{1,\ldots,X\}$. In this interval $h_j$ changes value at most
+$2X/w_j+2$ times, since its only changes in a period occur at residues
+$0$ and $\lceil w_j/2\rceil$. Every change of $H_{i+1}$ occurs at
+a change of one of its factors. Thus its set of ones is a disjoint
+union of at most
+\[
+ R_i\leq1+\sum_{j=i+1}^m(2X/w_j+2)
+ \leq1+3X\sum_{j=i+1}^m\frac1{w_j}
+ \leq1+\frac{6X}{w_{i+1}}\leq\frac{7X}{w_{i+1}}
+\]
+intervals of consecutive integers. The second inequality uses
+$X/w_j\geq Q\geq2$, the third uses
+$\sum_{j=i+1}^m1/w_j\leq(1/w_{i+1})\sum_{k\geq0}Q^{-k}
+\leq2/w_{i+1}$, and the last uses $X/w_{i+1}\geq1$.
+Apply \eqref{eq:perioderror} on each such interval to get
+\[
+ \left|\sum_{n=1}^X(h_i(n)-c_i)H_{i+1}(n)\right|
+ \leq R_iw_i\leq7X/Q\qquad(i<m).
+\]
+For $i=m$ the same sum with the empty product equal to one has
+absolute value at most $w_m\leq X/Q$. The exact identity
+\[
+ \prod_{i=1}^m h_i-\prod_{i=1}^m c_i
+ =\sum_{i=1}^m\left(\prod_{j<i}c_j\right)(h_i-c_i)
+                         \left(\prod_{j>i}h_j\right)
+\]
+and $0\leq c_i\leq1$ now give
+$|C-X\prod_i c_i|\leq(7(m-1)+1)X/Q\leq7mX/Q$.
+Finally, $0\leq c_i-1/2\leq1/(2w_i)$, so another telescoping
+identity gives
+\[
+ 0\leq\prod_i c_i-2^{-m}\leq\sum_i(c_i-1/2)
+ \leq\frac{m}{2Q}.
+\]
+The triangle inequality proves \eqref{eq:nested}, since $7+1/2<8$.
+\end{proof}
+
+\emph{Application to the prime counts.}
+Fix $0<a<b<1$ and $0<\epsilon<a/4$, and suppose that the integer
+$X\geq2^{1/\epsilon}$. Put $Q=X^\epsilon$ and $L=\lceil2/a\rceil$.
+By the factorial valuation identity \eqref{eq:valuation},
+\[
+ p\nmid B_n\quad\Longleftrightarrow\quad
+ n\bmod p^i<p^i/2\quad\hbox{for every }i\geq1.
+\]
+Indeed its $i$th summand is one precisely when
+$n\bmod p^i\geq p^i/2$, and all its summands are nonnegative.
+For an integer $1\leq r\leq L$, if $X^a<p\leq X^b$ and
+$X^{1/(r+1)+\epsilon}<p<X^{1/r-\epsilon}$, then
+$p^{r+1}>XQ^{r+1}\geq4X$. For $n\leq X$, all conditions with
+$i\geq r+1$ are therefore automatic. The remaining moduli are
+$p,p^2,\ldots,p^r$; their successive ratios and their smallest modulus
+exceed $Q$, and $X/p^r>X^{r\epsilon}\geq Q$.
+Lemma~\ref{lem:nested}, followed by deletion of the fewer than $p$
+integers with $n<p$, proves the explicit uniform estimate
+\begin{equation}\label{eq:uniform1}
+ \left|A_1(p;X)/X-2^{-r}\right|
+ \leq8rX^{-\epsilon}+p/X\leq8LX^{-\epsilon}+X^{b-1}.
+\end{equation}
+For two distinct primes $p,q$ in these trimmed bands with indices
+$r,t\leq L$, assume also the scale inequalities of (5), with $x=X$.
+All powers beyond $p^r$ and $q^t$ again give automatic conditions.
+The merged list has $m=r+t\leq2L$ distinct moduli: equality between
+a positive power of $p$ and one of $q$ would contradict unique
+factorization. Its smallest modulus exceeds $Q$, and (5) supplies
+the other hypotheses of Lemma~\ref{lem:nested}. Deleting the fewer
+than $\max(p,q)$ initial integers gives
+\begin{equation}\label{eq:uniform2}
+ \left|A_2(p,q;X)/X-2^{-(r+t)}\right|
+ \leq8(r+t)X^{-\epsilon}+\frac{\max(p,q)}X
+ \leq16LX^{-\epsilon}+X^{b-1}.
+\end{equation}
+These estimates prove, with constants independent of the retained
+primes, the uniform forms required below.
+
 For the mean of the full sum we use Theorem 2, pp.~86--87:
 \begin{equation}\label{eq:inputmean}
  \begin{gathered}
@@ -275,23 +376,34 @@ For the mean of the full sum we use Theorem 2, pp.~86--87:
  c_0=\sum_{r\geq1}2^{-r}\log(1+1/r)=A(1).
  \end{gathered}
 \end{equation}
-These are the only moment estimates imported from that paper. In
-particular, we do not infer concentration of a sub-sum from the second
+This full first moment is the only moment estimate imported from that
+paper; the uniform prime counts were proved above. In particular, we
+do not infer concentration of a sub-sum from the second
 moment of the full sum, and do not import display (6) as written.
 
-Here and below, the uniform remainders in \eqref{eq:input1} and
-\eqref{eq:input2} have the following precise meaning. For fixed $0<a<b<1$
+Here and below, the errors in \eqref{eq:uniform1} and
+\eqref{eq:uniform2} have the following precise meaning. For fixed $0<a<b<1$
 and $0<\epsilon<a/4$, let $L=\lceil2/a\rceil$ and let
 $e_1(X;a,b,\epsilon)$ be the maximum of
 $|A_1(p;X)/X-2^{-r}|$ over $X^a<p\leq X^b$, $1\leq r\leq L$, in
 the indicated trimmed bands. Define $e_2$ as the analogous maximum for
-\eqref{eq:input2}, with $r,t\leq L$; an empty maximum is zero.
-The imported assertions say $e_i\to0$ as $X\to\infty$ with these
-parameters fixed: for every $z>0$ there is $X_0(a,b,\epsilon,z)$ such
-that $e_i<z$ for all integer $X\geq X_0$. No numerical value of that
-$X_0$ is asserted. Likewise the absolute error in \eqref{eq:inputmean}
-tends to zero for every prescribed tolerance. This specifies all
-non-effective remainders used below.
+\eqref{eq:uniform2}, with $r,t\leq L$; an empty maximum is zero.
+The just-proved estimates give, for every integer $X\geq2^{1/\epsilon}$,
+\[
+ e_1\leq8LX^{-\epsilon}+X^{b-1},\qquad
+ e_2\leq16LX^{-\epsilon}+X^{b-1}.
+\]
+Thus both errors tend to zero with the parameters fixed. For example,
+both are less than any given $z>0$ whenever
+\[
+ X>\max\left\{2^{1/\epsilon},(32L/z)^{1/\epsilon},
+                                  (2/z)^{1/(1-b)}\right\}.
+\]
+The only qualitative remainder retained here is the absolute error in
+\eqref{eq:inputmean}: for every $z>0$ it is less than $z$ for all
+sufficiently large $X$. No numerical onset for that imported first
+moment, or effective exceptional-set rate for the final theorem, is
+claimed.
 
 We also use the reciprocal-prime bounds of Rosser--Schoenfeld
 \cite{RS}. If $M(y)=\sum_{p\leq y}1/p$ and $B$ is the prime Mertens
@@ -337,7 +449,7 @@ the trimmed bands; every band met has index at most $L$.
 
 \emph{First moment.} The count for $1\leq n\leq X$ differs from
 $A_1(p;X)$ by at most $p\leq X^b$. On the retained primes apply
-\eqref{eq:input1}; their total reciprocal mass is at most $H$.
+\eqref{eq:uniform1}; their total reciprocal mass is at most $H$.
 There are at most $L$ band pieces, so \eqref{eq:MX} gives
 \begin{equation}\label{eq:meanerror}
  |\E S^X-\lambda|\leq
@@ -377,7 +489,7 @@ quantity at most $(4L+2L^2)\log(b/a)\epsilon/a$.
 \[
  \sum_{p>X^a}\frac1{p^2}\leq\frac1{X^a-1}.
 \]
-For the other, retained pairs satisfying (5), apply \eqref{eq:input2}.
+For the other, retained pairs satisfying (5), apply \eqref{eq:uniform2}.
 Changing $n\geq\max(p,q)$ to $n\geq1$ costs at most $X^{b-1}$ in
 each normalized count. Also, summing $w(\log p/\log X)/p$ band by
 band differs from $\lambda$ by at most $LE$. Hence
@@ -647,7 +759,8 @@ The accompanying program \texttt{code/density\_intervals.py} uses only
 exact integers and rational numbers. We describe each error bound,
 including the discretization error. The stated table uses $\alpha=1/s$
 with $s\in\{2,3,4,5\}$, mesh $M=16384$, cutoff $R=64$, $K=8$ terms,
-and $Q=2^{56}$. The same construction works for any rational
+and $Q=2^{56}$. The program as shipped implements $\alpha=1/s$ for
+integers $s\geq2$; the construction extends to any rational
 $0<\alpha\leq1/2$ by clipping the top band at $\alpha$.
 
 \subsection{Rational bin masses and logarithms}\label{subsec:bins}
@@ -833,21 +946,27 @@ checks supply an effective exceptional-set rate for the density theorem.
 \section*{Provenance and verification status}
 The density theorem, its proof and the certified evaluation were found by
 a GPT-6 Astra agent (OpenAI) on 2026-09-09; the present text, which applies
-the referees' repairs, was written by a second Astra session on
-2026-10-10. Two isolated cross-vendor referee reports by Claude Opus
-(Anthropic), dated 2026-10-10, both returned \emph{PASS-WITH-REPAIRS}
-with no fatal gap. Both asked for the same three repairs, all applied here:
+the referees' repairs, was revised by GPT-6 Astra on 2026-10-10. Two
+isolated cross-vendor referee reports by Claude Opus (Anthropic), dated
+2026-10-10, both returned \emph{PASS-WITH-REPAIRS} with no fatal gap.
+Both asked for the same three required repairs, all applied here:
 the decreasing-term inequality behind $0\leq\cn(\alpha)\leq A(\alpha)$
 (Lemma~\ref{lem:alternating}); the localized moment statement written out
 (Lemma~\ref{lem:local}); and the scope $0<\alpha\leq1/2$
-(Remark~\ref{rem:scope}). Each referee reran the certificate program at
+(Remark~\ref{rem:scope}). Referee~1 also suggested an optional
+simplification of the small-prime argument, applied in
+Section~\ref{subsec:G}. In a second round both referees asked for a
+self-contained proof of the uniform forms of the two counts taken from
+the 1975 paper; this is Lemma~\ref{lem:nested}, which both confirmed in a
+third round (\emph{PASS}). Each referee reran the certificate program at
 both meshes with byte-identical output, and computed the four constants
-by an independent method; all values fell inside the certified intervals.
-A separate Claude verifier reproduced the certificates byte for byte and
-checked $v_2\bigl(\binom{2^{h+1}}{2^h}\bigr)=1$ exactly for
-$1\leq h\leq300$. Empirical proportions at $n\approx10^{9}$--$10^{12}$
-lie 9--12\% below the limits, which is consistent with slow convergence
-in $n$. These are sanity checks, not evidence for the theorem.
+by an independent method; the converged values fell inside the certified
+intervals. A separate Claude verifier reproduced the certificates byte
+for byte and checked $v_2\bigl(\binom{2^{h+1}}{2^h}\bigr)=1$ exactly for
+$1\leq h\leq300$. Empirical proportions for $n$ between about $10^{9}$
+and $10^{24}$ lie roughly 9--17\% below the limits, depending on $\alpha$
+and on the range of $n$, which is consistent with slow convergence in
+$n$. These are sanity checks, not evidence for the theorem.
 No formal (Lean) verification has been carried out.
 
 \begin{thebibliography}{99}

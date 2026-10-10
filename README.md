@@ -7,6 +7,16 @@ The Lean 4 proof library formerly at `lean/` has migrated to its own
 repository: [chy4pro/automath-lean-proofs](https://github.com/chy4pro/automath-lean-proofs)
 (history preserved in this repo's git log; see `lean/README.md`).
 
+## Erdős–Graham–Ruzsa–Straus 1975, Theorem 4 — density interpretation (small result)
+
+**Claim.** For each fixed 0 < α ≤ 1/2, the proportions of m ≤ n^α that divide / do not divide C(2n,n) converge in
+natural density to explicit constants (alternating simplex-integral series, effective truncation); no limit exists along
+all n; certified enclosures at α = 1/2, 1/3, 1/4, 1/5. This corrects the printed Theorem 4 (missing almost-all qualifier;
+the constant tending to 1 is the divisor constant). It does not address Erdős Problem #377 itself.
+
+- Paper and code: [`erdos377/`](erdos377/) — DOI pending
+- Status: two cross-vendor referees (three rounds, PASS), verifier reproduction; bounded literature search; no Lean
+
 ## A211417 — Bala's general divisibility conjecture (resolved)
 
 **Claim.** For the integral factorial ratio sequence
