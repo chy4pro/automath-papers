@@ -1,10 +1,10 @@
 # An explicit second-order bound for Sidon sets
 
-Zenodo: v1 https://doi.org/10.5281/zenodo.23103980 (2026-10-02 13:37 UTC); v2 adds the optimality theorem v2 https://doi.org/10.5281/zenodo.23105891 ; v3 (2026-10-10) lowers the onset to N ≥ 4,600,000 and adds the related-work section on Akwei's independent work (DOI: see the concept record); concept DOI (always the latest) https://doi.org/10.5281/zenodo.23103979.
+Zenodo: v1 https://doi.org/10.5281/zenodo.23103980 (2026-10-02 13:37 UTC); v2 adds the optimality theorem v2 https://doi.org/10.5281/zenodo.23105891 ; v3 (2026-10-10) lowers the onset to N ≥ 4,600,000 and adds the related-work section on Akwei's independent work, v3 https://doi.org/10.5281/zenodo.23273526 ; concept DOI (always the latest) https://doi.org/10.5281/zenodo.23103979.
 
 Haoyu Chen — independent researcher.
 
-**Published.** Zenodo, all versions: [10.5281/zenodo.23103979](https://doi.org/10.5281/zenodo.23103979) (v1 10.5281/zenodo.23103980; v2 10.5281/zenodo.23105891, which adds the optimality section). `main.pdf` in this directory is v3.
+**Published.** Zenodo, all versions: [10.5281/zenodo.23103979](https://doi.org/10.5281/zenodo.23103979) (v1 10.5281/zenodo.23103980; v2 10.5281/zenodo.23105891, which adds the optimality section; v3 10.5281/zenodo.23273526, onset 4,600,000 and related work). `main.pdf` in this directory is v3.
 
 ## Statement
 
