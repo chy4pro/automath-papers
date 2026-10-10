@@ -14,7 +14,7 @@ natural density to explicit constants (alternating simplex-integral series, effe
 all n; certified enclosures at α = 1/2, 1/3, 1/4, 1/5. This corrects the printed Theorem 4 (missing almost-all qualifier;
 the constant tending to 1 is the divisor constant). It does not address Erdős Problem #377 itself.
 
-- Paper and code: [`erdos377/`](erdos377/) — DOI pending
+- Paper and code: [`erdos377/`](erdos377/) — DOI [10.5281/zenodo.23274211](https://doi.org/10.5281/zenodo.23274211)
 - Status: two cross-vendor referees (three rounds, PASS), verifier reproduction; bounded literature search; no Lean
 
 ## A211417 — Bala's general divisibility conjecture (resolved)

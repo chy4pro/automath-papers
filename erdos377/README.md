@@ -9,7 +9,7 @@ no limit exists along all n, and gives certified rational enclosures at α = 1/2
 Erdős Problem #377 itself.
 
 - Paper: [`main.pdf`](main.pdf) (source [`main.tex`](main.tex))
-- DOI: pending
+- DOI: [10.5281/zenodo.23274211](https://doi.org/10.5281/zenodo.23274211)
 - Certificate program: [`code/density_intervals.py`](code/density_intervals.py) (exact rationals, Python 3 standard library);
   outputs [`code/density_4096.txt`](code/density_4096.txt) and [`code/density_16384.txt`](code/density_16384.txt);
   self-test [`code/check_convolution.py`](code/check_convolution.py); exact consistency checks [`code/revision_checks.js`](code/revision_checks.js) (Node).
