@@ -38,7 +38,7 @@ python3 ../../../problems/erdos30/check_sidon_bound.py
 python3 ../../../problems/erdos30/check_sidon_bound_v2.py   # v3: replays every comparison of the new Section 6 and the Lean tail chain
 ```
 
-The script checks exact rational enclosures of the final numerical inequalities at the onset and a larger grid, using a proved rational majorant for the exponential error. It also checks the polynomial identity in $\mathbb Q[\sqrt2]$, independently enumerates every subset for $N\le12$, and uses complete branch-and-bound to determine maxima for every $1\le N\le60$. Finite checks cover the sum/difference convention and the universal energy inequalities; they do not extend the theorem below its onset or replace its all-$N$ proof.
+The first script checks exact rational enclosures of the final numerical inequalities at the version-1 onset $120^4$ and a larger grid, using a proved rational majorant for the exponential error. It also checks the polynomial identity in $\mathbb Q[\sqrt2]$, independently enumerates every subset for $N\le12$, and uses complete branch-and-bound to determine maxima for every $1\le N\le60$. Finite checks cover the sum/difference convention and the universal energy inequalities; they do not extend the theorem below its onset or replace its all-$N$ proof. The second script (version 3) replays every integer and rational comparison of the new Section 6 and of the Lean tail chain, and tests the finite-certificate tail inequality for every integer $N$ in $[4.6\cdot10^6,5.6\cdot10^6]$.
 
 The default exact-search budget is 5,000,000 nodes and 120 seconds. A budget stop reports unresolved entries as `INCOMPLETE` and exits with status 2. To request completion without either search budget:
 
