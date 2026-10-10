@@ -1,3 +1,4 @@
+% Paper v3 (2026-10-10): onset 4,600,000 (Section 6 from CR-9; two cross-vendor referees PASS; checker v2; Lean sidon_second_order'); related work: Akwei.
 % Paper v2; bound: two cross-vendor referees PASS; optimality: referee A PASS-WITH-REPAIRS (applied), referee B PASS. 2026-10-02.
 \documentclass[10pt]{article}
 \usepackage[hmargin=1in,vmargin=0.9in]{geometry}
@@ -19,7 +20,7 @@
 
 \title{An explicit second-order bound for Sidon sets and the limit of the fixed-kernel energy method}
 \author{Haoyu Chen\\ Independent researcher}
-\date{October 2, 2026}
+\date{October 2, 2026; version 3, October 10, 2026}
 
 \begin{document}
 \maketitle
@@ -27,7 +28,8 @@
 \begin{abstract}
 Let $F(N)$ be the largest size of a Sidon subset of $\{1,\ldots,N\}$,
 with diagonal pair sums included. We prove
-$F(N)\le\sqrt N+(2\sqrt2/3)N^{1/4}+1$ for every integer $N\ge120^4$.
+$F(N)\le\sqrt N+(2\sqrt2/3)N^{1/4}+1$ for every integer $N\ge4\,600\,000$;
+this statement is also kernel-checked in Lean.
 The proof uses weighted Erd\H{o}s--Tur\'an energy with
 $h(t)=2(1-t)\mathbf1_{[0,1]}(t)$ and an exact boundary correction of $2/3$;
 an elementary contraction estimate makes the remainder explicit.
@@ -35,10 +37,12 @@ We also prove the sharp bound
 $\liminf_{L\to\infty}(C_f(L)-L)\ge8/(9f(0))$ for nonnegative normalized
 kernels, giving a limitation for every choice of scale in the
 fixed-kernel scalar capacity method with full difference sums under a
-unit-slope hypothesis.
+unit-slope hypothesis. For the Hou--Zhao covering certificates the
+limit $2\sqrt2/3$ was proved independently, one day before the first
+version of this note, by J.~Akwei; see Section~\ref{sec:akwei}.
 Reported coefficients run from Lindstr\"om's $1$ through Hou--Zhao's
-$0.94349\ldots$ to unrefereed repository claims near $0.94324$ and
-$0.94301$; the present coefficient is $0.942809\ldots$.
+$0.94349\ldots$ to unrefereed repository claims near $0.94324$,
+$0.94301$ and $0.9428095$; the present coefficient is $0.942809\ldots$.
 Erd\H{o}s's conjecture $F(N)=\sqrt N+O_\varepsilon(N^\varepsilon)$
 for every $\varepsilon>0$ remains untouched.
 \end{abstract}
@@ -99,8 +103,10 @@ Wu, q1 (August 2026)~\cite{Wu26}
 & $\approx0.94324253$ & $c<0.94325$; $O(1)$; unrefereed repository claim\\
 Wu, q2 (August 2026)~\cite{Wu26}
 & $\approx0.94300617$ & $c<0.94301$; $O(1)$; unrefereed repository claim\\
+Akwei (October 2026)~\cite{Akw26a}
+& $\approx0.94280952$ & $\gamma<0.942809522$; $O(1)$, no explicit onset; unrefereed repository claim; proves $\gamma\ge2\sqrt2/3$ for all Hou--Zhao covering certificates\\
 This note
-& $2\sqrt2/3$ & additive $+1$ for every $N\ge120^4$; review status below\\
+& $2\sqrt2/3$ & additive $+1$ for every $N\ge4\,600\,000$ ($N\ge120^4$ in v1--v2); kernel-checked in Lean; review status below\\
 \bottomrule
 \end{tabular}
 \caption{Selected coefficient history. The initial date is the preprint or
@@ -137,13 +143,18 @@ support. Under the separate unit-slope condition, the scalar method
 using the full difference sum cannot improve its second-order
 coefficient by any choice of scale.
 This does not limit all weighted Erd\H{o}s--Tur\'an arguments or
-resolve the original conjecture.\footnote{Changes from v1:
+resolve the original conjecture.\footnote{Changes in v2:
 Section~\ref{sec:optimality} adds the complete fixed-kernel optimality
 proof and positive-capacity attainment estimate. Referee A's all-scale
 repair and liminf and sampling strengthenings are applied. The v1
-statements and proofs, including the certified onset $120^4$, are
-unchanged; the numerical scan is replaced by the rigorous theorem.
-Cross-vendor referee A: PASS-WITH-REPAIRS, repairs applied; referee B: PASS.}
+statements and proofs, including the certified onset $120^4$, were
+unchanged in v2; the numerical scan was replaced by the rigorous theorem.
+Cross-vendor referee A: PASS-WITH-REPAIRS, repairs applied; referee B: PASS.
+Changes in v3: Section~\ref{sec:onset} lowers the onset from $120^4$ to
+$4\,600\,000$ by a new numerical absorption, with Lemma~\ref{lem:7}
+unchanged (two cross-vendor referees: PASS, PASS); the bound is
+kernel-checked in Lean; Section~\ref{sec:akwei} records independent work
+of Akwei on the same constant. No other statement or proof is changed.}
 
 Erd\H{o}s's conjecture asks for
 $F(N)=\sqrt N+O_\varepsilon(N^\varepsilon)$ for every $\varepsilon>0$;
@@ -164,7 +175,7 @@ A finite set of integers \(A\) is a \textbf{Sidon set} if the map
 is injective. In particular, the pairs \((a,a)\) are included: equality
 \(a+b=c+d\), with \(a\le b\) and \(c\le d\), requires \(a=c\) and \(b=d\).
 
-\begin{theorem}\label{thm:main} For every integer \(N\ge207\,360\,000\) and every Sidon set
+\begin{theorem}\label{thm:main} For every integer \(N\ge4\,600\,000\) and every Sidon set
 \(A\subseteq\{1,\ldots,N\}\),
 
 \begin{equation}
@@ -175,6 +186,7 @@ is injective. In particular, the pairs \((a,a)\) are included: equality
 
 All powers and square roots in this document are positive real ones. In
 particular, there is no requirement that \(N\) be a fourth power. The onset is
+\(4\,600\,000\); versions~1 and~2 of this note used the convenience onset
 \(207\,360\,000=120^4\).
 
 \begin{lemma}[equivalent difference convention]\label{lem:1} The Sidon condition is
@@ -724,19 +736,26 @@ This proof applies also to the empty set and to singleton sets. \end{proof}
 \section{Explicit constants and onset}\label{sec:onset}
 
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
-
-Let
+Put \(N_1=4\,600\,000\) and \(x_1=N_1^{1/4}\). Let \(N\ge N_1\) be an
+integer and let \(A\subseteq\{0,\ldots,N-1\}\) be a Sidon set. Write
+\(k=|A|\). Set
 
 \begin{equation}
-x=N^{1/4},\quad T=\sqrt2\,x^3,\quad
-\gamma=\frac{2\sqrt2}{3},\quad
+x=N^{1/4},\qquad T=\sqrt2\,x^3,\qquad
+\gamma=\frac{2\sqrt2}{3},\qquad
+\alpha=\log(4/3),\qquad
 \varepsilon=200e^{-\alpha x/\sqrt2}.
 \label{eq:s6-1}
 \end{equation}
 
-For \(x\ge120\) the interval parameter \(L=N/T=x/\sqrt2\) is at least
-one, so Lemma~\ref{lem:7} applies. Expanding its right side gives
-\(P_\varepsilon(k)\le0\), where
+The estimates below hold, in fact, for every real \(x\ge x_1\), regardless
+of whether \(x^4\) is integral. Put \(s=\sqrt2\), \(\beta=\alpha/s\), and
+\(u=463/10\). Since \(463^4=45\,954\,068\,161<46\,000\,000\,000=10^4N_1\),
+we have \(x\ge x_1>u>46>2>s>0\). Here \(u>46\) follows from \(463>460\),
+and \(2>s\) follows from \(2<4=2^2\). Consequently \(L=N/T=x/s>1\) and
+\(0<T<N\). Thus the interval parameter in Lemma~\ref{lem:7} is admissible.
+
+Expanding Lemma~\ref{lem:7} gives \(P_\varepsilon(k)\le0\), where
 
 \begin{equation}
 P_\varepsilon(z)=
@@ -745,105 +764,152 @@ z^2-\left(\gamma x+\frac89+\frac43\varepsilon\right)z
 \label{eq:s6-2}
 \end{equation}
 
-For clarity, the coefficient of \(z\) comes from
-\((4/3)(x/\sqrt2+2/3+\varepsilon)\), and the constant term comes from
-\(-(x/\sqrt2+2/3+\varepsilon)\sqrt2 x^3\).
+Indeed, \((4/3)(x/s+2/3+\varepsilon)=\gamma x+8/9+(4/3)\varepsilon\), and
+\((x/s+2/3+\varepsilon)sx^3=x^4+\gamma x^3+s\varepsilon x^3\).
 
-We next establish a uniform bound for the error with all numerical
-comparisons explicit. The integral formula for the logarithm gives
+Here are exact elementary bounds for the exponential. Substitution in the
+logarithm integral gives
 
 \[
-\alpha=\int_1^{4/3}\frac{dt}{t}\ge\frac14.
+\alpha=2\int_0^{1/7}\frac{dt}{1-t^2}
+>2\left(\frac17+\frac{1}{3\cdot7^3}\right)
+=\frac{296}{1029}>\frac{719}{2500}.
 \]
 
-Since \(\sqrt2\le3/2\), it follows that
-\(\alpha/\sqrt2\ge1/6\). The derivative of \(x e^{-x/6}\) is
-\(e^{-x/6}(1-x/6)\), so it is nonpositive for \(x\ge6\). Consequently,
-for every real \(x\ge120\),
+The first strict inequality follows from \(1/(1-t^2)>1+t^2\) for
+\(0<t\le1/7\). The last comparison is \(740\,000>739\,851\). Also
+\(s<99/70\), since \(99^2=9801>9800=2\cdot70^2\). Therefore
 
 \begin{equation}
-\varepsilon x
-\le200xe^{-x/6}
-\le24000e^{-20}
-<\frac{24000}{2^{20}}
-=\frac{375}{16384}
-<\frac1{32}.
+\beta u>
+\frac{719}{2500}\cdot\frac{463}{10}\cdot\frac{70}{99}
+>\frac{941}{100}>1.
 \label{eq:s6-3}
 \end{equation}
 
-Here \(e>2\) follows from its series, and the last comparison is the
-integer inequality \(375\cdot32=12000<16384\). Equivalently,
-\(24000\cdot32=768000<1048576=2^{20}\).
+The middle comparison is exactly
+\(2\,330\,279\,000>2\,328\,975\,000\), obtained by multiplying the positive
+denominators; the last is \(941>100\).
 
-This is the reason for the convenient choice \(x_0=120\), hence
-\(N_0=120^4=207\,360\,000\): it makes the exponent \(x_0/6=20\) and
-proves \eqref{eq:s6-3} by integer arithmetic. This onset is not claimed minimal.
-The argument is uniform beyond the onset, rather than a check at one
-point. More explicitly, the controlling envelope
+The positive-term exponential series yields
 
 \[
-H(N)=200N^{1/4}\exp(-N^{1/4}/6)
+e^3>\sum_{j=0}^{9}\frac{3^j}{j!}
+=\frac{22471}{1120}>\frac{1003}{50},
+\qquad
+e^{41/100}>
+\sum_{j=0}^{3}\frac{(41/100)^j}{j!}
+=\frac{9033221}{6000000}>\frac32.
 \]
 
-has derivative
+The rational comparisons are \(1\,123\,550>1\,123\,360\) and
+\(9\,033\,221>9\,000\,000\). Hence
 
 \begin{equation}
-H'(N)=50N^{-3/4}\exp(-N^{1/4}/6)
-\left(1-\frac{N^{1/4}}6\right)\le0
-\qquad(N\ge6^4).
+e^{\beta u}>e^{941/100}
+=(e^3)^3e^{41/100}
+>\frac{3\cdot1003^3}{2\cdot50^3}>12100,
+\qquad
+200e^{-\beta u}<\frac{2}{121}.
 \label{eq:s6-4}
 \end{equation}
 
-The actual quantity \(\varepsilon x\) is also decreasing there, since
-\(\alpha/\sqrt2\ge1/6\). Thus no larger \(N\) can violate the error bound
-used in \eqref{eq:s6-3}.
+The penultimate comparison is exactly
+\(3\,027\,081\,081>3\,025\,000\,000\).
 
-Put \(y=x^2+\gamma x+1\). Using \(\gamma^2=8/9\), direct expansion gives
+Put \(y=x^2+\gamma x+1\). Since \(\gamma^2=8/9\), direct expansion gives
 
 \begin{equation}
 P_0(y)=\frac{10}{9}x^2+\frac{\gamma}{9}x+\frac19\ge x^2.
 \label{eq:s6-5}
 \end{equation}
 
-Also \(\gamma<1\), since \(\gamma^2=8/9<1\). For \(x\ge1\),
-\(y\le x^2+x+1\le3x^2\). Hence \eqref{eq:s6-3} implies
+We retain the full leading term \((10/9)x^2\) in what follows. In
+particular \(P_0(y)\ge(10/9)x^2\). Also \(0<\gamma<1\), because
+\(0<\gamma^2=8/9<1\).
+
+Normalize the error by \(x^2\):
+
+\[
+\Phi(x):=\frac{\varepsilon((4/3)y+sx^3)}{x^2}
+=200e^{-\beta x}
+\left(sx+\frac43+\frac{4\gamma}{3x}+\frac{4}{3x^2}\right).
+\]
+
+This function is strictly decreasing on \([u,\infty)\). To see this
+without any estimate on an unspecified remainder, its four summands are
+positive constant multiples of \(xe^{-\beta x}\), \(e^{-\beta x}\),
+\(x^{-1}e^{-\beta x}\), and \(x^{-2}e^{-\beta x}\). The derivative of the
+first is \(e^{-\beta x}(1-\beta x)<0\), by \eqref{eq:s6-3}. For
+\(j=0,1,2\), the derivative of \(x^{-j}e^{-\beta x}\) is
+\(-e^{-\beta x}(j x^{-j-1}+\beta x^{-j})<0\).
+
+At the rational endpoint \(u\),
+
+\[
+su<\frac{99}{70}\cdot\frac{463}{10}
+=\frac{45837}{700}<\frac{131}{2},
+\qquad
+\frac43\left(1+\frac\gamma u+\frac1{u^2}\right)
+<\frac43\left(1+\frac1{46}+\frac1{46^2}\right)
+=\frac{721}{529}<\frac32.
+\]
+
+These comparisons are \(45837<45850\), \(463>460\), and \(1442<1587\).
+Combining them with \eqref{eq:s6-4} gives, uniformly for \(x\ge x_1>u\),
 
 \begin{equation}
-\begin{aligned}
-\varepsilon\left(\frac43y+\sqrt2\,x^3\right)
-&<\frac1{32x}\left(4x^2+\frac32x^3\right)\\
-&=\frac x8+\frac{3x^2}{64}
-\le\frac{11x^2}{64}.
-\end{aligned}
+\Phi(x)\le\Phi(u)
+<\frac{2}{121}\left(\frac{131}{2}+\frac32\right)
+=\frac{134}{121}.
 \label{eq:s6-6}
 \end{equation}
 
-The last step uses \(x\le x^2\), valid for \(x\ge1\). Combining
-\eqref{eq:s6-2}, \eqref{eq:s6-5}, and \eqref{eq:s6-6} now proves, for every real \(x\ge120\),
+Finally, \eqref{eq:s6-2}, \eqref{eq:s6-5}, and \eqref{eq:s6-6} give
 
 \begin{equation}
+\begin{aligned}
 P_\varepsilon(y)
-=P_0(y)-\varepsilon\left(\frac43y+\sqrt2\,x^3\right)
->\frac{53}{64}x^2>0.
+&=P_0(y)-\varepsilon\left(\frac43y+sx^3\right)\\
+&>\left(\frac{10}{9}-\frac{134}{121}\right)x^2
+=\frac4{1089}x^2>0.
+\end{aligned}
 \label{eq:s6-7}
 \end{equation}
 
+Here \(10\cdot121-134\cdot9=1210-1206=4>0\). This proves
+\(P_\varepsilon(y)>0\) for every real \(x\ge x_1\).
+
 The quadratic \(P_\varepsilon\) has leading coefficient 1 and strictly
-negative constant term. Its two real roots have opposite signs: this also
-follows directly from its positive discriminant and negative root product.
-Therefore, on \([0,\infty)\), the condition \(P_\varepsilon(k)\le0\)
-places \(k\) at or below the unique positive root. Since \(y>0\) and
-\(P_\varepsilon(y)>0\), that root is strictly smaller than \(y\).
-We have proved
+negative constant term. Its discriminant is positive, and its two roots
+have negative product, so precisely one root is positive. Since \(k\ge0\)
+and \(P_\varepsilon(k)\le0\), \(k\) is at most that positive root. Since
+\(y>0\) and \(P_\varepsilon(y)>0\), the positive root is strictly smaller
+than \(y\). Consequently
 
 \[
 k<x^2+\gamma x+1
 =\sqrt N+\frac{2\sqrt2}{3}N^{1/4}+1.
 \]
 
-Translating the original set as in Section~\ref{sec:statement} proves \eqref{eq:s1-1}. In particular,
-the stated non-strict bound follows from a strict bound on the real right
-side. \end{proof}
+Translation from \(A\subseteq\{1,\ldots,N\}\) to
+\(A-1\subseteq\{0,\ldots,N-1\}\) preserves the given Sidon condition, as in
+Section~\ref{sec:statement}. This proves \eqref{eq:s1-1}, and indeed its
+strict version, for every integer \(N\ge4\,600\,000\). The root argument
+also includes \(k=0\). \end{proof}
+
+\begin{remark}[version history of the onset]\label{rem:onset-history}
+Versions~1 and~2 of this note (2 October 2026) proved
+Theorem~\ref{thm:main} with the convenience onset
+\(N_0=120^4=207\,360\,000\): they replaced \(\alpha/\sqrt2\) by \(1/6\)
+and absorbed the error through the envelope \(\varepsilon x<1/32\), which
+needs \(x\ge120\). The present section (version~3) keeps
+Lemma~\ref{lem:7} and the identities \eqref{eq:s6-2}, \eqref{eq:s6-5}
+unchanged and replaces only the numerical absorption; the earlier
+argument remains valid on its own range, which is contained in the range
+of this one. The onset \(4\,600\,000\) is not claimed minimal; see
+Remark~\ref{rem:numerical-onset}.
+\end{remark}
 
 \section{Where \texorpdfstring{$2\sqrt2/3$}{2 sqrt(2)/3} comes from}\label{sec:constant}
 
@@ -1440,6 +1506,30 @@ and $R\ge1$, but this does not characterize all equality kernels.
 Signed-probability capacity can be larger, even infinite; it cannot
 replace the positive capacity here.
 
+\subsection{Independent work on the same constant}\label{sec:akwei}
+A manuscript by John Akwei, posted on GitHub on 1 October 2026 (one day
+before the first version of this note) and expanded on 5 October
+2026~\cite{Akw26a,Akw26b}, proves that every symmetric or two-sided
+covering certificate in the vector-valued smoothing framework of
+Hou--Zhao satisfies $ab\ge 8/9$, so that the certificate coefficient
+$\gamma=\sqrt{ab}$ cannot fall below $2\sqrt2/3$, and that the infimum is
+attained in the continuum by the ramp density $\rho(x)=2x$ on $[0,1]$
+($a=4/3$, $b=2/3$); it also reports a rational certificate with
+$\gamma<0.942809522$ and the bound $h(N)\le\sqrt N+0.9428096\,N^{1/4}+O(1)$
+(his $h$ is our $F$).
+The ramp is the reflection of our kernel and has the same
+autocorrelation, and the renewal-measure multiplier is the same up to
+normalisation. The statements differ in the quantified object: Akwei
+bounds the boundary cost of Hou--Zhao covering certificates over finite
+mixtures of autocorrelations, while Theorem~\ref{thm:optimality} bounds
+the positive capacity intercept over all even nonnegative kernels in
+$C_0\cap L^1$; neither statement is known to imply the other. The
+explicit cardinality theorem with the exact coefficient, the additive
+constant $+1$ and an explicit onset (now $N\ge4\,600\,000$; $N\ge120^4$ in
+the first two versions) appears to be new to this note. We learned of
+Akwei's manuscript on 9 October 2026, after the first two versions of
+this note had been published.
+
 \section{Remarks}\label{sec:remarks}
 
 \subsection{The earlier numerical kernel scan}
@@ -1447,8 +1537,9 @@ The exploratory numerical scan is superseded, within the stated scope, by Theore
 
 \begin{remark}[numerical onset, not certified]\label{rem:numerical-onset}
 Numerical evaluation of the same inequalities gives the stated Sidon
-bound already for $N\ge4\,540\,589$. This evaluation is not certified
-here and does not replace the proved onset $120^4=207\,360\,000$ in
+bound already for $N\ge4\,540\,589$ (computed by a referee of version~1
+and reproduced independently in 60-digit arithmetic). This evaluation is
+not certified here and does not replace the proved onset $4\,600\,000$ in
 Theorem~\ref{thm:main}.
 \end{remark}
 
@@ -1488,7 +1579,13 @@ The accompanying audit script \texttt{check\_sidon\_bound.py} uses exact
 fractions and integer square roots for rational enclosures and finite
 sanity checks. A JavaScript translation was executed for the reported
 finite checks, including maxima on intervals of lengths at most $60$;
-the Python deliverable itself was not executed in the drafting environment.
+the Python deliverable itself was not executed in the drafting environment;
+it was later run by the coordinator and by both referees of version~1
+(exit code 0). For version~3, \texttt{check\_sidon\_bound\_v2.py} replays
+exactly every integer and rational comparison of Section~\ref{sec:onset}
+and of the tail chain of the Lean formalization, and tests the
+finite-certificate tail inequality used there for every integer
+$N\in[4.6\cdot10^6,5.6\cdot10^6]$ (exit code 0).
 These finite computations are not used to prove the theorem. In
 particular, numerical grids do not replace the all-$N$ monotonicity
 argument in Section~\ref{sec:onset}.
@@ -1514,9 +1611,32 @@ checked and incorporated. The referee's reported numerical checks were
 not rerun here and are not numerical certificates.
 Cross-vendor referee~B (Claude Opus, isolated, 2026-10-02): \emph{PASS}; it reconstructed the lower bound independently from the statement, arriving at the same trial measure, and found no kernel below $8/9$ among about thirty named kernels and four optimised parametric families.
 
-No independent human referee report, Lean formalization, or other kernel
-verification is claimed. The author takes responsibility for the
-mathematics. Bibliographic statements and unrefereed numerical claims
+The new Section~\ref{sec:onset} of v3 was written by a clean-room GPT-6
+Astra agent (OpenAI) that received only Sections~\ref{sec:statement},
+\ref{sec:discrete} and~\ref{sec:onset} of the v1 proof and the
+finite-certificate chain of the Lean formalization, without the
+literature or earlier referee reports. Its every comparison was replayed
+in exact arithmetic by a separate Claude verifier, and two isolated
+cross-vendor referee reports by Claude (Anthropic), dated 2026-10-09 (UTC),
+returned \emph{PASS} and \emph{PASS} with no repair required, each
+recomputing every displayed comparison.
+
+Lean: the upper bound is kernel-checked in Lean~4 with Mathlib in the
+project \url{https://github.com/chy4pro/automath/tree/main/lean/sidon30}.
+Theorem \texttt{sidon\_second\_order'} states it for every natural
+$N\ge4\,600\,000$ and every Sidon set $A\subseteq\{1,\ldots,N\}$, with
+diagonal sums included, coefficient $2\sqrt2/3$ and additive constant~$1$
+(GitHub Actions run 37978411704); the v1 theorem
+\texttt{sidon\_second\_order} for $N\ge120^4$ is a corollary. Both depend
+only on the axioms \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound}. The formalization, written by GPT-6 Astra, uses a
+finite certificate in place of the real-variable Lemma~\ref{lem:7}; its
+tail estimate at the new onset was refereed together with
+Section~\ref{sec:onset}. The optimality theorem of
+Section~\ref{sec:optimality} is not formalized.
+
+No independent human referee report is claimed. The author takes
+responsibility for the mathematics. Bibliographic statements and unrefereed numerical claims
 are distinguished in the introduction; citing a claim does not certify
 its proof or computational certificate.
 
@@ -1566,6 +1686,13 @@ commit \texttt{da2440b68979b78d201182118d30ca418e3c2001},
 The q1 and q2 statements are also recorded in
 \url{https://github.com/wustep/maths/blob/da2440b68979b78d201182118d30ca418e3c2001/problems/sidon-second-term/PROBLEM.md}.
 Unrefereed repository claims; accessed 2 October 2026.
+\bibitem[Akw26a]{Akw26a} J.~Akwei, \emph{Vector-valued smoothing for Sidon sets cannot beat $2\sqrt2/3$}, manuscript,
+GitHub repository \texttt{johnakwei/Science}, commit \texttt{7e78435} (1 October 2026); expanded as
+\emph{The limit of vector-valued smoothing for Sidon sets is $2\sqrt2/3$}, commit \texttt{15609b5} (5 October 2026).
+Unrefereed; accessed 9 October 2026.
+\bibitem[Akw26b]{Akw26b} J.~Akwei, \emph{A Data Science Analysis of Erd\H{o}s Problem 30}, version 4,
+GitHub repository \texttt{johnakwei/Science}, commit \texttt{6b32990} (5 October 2026).
+Unrefereed; accessed 9 October 2026.
 \bibitem[GO26]{GO26} A.~Gupta and K.~O'Bryant, Optimal Diameters of High Multiplicity $g$-Golomb Rulers,
 preprint, \href{https://arxiv.org/abs/2605.14229v1}{arXiv:2605.14229v1},
 14 May 2026.
