@@ -1,0 +1,886 @@
+% STATUS: DONE -- author revision; all required referee repairs are applied.
+% Related work and provenance added by the coordinator from the AUT-103 literature check, 2026-10-10.
+% Neither a TeX engine nor Python was available in the revision environment.
+% The companion REVISION_REPORT.md records the proof audit and exact checks.
+% Session lineage: fresh AUT-106 author-revision session, 2026-10-10;
+% based only on the specified record, referee reports, scans, and certification files.
+\documentclass[10pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\allowdisplaybreaks
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\N}{\mathbb N}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\dd}{\,dt}
+\newcommand{\dens}{\mathop{\mathrm{dens}}}
+\newcommand{\cn}{c_{\mathrm N}}
+\newcommand{\cd}{c_{\mathrm D}}
+\title{The density interpretation of Theorem 4 of Erd\H{o}s, Graham, Ruzsa and Straus}
+\author{Haoyu Chen\\ Independent researcher}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For each fixed $0<\alpha\leq 1/2$, we give the natural-density limits of
+the proportions of integers up to $n^\alpha$ which divide, or do not
+divide, $\binom{2n}{n}$. The constants have absolutely convergent integral
+series and effective truncation bounds. The nondivisor constant tends to
+zero as $\alpha\downarrow0$, whereas the divisor constant tends to one.
+Neither proportion has a limit along all integers $n$ in this range.
+We specify the localized moment input from the 1975 paper, prove its
+required consequence, and give certified numerical intervals. No claim
+is made for $1/2<\alpha<1$, or for an effective exceptional-set rate in $n$.
+\end{abstract}
+
+\section{Introduction}
+Write $B_n=\binom{2n}{n}$. Theorem 4 on p.~89 of
+Erd\H{o}s--Graham--Ruzsa--Straus \cite{EGRS} reads as follows
+(the mathematical notation and the final parenthesis are retained):
+\begin{quote}
+\textsc{Theorem 4.} \textit{For $\alpha<1$,}
+\[
+ \left|\left\{m:1\leq m\leq n^\alpha,\ m\nmid\binom{2n}{n}\right\}\right|
+ =c(\alpha)n^\alpha+o(n^\alpha),
+\]
+\textit{where $c(\alpha)\to1$ as $\alpha\to0$.
+(In fact, $c(\alpha)$ can be explicitly calculated.)}
+\end{quote}
+The qualifier ``for almost all $n$'' occurs in the preceding display (6)
+and its introduction, but not in the theorem itself. In the range
+$0<\alpha\leq1/2$, an interpretation as a limit along all $n$ is false.
+Even after the density qualifier is supplied, the direction of
+divisibility in the assertion about the constant tending to one is
+reversed: it is the divisor proportion that has that limit.
+
+We prove the density statement for $0<\alpha\leq1/2$, with an explicit
+series for both constants and certified intervals at four values of
+$\alpha$. We also correct the endpoint interpretation of display (6).
+Nothing here is asserted for $1/2<\alpha<1$, although the printed theorem
+states the wider range $\alpha<1$.
+
+\section{Related work}
+The main question of \cite{EGRS}, whether
+$f(n)=\sum_{p\leq n,\ p\nmid B_n}1/p$ is bounded, is Problem~377 in
+Bloom's list of Erd\H{o}s problems \cite{EP377}; this note does not
+address it. Several later papers determine densities of sets of
+\emph{indices} $n$ defined by divisibility properties of $B_n$.
+Pomerance \cite{Po15} shows that, for each fixed $k\geq1$, $n+k\mid B_n$
+for a set of $n$ of density one. Sanna \cite{Sa18} bounds the upper
+density of $\{n:n\mid B_n\}$. Ford and Konyagin \cite{FK21} prove that
+$\{n:n^\ell\mid B_n\}$ has a positive density for each $\ell\geq1$ and
+evaluate these densities numerically. Pomerance \cite{Po26} proves
+density-one divisibility statements for products of consecutive
+integers. These results concern the density of indices $n$, not the
+proportion of divisors of $B_n$ among $m\leq n^\alpha$ for a typical
+$n$, which is the quantity of Theorem~4 of \cite{EGRS} and of this note.
+In the formal-conjectures repository, a change merged in September 2026
+\cite{FC5792} replaced a cofinite-convergence formalization of the
+reciprocal-prime result of \cite{EGRS} by a density-one statement; that
+is a different statement from Theorem~4.
+
+In a bounded search completed on 10 October 2026 (reviews and forward
+citations of \cite{EGRS}, the problem page and its forum, OEIS, and
+public code repositories), we did not locate an earlier published
+correction of the printed Theorem~4, or an earlier explicit evaluation
+of the densities studied here. The MathSciNet review of \cite{EGRS} was
+not accessible to us.
+
+\section{Statement and constants}\label{sec:statement}
+For real $x=n^\alpha$ put
+\[
+ N_\alpha(n)=\frac{\#\{1\leq m\leq x:m\nmid B_n\}}x,
+ \qquad
+ D_\alpha(n)=\frac{\#\{1\leq m\leq x:m\mid B_n\}}x.
+\]
+Thus $N_\alpha(n)+D_\alpha(n)=\lfloor x\rfloor/x$, rather than exactly
+one. Convergence in natural density to $c$ means that, for every $\eta>0$,
+$X^{-1}\#\{n\leq X:|u(n)-c|>\eta\}\to0$. Throughout the proof $X$ may
+be restricted to positive integers; replacing a real $X$ by $\lfloor
+X\rfloor$ changes normalized counts by at most $1/X$.
+
+For $0<t<1$ define
+\[
+ w(t)=2^{-\lfloor1/t\rfloor},\qquad g(t)=\frac{w(t)}t,
+ \qquad A(y)=\int_0^y g(t)\,dt\quad(0<y\leq1).
+\]
+Values at the countably many breakpoints do not affect integrals. Set
+\[
+ J_0(\alpha)=1,\qquad
+ J_k(\alpha)=\frac1{k!}
+ \int_{\substack{t_i>0\ (1\leq i\leq k)\\t_1+\cdots+t_k\leq\alpha}}
+       \prod_{i=1}^k g(t_i)\,dt_1\cdots dt_k\quad(k\geq1).
+\]
+
+\begin{theorem}[Corrected Theorem 4, for $0<\alpha\leq1/2$]
+\label{thm:main}
+For every fixed $0<\alpha\leq1/2$ and every $\eta>0$,
+\begin{align*}
+ \lim_{X\to\infty}\frac1X\#\{n\leq X:|N_\alpha(n)-\cn(\alpha)|>\eta\}&=0,\\
+ \lim_{X\to\infty}\frac1X\#\{n\leq X:|D_\alpha(n)-\cd(\alpha)|>\eta\}&=0,
+\end{align*}
+where the absolutely convergent series are
+\begin{equation}\label{eq:density}\tag{DENSITY}
+ \begin{aligned}
+ \cd(\alpha)&=\sum_{k=0}^{\infty}(-1)^kJ_k(\alpha),\\
+ \cn(\alpha)&=\sum_{k=1}^{\infty}(-1)^{k+1}J_k(\alpha)=1-\cd(\alpha).
+ \end{aligned}
+\end{equation}
+If $s=\lfloor1/\alpha\rfloor\geq2$, then
+\begin{align}
+ A(\alpha)&=2^{-s}\log((s+1)\alpha)
+       +\sum_{r=s+1}^{\infty}2^{-r}\log(1+1/r),\label{eq:A}\\
+ 0<A(\alpha)&\leq A_s:=\frac{2^{1-s}}s\leq\frac14,
+ \qquad 0\leq J_k(\alpha)\leq\frac{A(\alpha)^k}{k!},\label{eq:bounds}\\
+ A(\alpha)(1-A(\alpha)/2)&\leq\cn(\alpha)\leq A(\alpha)<\frac14.
+ \label{eq:bracket}
+\end{align}
+For every integer $K\geq0$, writing
+$E_K(u)=u^{K+1}/((K+1)!(1-u/(K+2)))$,
+\begin{equation}\label{eq:tail}\tag{TAIL}
+ \left|\cd(\alpha)-\sum_{k=0}^K(-1)^kJ_k(\alpha)\right|
+ \leq E_K(A(\alpha))\leq E_K(A_s).
+\end{equation}
+The same bound holds for the nondivisor series truncated at $k=K$
+(the empty sum is zero). Both proportions also converge in Ces\`aro mean.
+\end{theorem}
+
+\begin{proposition}\label{prop:nolimit}
+For every fixed $0<\alpha\leq1/2$, neither $N_\alpha(n)$ nor
+$D_\alpha(n)$ has a limit as $n\to\infty$ through all integers.
+For every integer $h\geq0$,
+\[
+ v_2\left(\binom{2^{h+1}}{2^h}\right)=1,\qquad
+ N_\alpha(2^h)\geq\frac{\lfloor2^{h\alpha}/4\rfloor}{2^{h\alpha}}
+ \geq\frac14-2^{-h\alpha}.
+\]
+Moreover $\cn(\alpha)\to0$ and $\cd(\alpha)\to1$ as $\alpha\downarrow0$.
+\end{proposition}
+
+\begin{remark}[Effectiveness and scope]\label{rem:scope}
+The constant can be enclosed to any prescribed rational accuracy when
+$\alpha$ is rational, and for a computable real $\alpha$ when an
+approximation procedure for $\alpha$ is supplied. All numerical error
+bounds below are explicit. We give no effective onset or rate for the
+exceptional sets in $n$. The quantifiers in Theorem~\ref{thm:main} are for
+each fixed $\alpha$ and $\eta$, not uniformly in them. Nothing is claimed
+for $1/2<\alpha<1$.
+\end{remark}
+
+\begin{lemma}[Integral bounds and alternating-series bracket]
+\label{lem:alternating}
+The formulas and inequalities \eqref{eq:A}--\eqref{eq:tail} hold for
+the constants defined by \eqref{eq:density}.
+\end{lemma}
+\begin{proof}
+Integrate $2^{-r}/t$ on each interval $(1/(r+1),1/r)$ to obtain
+\eqref{eq:A}. Since $\log(1+1/r)\leq1/r$ and $\alpha\leq1/s$,
+\[
+ A(\alpha)\leq\sum_{r\geq s}\frac{2^{-r}}r
+ \leq\frac1s\sum_{r\geq s}2^{-r}=A_s.
+\]
+Dropping the simplex constraint gives $J_k\leq A(\alpha)^k/k!$.
+More particularly, integrate out the last coordinate and then enlarge
+its permitted interval to $(0,\alpha)$ to obtain
+\begin{equation}\label{eq:successive}
+ (k+1)!J_{k+1}(\alpha)
+ \leq k!J_k(\alpha)A(\alpha),\qquad
+ J_{k+1}(\alpha)\leq\frac{A(\alpha)}{k+1}J_k(\alpha).
+\end{equation}
+Thus the nonnegative terms decrease to zero, and the alternating-series
+bracket gives $J_1-J_2\leq\cn\leq J_1$. Since $J_1=A$ and $J_2\leq
+A^2/2$, this proves the non-strict parts of \eqref{eq:bracket}.
+The strict inequality follows from
+\[
+ A(\alpha)\leq A(1/2)=\sum_{r\geq2}2^{-r}\log(1+1/r)
+ <\frac12\sum_{r\geq2}2^{-r}=\frac14.
+\]
+Finally, for $j\geq0$ and $0\leq u\leq1/4$,
+\[
+ \frac{u^{K+1+j}}{(K+1+j)!}
+ \leq\frac{u^{K+1}}{(K+1)!}\left(\frac{u}{K+2}\right)^j.
+\]
+The geometric sum bounds the absolute tail. Its terms increase with
+$u$, so replacing $A(\alpha)$ by $A_s$ is permitted.
+\end{proof}
+
+\section{Proof of the density theorem}\label{sec:proof}
+\subsection{Sieve reduction}
+For $0<\delta<\alpha$, let $\mathcal P_\delta(n)$ be the primes
+$n^\delta<p\leq n^\alpha$ with $p\nmid B_n$. Let $F_\delta(n)$ be
+$n^{-\alpha}$ times the number of integers $1\leq m\leq n^\alpha$
+having no prime factor in $\mathcal P_\delta(n)$, and put
+\[
+ U_\delta(n)=\frac{\lfloor n^\alpha\rfloor}{n^\alpha}-F_\delta(n),
+ \quad
+ G_\delta(n)=\sum_{\substack{p\leq n^\delta\\p\nmid B_n}}\frac1p,
+ \quad
+ T(n)=\sum_{\substack{p\leq n^\alpha\\v_p(B_n)\geq1}}
+                  p^{-v_p(B_n)-1}.
+\]
+Every integer counted in $U_\delta$ is a nondivisor. Conversely, if
+$m\nmid B_n$, some prime satisfies $v_p(m)>v_p(B_n)$. Either $p\nmid
+B_n$, or $p^{v_p(B_n)+1}\mid m$ with $v_p(B_n)\geq1$.
+The fraction of multiples of any positive integer $d$ is at most $1/d$.
+The union bound therefore proves the pointwise sandwich
+\begin{equation}\label{eq:sandwich}
+ U_\delta(n)\leq N_\alpha(n)
+ \leq U_\delta(n)+G_\delta(n)+T(n).
+\end{equation}
+
+\subsection{The localized moment calculation}\label{subsec:local}
+We state precisely the analytic inputs. Write
+\[
+ \begin{aligned}
+ A_1(p;X)&=\#\{p\leq n\leq X:p\nmid B_n\},\\
+ A_2(p,q;X)&=\#\{\max(p,q)\leq n\leq X:\gcd(pq,B_n)=1\}.
+ \end{aligned}
+\]
+Changing a strict upper endpoint in a printed count to $n\leq X$
+changes its normalized value by at most $1/X$ and does not change any
+of the following uniform limits.
+The single-prime estimate is the last, unnumbered display on p.~86 of
+\cite{EGRS}, immediately following (4): for each fixed $r\geq1$ and
+$\epsilon>0$,
+\begin{equation}\label{eq:input1}
+ A_1(p;X)/X\longrightarrow2^{-r}
+ \quad\hbox{uniformly for }X^{1/(r+1)+\epsilon}<p<X^{1/r-\epsilon}.
+\end{equation}
+The class-III pair estimate is the unnumbered display immediately below
+condition (5) on p.~88. For distinct primes in bands indexed by $r,t$,
+order the powers $p^i$ ($1\leq i\leq r$) and $q^j$ ($1\leq j\leq t$)
+as $w_1<\cdots<w_{r+t}$. With the individual bands trimmed as in
+\eqref{eq:input1}, its needed form is
+\begin{equation}\label{eq:input2}
+ \begin{gathered}
+ \frac{A_2(p,q;X)}X\longrightarrow2^{-(r+t)}
+ \quad\hbox{uniformly if}\\
+ \frac{w_{i+1}}{w_i}>X^\epsilon\ (1\leq i<r+t),\qquad
+ \frac{X}{w_{r+t}}>X^\epsilon.
+ \end{gathered}
+\end{equation}
+For the mean of the full sum we use Theorem 2, pp.~86--87:
+\begin{equation}\label{eq:inputmean}
+ \begin{gathered}
+ f(n):=\sum_{\substack{p\leq n\\p\nmid B_n}}\frac1p,\qquad
+ \frac1X\sum_{n\leq X}f(n)\longrightarrow c_0,\\
+ c_0=\sum_{r\geq1}2^{-r}\log(1+1/r)=A(1).
+ \end{gathered}
+\end{equation}
+These are the only moment estimates imported from that paper. In
+particular, we do not infer concentration of a sub-sum from the second
+moment of the full sum, and do not import display (6) as written.
+
+Here and below, the uniform remainders in \eqref{eq:input1} and
+\eqref{eq:input2} have the following precise meaning. For fixed $0<a<b<1$
+and $0<\epsilon<a/4$, let $L=\lceil2/a\rceil$ and let
+$e_1(X;a,b,\epsilon)$ be the maximum of
+$|A_1(p;X)/X-2^{-r}|$ over $X^a<p\leq X^b$, $1\leq r\leq L$, in
+the indicated trimmed bands. Define $e_2$ as the analogous maximum for
+\eqref{eq:input2}, with $r,t\leq L$; an empty maximum is zero.
+The imported assertions say $e_i\to0$ as $X\to\infty$ with these
+parameters fixed: for every $z>0$ there is $X_0(a,b,\epsilon,z)$ such
+that $e_i<z$ for all integer $X\geq X_0$. No numerical value of that
+$X_0$ is asserted. Likewise the absolute error in \eqref{eq:inputmean}
+tends to zero for every prescribed tolerance. This specifies all
+non-effective remainders used below.
+
+We also use the reciprocal-prime bounds of Rosser--Schoenfeld
+\cite{RS}. If $M(y)=\sum_{p\leq y}1/p$ and $B$ is the prime Mertens
+constant, then
+\begin{equation}\label{eq:RS}
+ \begin{aligned}
+ \log\log y+B-\frac1{2\log^2y}&<M(y)\quad(y>1),\\
+ M(y)&<\log\log y+B+\frac1{2\log^2y}\quad(y\geq286).
+ \end{aligned}
+\end{equation}
+Consequently, for $a\leq u\leq v\leq b$ and $X\geq286^{1/a}$, an
+interval with exponent endpoints $u,v$ has reciprocal-prime mass
+differing from $\log(v/u)$ by at most
+\begin{equation}\label{eq:MX}
+ E_X(a):=\frac1{a^2\log^2X}+2X^{-a}.
+\end{equation}
+The $2X^{-a}$ permits either inclusion convention at the two endpoints.
+
+\begin{lemma}[Localized moment statement]\label{lem:local}
+For every fixed $0<a<b<1$, in natural density,
+\begin{equation}\label{eq:local}\tag{LOCAL}
+ S_{a,b}(n):=\sum_{\substack{n^a<p\leq n^b\\p\nmid B_n}}\frac1p
+ \longrightarrow \lambda_{a,b}:=\int_a^b g(t)\,dt.
+\end{equation}
+\end{lemma}
+\begin{proof}
+First choose $n$ uniformly from $\{1,\ldots,X\}$ and use fixed endpoints:
+\[
+ S^X(n)=\sum_{\substack{X^a<p\leq X^b\\p\nmid B_n}}\frac1p.
+\]
+Abbreviate $E=E_X(a)$, $H=\log(b/a)+E$, $\lambda=\lambda_{a,b}$,
+and $L=\lceil2/a\rceil$. Fix $0<\epsilon<a/4$. Remove primes whose
+exponent $\log p/\log X$ lies within distance $\epsilon$ of any $1/j$,
+$1\leq j\leq L$. The union of removed intervals in $[a,b]$ has length
+at most $2L\epsilon$ and at most $L$ components. Its reciprocal mass is
+at most
+\begin{equation}\label{eq:removed}
+ R_X:=2L\epsilon/a+LE,
+\end{equation}
+by \eqref{eq:MX} and $\log(v/u)\leq(v-u)/a$. Its limiting $g$-mass
+is at most $2L\epsilon/a$, since $w\leq1$. All other primes are in
+the trimmed bands; every band met has index at most $L$.
+
+\emph{First moment.} The count for $1\leq n\leq X$ differs from
+$A_1(p;X)$ by at most $p\leq X^b$. On the retained primes apply
+\eqref{eq:input1}; their total reciprocal mass is at most $H$.
+There are at most $L$ band pieces, so \eqref{eq:MX} gives
+\begin{equation}\label{eq:meanerror}
+ |\E S^X-\lambda|\leq
+ m_X:=(e_1+X^{b-1})H+2LE+4L\epsilon/a.
+\end{equation}
+Here one $LE$ bounds integration over the retained band pieces,
+and the other $LE+4L\epsilon/a$ bounds the sum of the removed
+prime mass and its limiting integral. In particular, first letting
+$X\to\infty$ and then $\epsilon\downarrow0$ proves $\E S^X\to\lambda$.
+
+\emph{Excluded pairs.} Choose an integer $s>1/a$. All the primes are
+larger than $X^{1/s}$, so classes I and II of pp.~87--88 are empty.
+Pairs containing a removed prime have reciprocal mass at most $2HR_X$.
+For a retained prime in band $r$, $p^r<X^{1-r\epsilon}\leq
+X^{1-\epsilon}$. Consecutive powers of the same prime have ratio
+$p>X^a>X^\epsilon$. Thus failure of condition (5) for two distinct
+retained primes requires
+\begin{equation}\label{eq:ratio}
+ X^{-\epsilon}\leq p^u/q^v\leq X^\epsilon
+ \quad\hbox{for some }1\leq u,v\leq L.
+\end{equation}
+This is the ratio intended in the last excluded-pair display on p.~88,
+which prints $p^u q^v$. The product with two positive exponents cannot
+express proximity of two scales.
+For fixed $p,u,v$, the possible exponents of $q$ lie in an interval
+of length at most $2\epsilon/v\leq2\epsilon$. After intersecting with
+$[a,b]$, \eqref{eq:MX} bounds their reciprocal mass by
+$2\epsilon/a+E$. Summing over $p,u,v$ gives the explicit bound
+\begin{equation}\label{eq:badpairs}
+ \sum_{\text{excluded ordered pairs}}\frac1{pq}
+ \leq2HR_X+L^2H(2\epsilon/a+E).
+\end{equation}
+This bound overcounts overlaps, which is harmless. It tends to a
+quantity at most $(4L+2L^2)\log(b/a)\epsilon/a$.
+
+\emph{Second moment and Chebyshev.} The diagonal contributes at most
+\[
+ \sum_{p>X^a}\frac1{p^2}\leq\frac1{X^a-1}.
+\]
+For the other, retained pairs satisfying (5), apply \eqref{eq:input2}.
+Changing $n\geq\max(p,q)$ to $n\geq1$ costs at most $X^{b-1}$ in
+each normalized count. Also, summing $w(\log p/\log X)/p$ band by
+band differs from $\lambda$ by at most $LE$. Hence
+\begin{align}
+ \E (S^X)^2&\leq (\lambda+LE)^2+(e_2+X^{b-1})H^2+2HR_X\notag\\
+ &\hspace{12mm}+L^2H(2\epsilon/a+E)+\frac1{X^a-1},\label{eq:second}\\
+ \E(S^X-\lambda)^2&\leq
+ (\lambda+LE)^2-\lambda^2+(e_2+X^{b-1})H^2+2HR_X\notag\\
+ &\hspace{12mm}+L^2H(2\epsilon/a+E)+\frac1{X^a-1}
+       +2\lambda m_X=:V_X.\label{eq:variance}
+\end{align}
+We used $-2\lambda\E S^X\leq-2\lambda^2+2\lambda m_X$.
+Since $\lambda\leq\log(b/a)$,
+\[
+ \limsup_{X\to\infty}V_X
+ \leq(12L+2L^2)\log(b/a)\epsilon/a.
+\]
+Chebyshev's inequality gives
+$\Prob(|S^X-\lambda|>\eta)\leq V_X/\eta^2$. Letting
+$\epsilon\downarrow0$ proves concentration of $S^X$.
+
+\emph{Moving the endpoints.} Fix $0<\rho<1$. For
+$X^{1-\rho}\leq n\leq X$, the symmetric difference of the two prime
+ranges is contained in
+\[
+ (X^{a(1-\rho)},X^a]\ \cup\ (X^{b(1-\rho)},X^b].
+\]
+Consequently, for $X\geq286^{1/(a(1-\rho))}$,
+\begin{equation}\label{eq:endpointshift}
+ |S_{a,b}(n)-S^X(n)|\leq
+ 2\log\frac1{1-\rho}+2E_X(a(1-\rho)).
+\end{equation}
+Given $\eta>0$, choose $\rho$ so the logarithmic term is less than
+$\eta/4$ and then $X$ so the error term is less than $\eta/4$.
+There are at most $X^{1-\rho}$ discarded integers. Thus the density
+of $|S_{a,b}-\lambda|>\eta$ is bounded by
+$X^{-\rho}+\Prob(|S^X-\lambda|>\eta/2)$, which tends to zero.
+\end{proof}
+
+\begin{remark}[The endpoints in printed display (6)]\label{rem:printed6}
+For arbitrary endpoints, whole digit bands cannot replace their actual
+intersections with the interval. For example, take $a=3/10$, $b=9/20$.
+The sum in printed (6), indexed by $1/b\leq k\leq1/a$, includes only
+$k=3$ and gives $2^{-3}\log(4/3)$. In contrast, \eqref{eq:local} gives
+\[
+ 2^{-3}\log\frac{1/3}{3/10}
+ +2^{-2}\log\frac{9/20}{1/3}
+ =2^{-3}\log(10/9)+2^{-2}\log(27/20).
+\]
+The two numbers differ: eight times their difference is
+$\log((10/9)(27/20)^2/(4/3))=\log(243/160)>0$.
+This is an endpoint-convention defect, independent of the missing
+density qualifier in the printed theorem.
+\end{remark}
+
+\subsection{The finite sieve and its limit}\label{subsec:sieve}
+For $n>1$ define the finite measure
+\[
+ \mu_n=\sum_{p\in\mathcal P_\delta(n)}\frac1p
+             \delta_{\log p/\log n},\qquad
+ \nu_\delta(dt)=\ind_{[\delta,\alpha]}(t)g(t)\,dt.
+\]
+The notation $\delta_u$ denotes a unit point mass at $u$.
+For $n\geq286^{1/\alpha}$, \eqref{eq:RS} gives
+\begin{equation}\label{eq:massbound}
+ \mu_n([\delta,\alpha])
+ \leq\log(\alpha/\delta)
+ +\frac{\alpha^{-2}+\delta^{-2}}{2\log^2n}.
+\end{equation}
+In particular, with $C=1+\log(\alpha/\delta)$, this mass is at most
+$C$ for
+$n\geq\max(286^{1/\alpha},\exp\sqrt{(\alpha^{-2}+\delta^{-2})/2})$.
+The same bound holds for the mass of $\nu_\delta$.
+
+For completeness, we explain the measure passage without an independence
+assumption. Partition $[\delta,\alpha]$ into $m$ half-open intervals of
+length at most $h$. By \eqref{eq:local}, outside a set of density zero
+each of their $m$ masses is within any prescribed $\zeta>0$ of its
+$\nu_\delta$-mass. The sum of absolute errors of the bin masses is
+at most $m\zeta$. The tensor telescoping identity bounds the error
+of any union of bin boxes in the $k$th product measure by
+$kC^{k-1}m\zeta$, using a larger $C$ if necessary for finitely many
+initial $n$.
+
+On $(0,1/2]$, $g(t)\leq3/4$: on band $r\geq2$ it is at most
+$(r+1)2^{-r}\leq3/4$. A slab of width $\ell$ in the sum of the
+$k$ coordinates has $\nu_\delta^{\otimes k}$-mass at most
+\begin{equation}\label{eq:slab}
+ \frac34\ell A(\alpha)^{k-1}.
+\end{equation}
+Indeed fix the first $k-1$ coordinates and integrate the last over an
+interval of length at most $\ell$. Inner and outer bin approximations
+to a simplex differ in a slab of width at most $2kh$. First choose
+$h$, then $\zeta$, and then use the finite union of the exceptional
+sets for the bins. This proves, in natural density, convergence of
+$\mu_n^{\otimes k}$ on every simplex and every such slab to the
+corresponding $\nu_\delta^{\otimes k}$ mass. In particular no joint
+independence of the prime indicators is assumed in this step.
+
+Set $K_\delta=\lfloor\alpha/\delta\rfloor$. Inclusion--exclusion gives
+the exact finite identity
+\begin{equation}\label{eq:sieve}
+ F_\delta(n)=\sum_{k=0}^{K_\delta}(-1)^k
+ \sum_{\substack{p_1<\cdots<p_k\in\mathcal P_\delta(n)\\d=p_1\cdots p_k\leq n^\alpha}}
+ \frac{\lfloor n^\alpha/d\rfloor}{n^\alpha}.
+\end{equation}
+The $k=0$ term has $d=1$. For $0<\epsilon<\alpha$ and
+$d\leq n^{\alpha-\epsilon}$, the error in replacing the floor term
+by $1/d$ is at most $n^{-\epsilon}/d$. Summed over all such squarefree
+products, it is at most
+\begin{equation}\label{eq:floorerror}
+ n^{-\epsilon}\prod_{p\in\mathcal P_\delta(n)}(1+1/p)
+ \leq n^{-\epsilon}\exp(\mu_n([\delta,\alpha]))\leq n^{-\epsilon}e^C.
+\end{equation}
+For the remaining products the error is at most $1/d$. Their total
+is bounded by
+$\sum_{k=1}^{K_\delta}\mu_n^{\otimes k}
+\{\alpha-\epsilon<\sum t_i\leq\alpha\}/k!$.
+Its limit in density is at most
+$(3/4)\epsilon\sum_{k=1}^{K_\delta}A(\alpha)^{k-1}/k!$,
+by \eqref{eq:slab}. This tends to zero with $\epsilon$.
+
+The repeated-prime part of the ordered $k$-tuple mass, for $k\geq2$,
+is at most
+\begin{equation}\label{eq:diagonal}
+ \binom{k}{2}\left(\sum_{p>n^\delta}p^{-2}\right)C^{k-2}
+ \leq\binom{k}{2}\frac{C^{k-2}}{n^\delta-1}.
+\end{equation}
+This follows by specifying one equal pair of coordinates and dropping
+all other restrictions. Dividing the remaining distinct ordered sums
+by $k!$ converts them into the unordered sums in \eqref{eq:sieve}.
+Equations \eqref{eq:floorerror}--\eqref{eq:diagonal} and the simplex
+convergence prove
+\begin{equation}\label{eq:Fdelta}
+ F_\delta(n)\longrightarrow
+ c_{\mathrm D,\delta}:=\sum_{k=0}^{K_\delta}(-1)^kJ_k^{(\delta)}(\alpha)
+ \quad\hbox{in natural density},
+\end{equation}
+where $J_k^{(\delta)}$ restricts all coordinates to $[\delta,\alpha]$.
+Terms with $k>K_\delta$ are zero; a possible boundary simplex has
+measure zero. It follows that $U_\delta\to1-c_{\mathrm D,\delta}$.
+
+\subsection{Insufficient prime powers}\label{subsec:T}
+The elementary valuation formula
+\begin{equation}\label{eq:valuation}
+ v_p(B_n)=\sum_{i\geq1}
+ \left(\left\lfloor\frac{2n}{p^i}\right\rfloor
+             -2\left\lfloor\frac n{p^i}\right\rfloor\right)
+\end{equation}
+follows by counting multiples of $p^i$ in factorials. Its summands
+are zero or one; it is also the number of carries in adding $n+n$ in
+base $p$. Each digit of $n$ at least $\lceil p/2\rceil$ forces a carry.
+Fix $p$ and a nonnegative integer $V$. Write
+$a_p=\lceil p/2\rceil$, $b_p=\lfloor p/2\rfloor$, and
+$h_p=\lfloor\log_pX\rfloor$. A block of $p^{h_p}$ consecutive
+integers has exactly
+\[
+ Q_{p,V}(h_p)=\sum_{j=0}^{\min(V,h_p)}
+        \binom{h_p}{j}b_p^j a_p^{h_p-j}
+\]
+residues with at most $V$ large digits among the lowest $h_p$ digits.
+There are at most $\lceil X/p^{h_p}\rceil\leq2X/p^{h_p}$ blocks,
+including a partial one. Hence
+\begin{equation}\label{eq:fixedp}
+ \frac1X\#\{n\leq X:v_p(B_n)\leq V\}
+ \leq\frac{2Q_{p,V}(h_p)}{p^{h_p}}.
+\end{equation}
+For $h_p\geq\max(V,1)$ the right side is at most
+$2(V+1)h_p^V(a_p/p)^{h_p}$, since $b_p\leq a_p$ and
+$\binom{h_p}{j}\leq h_p^V$. It tends to zero, including when $p=2$.
+
+For an integer $H\geq2$, the part of $T(n)$ from $p>H$ is at most
+$\sum_{m>H}m^{-2}\leq1/H$, by integration of $t^{-2}$.
+If all $p\leq H$ have $v_p(B_n)>V$, the other part is at most
+$H2^{-V-2}$. Given $\eta>0$, choose $H$ and $V$ so that
+$1/H+H2^{-V-2}<\eta$. Then
+\[
+ \frac1X\#\{n\leq X:T(n)>\eta\}
+ \leq\sum_{p\leq H}\frac{2Q_{p,V}(h_p)}{p^{h_p}}\longrightarrow0.
+\]
+Thus $T\to0$ in natural density with every discarded bound specified.
+
+\subsection{Small primes and assembly}\label{subsec:G}
+Fix $\rho>0$ with $\delta<1-\rho$. Pointwise,
+$f(n)\geq G_\delta(n)+S_{\delta,1-\rho}(n)$.
+The local sum is bounded for all sufficiently large $n$ by
+\eqref{eq:RS}. A bounded sequence converging in density converges
+in mean: if $|u(n)|\leq C$ and $u(n)\to u$ in density, the mean of
+$|u(n)-u|$ is at most $\eta$ plus $C+|u|$ times the proportion where
+$|u(n)-u|>\eta$; finitely many initial exceptions contribute their
+fixed total divided by $X$. Apply this fact to \eqref{eq:local} and
+then use \eqref{eq:inputmean} to obtain
+\[
+ \limsup_{X\to\infty}\frac1X\sum_{n\leq X}G_\delta(n)
+ \leq c_0-\int_\delta^{1-\rho}g(t)\,dt.
+\]
+Let $\rho\downarrow0$. Monotone convergence gives
+\begin{equation}\label{eq:G}
+ \begin{aligned}
+ \limsup_{X\to\infty}\frac1X\sum_{n\leq X}G_\delta(n)&\leq A(\delta),\\
+ \limsup_{X\to\infty}\frac1X\#\{n\leq X:G_\delta(n)>\eta\}
+ &\leq\frac{A(\delta)}\eta.
+ \end{aligned}
+\end{equation}
+The second inequality is Markov's inequality. The full second moment
+and a uniform-integrability argument are unnecessary here.
+
+Deleting the measure on $(0,\delta)$ changes its total mass by
+$A(\delta)$. Dropping the simplex restriction, or telescoping product
+measures, gives for $k\geq1$
+\[
+ 0\leq J_k-J_k^{(\delta)}
+ \leq\frac{A(\alpha)^k-(A(\alpha)-A(\delta))^k}{k!}
+ \leq\frac{A(\delta)A(\alpha)^{k-1}}{(k-1)!}.
+\]
+Consequently
+\begin{equation}\label{eq:deltaerror}
+ |c_{\mathrm D,\delta}-\cd(\alpha)|
+ \leq A(\delta)e^{A(\alpha)}<2A(\delta).
+\end{equation}
+Given $\eta>0$, choose any sufficiently small $\delta>0$ so that
+$2A(\delta)<\eta/4$. Outside the union of
+\[
+ \begin{gathered}
+ \{|U_\delta-(1-c_{\mathrm D,\delta})|>\eta/4\},\\
+ \{T>\eta/4\},\qquad \{G_\delta>\eta/4\},
+ \end{gathered}
+\]
+the sandwich \eqref{eq:sandwich} implies $|N_\alpha-\cn|\leq\eta$.
+The first two exceptional sets have density zero, and the third has
+upper density at most $4A(\delta)/\eta$. Letting $\delta\downarrow0$
+proves the first assertion of Theorem~\ref{thm:main}. The identity
+$D_\alpha+N_\alpha=\lfloor n^\alpha\rfloor/n^\alpha$, whose error from
+one is at most $n^{-\alpha}$, proves the second. Both sequences lie in
+$[0,1]$, so the preceding bounded-convergence-in-density argument
+proves Ces\`aro convergence as well.
+
+\section{Failure of the printed statement as written}\label{sec:false}
+\begin{proof}[Proof of Proposition~\ref{prop:nolimit}]
+For $n=2^h$, all the terms in \eqref{eq:valuation} with $p=2$ vanish
+except $i=h+1$, which equals one. Thus $4\nmid B_{2^h}$ and every
+multiple of four is a nondivisor. The proposition's explicit lower
+bound follows from $\lfloor y\rfloor\geq y-1$.
+
+By Lemma~\ref{lem:alternating}, $\cn(\alpha)<1/4$ for every
+$0<\alpha\leq1/2$. A limit along all integers would also be a limit
+in natural density, and such a limit is unique: two different limits
+have disjoint neighborhoods of radius less than half their separation,
+whereas each neighborhood would have density one. The subsequence
+$n=2^h$ therefore contradicts existence of an all-integer limit for
+$N_\alpha$. Since $N_\alpha+D_\alpha\to1$, it also contradicts
+existence of one for $D_\alpha$.
+
+As $\alpha\downarrow0$, $s=\lfloor1/\alpha\rfloor\to\infty$ and
+$A(\alpha)\leq2^{1-s}/s\to0$. The bracket
+$0\leq\cn(\alpha)\leq A(\alpha)$ gives $\cn(\alpha)\to0$ and
+$\cd(\alpha)=1-\cn(\alpha)\to1$.
+\end{proof}
+Thus the nondivisor direction of the printed small-$\alpha$ assertion
+fails even with the density qualifier restored. Switching to divisors
+repairs that limit, but does not produce an all-integer limit. These
+conclusions concern $0<\alpha\leq1/2$; the interval $1/2<\alpha<1$
+remains outside the statement proved here.
+
+\section{Certified evaluation}\label{sec:numerics}
+The accompanying program \texttt{code/density\_intervals.py} uses only
+exact integers and rational numbers. We describe each error bound,
+including the discretization error. The stated table uses $\alpha=1/s$
+with $s\in\{2,3,4,5\}$, mesh $M=16384$, cutoff $R=64$, $K=8$ terms,
+and $Q=2^{56}$. The same construction works for any rational
+$0<\alpha\leq1/2$ by clipping the top band at $\alpha$.
+
+\subsection{Rational bin masses and logarithms}\label{subsec:bins}
+Let $h=\alpha/M$ and $I_i=((i-1)h,ih]$, $1\leq i\leq M$.
+First restrict $\nu(dt)=g(t)\,dt$ to $[1/R,\alpha]$, with $R>s$.
+An intersection $[a,b]$ of a bin and a band $[1/(r+1),1/r]$ has mass
+$2^{-r}\log(b/a)$. Zero-length intersections are ignored. Here
+$1\leq b/a\leq(r+1)/r\leq3/2$. For $z=(b/a-1)/(b/a+1)$, put
+\[
+ \ell_J=2\sum_{j=0}^{J-1}\frac{z^{2j+1}}{2j+1}.
+\]
+Integrating the geometric series for $2/(1-z^2)$, or summing its
+positive terms, gives the rational enclosure
+\begin{equation}\label{eq:loginterval}
+ \ell_J\leq\log(b/a)\leq
+ \ell_J+\frac{2z^{2J+1}}{(2J+1)(1-z^2)}.
+\end{equation}
+Indeed each denominator in the omitted series is at least $2J+1$.
+Here $0\leq z\leq1/5$, so the bound tends to zero. Increase $J$ until
+the displayed error is less than $1/(Q2^{20})$. Round the lower and
+upper bounds for $2^{-r}\log(b/a)$ down and up, respectively, to
+integer multiples of $1/Q$. Sum segment bounds within each bin to get
+\[
+ q_i^-/Q\leq\nu(I_i\cap[1/R,\alpha])\leq q_i^+/Q.
+\]
+Every operation defining these integers is exact.
+
+\subsection{Simplex bounds and exact convolution}\label{subsec:convolution}
+For a tuple of bins, $\sum i_j\leq M$ implies that its whole box lies
+in $\sum t_j\leq\alpha$. Conversely, an intersecting box has
+$\sum i_j\leq M+k-1$, and in particular $\sum i_j\leq M+k$.
+Thus, with $P_\pm(z)=\sum_{i=1}^M q_i^\pm z^i$, lower and upper
+bounds for the truncated-measure $J_k$ are
+\begin{equation}\label{eq:poly}
+ L_k=\frac{\sum_{j=0}^M[z^j]P_-(z)^k}{k!Q^k},\qquad
+ U_k=\frac{\sum_{j=0}^{M+k}[z^j]P_+(z)^k}{k!Q^k}.
+\end{equation}
+Repeated bins are allowed: products of their masses are exactly the
+product-measure masses of boxes. Divide by $k!$ because $J_k$ uses
+ordered integration variables with that prefactor. Alternating signs
+are applied outwards, using $[-U_k,-L_k]$ when $k$ is odd.
+
+To compute the coefficients, pack each polynomial into base $2^B$,
+where
+\[
+ B=8\left\lfloor\frac{56K+8}{8}\right\rfloor=456
+ \quad\hbox{for }K=8.
+\]
+More generally the code replaces $56$ by the chosen bit precision.
+It checks $\sum_iq_i^+<Q$. Thus every coefficient and every prefix
+sum in any power $1\leq k\leq K$ is strictly less than
+$Q^k\leq Q^K<2^B-1$. There are no carries between packed coefficients.
+Integer multiplication and masking after degree $M+K$ therefore give
+exact truncated polynomial multiplication; discarded high degrees
+cannot affect lower ones because all degrees are nonnegative.
+Reduction of a selected prefix modulo $2^B-1$ sums its base-$2^B$
+digits exactly: $2^B\equiv1$ modulo $2^B-1$, and the digit sum is
+less than that modulus. This proves the convolution algorithm, without
+any floating-point rounding assumption.
+
+\subsection{All remaining errors and convergence}\label{subsec:errors}
+The omitted mass below $1/R$ satisfies
+\[
+ \tau:=\int_0^{1/R}g(t)\,dt
+ =\sum_{r\geq R}2^{-r}\log(1+1/r)
+ \leq\tau_R:=\frac{2^{1-R}}R.
+\]
+Writing $A=A(\alpha)$, the absolute change in the full alternating
+series is bounded by
+\[
+ \sum_{k\geq1}\frac{A^k-(A-\tau)^k}{k!}
+ =e^A-e^{A-\tau}\leq\tau e^A\leq\tau_R e^{A_s}<2\tau_R.
+\]
+Truncating the $k$-series adds at most $E_K(A_s)$ by
+\eqref{eq:tail}. Add
+\begin{equation}\label{eq:radius}
+ 2\tau_R+E_K(A_s)
+\end{equation}
+to each end of the interval computed from \eqref{eq:poly}. For $s=2$,
+$R=64$, $K=8$, this radius is strictly less than
+$0.00000000001078182876$. Nondivisor bounds are one minus the reversed
+divisor bounds. Decimal endpoints are rounded outwards using integer
+division, so they remain rational enclosures.
+
+Here is also an explicit convergence guarantee. Let
+$\eta_Q=\sum_i(q_i^+-q_i^-)/Q$. There are at most $M+R$ positive
+bin--band intersections, since the common refinement of the two
+partitions has at most the sum of their numbers of pieces. For each
+segment the scaled logarithm enclosure has length less than $2^{-20}$;
+after rounding its integer width is at most two. Therefore
+\begin{equation}\label{eq:etaQ}
+ \eta_Q\leq\frac{2(M+R)}Q.
+\end{equation}
+For the exact bin masses, the boxes included in the upper simplex
+bound but not the lower one lie in a slab of width at most $2kh$.
+By \eqref{eq:slab}, summing their contributions divided by $k!$ is
+at most
+\[
+ \sum_{k\geq1}\frac{2kh(3/4)A_s^{k-1}}{k!}
+ =\frac32h e^{A_s}<3h.
+\]
+Let $m_-$ and $m_+$ be the total lower and upper rounded masses.
+They differ by $\eta_Q$, and $m_+\leq A_s+\eta_Q$. The sum of
+the rounding contributions to the interval width is at most
+$\sum_{k\geq1}(m_+^k-m_-^k)/k!
+\leq\eta_Q e^{m_+}<3\eta_Q$ when $A_s+\eta_Q\leq1$.
+Together with \eqref{eq:radius}, the unrounded enclosure width is at most
+\begin{equation}\label{eq:width}
+ 3h+3\eta_Q+4\tau_R+2E_K(A_s).
+\end{equation}
+Reporting to $d$ decimal places adds at most $2\cdot10^{-d}$ to
+this width. Increasing $M,R,K,Q$ so that each displayed bound is below
+its allotted tolerance gives any prescribed rational accuracy.
+All choices have explicit bounds: one may test \eqref{eq:width}
+using rational upper bounds $3h$, $6(M+R)/Q$, $4\tau_R$, and
+$2E_K(A_s)$, then increase the parameters until their sum is small
+enough. The assertion $\sum q_i^+<Q$ eventually holds since
+$A_s\leq1/4$ and \eqref{eq:etaQ} tends to zero.
+
+For a real input $\alpha$ specified by computable rational
+approximations, a modulus also follows from the same slab estimate.
+If $0<\alpha\leq\beta\leq1/2$, then
+\[
+ 0\leq J_k(\beta)-J_k(\alpha)
+ \leq\frac{3(\beta-\alpha)A(\beta)^{k-1}}{4k!},\quad k\geq1.
+\]
+Summing shows $|\cd(\beta)-\cd(\alpha)|$ and
+$|\cn(\beta)-\cn(\alpha)|$ are at most
+$(3/4)e^{1/4}(\beta-\alpha)<2(\beta-\alpha)$.
+This supplies the approximation interpretation in
+Remark~\ref{rem:scope}; it asserts no algorithm for an unspecified,
+noncomputable real input.
+
+\subsection{Certified intervals and reproduction}\label{subsec:table}
+The following endpoints are transcribed exactly from
+\texttt{code/density\_16384.txt}. They are outward-rounded rational
+intervals, not confidence intervals.
+\begin{center}
+\small
+\begin{tabular}{c|c|c}
+$\alpha$ & $\cn(\alpha)$: nondivisors & $\cd(\alpha)$: divisors\\ \hline
+$1/2$ & $[0.160401041573,\ 0.160401748642]$
+      & $[0.839598251358,\ 0.839598958427]$\\
+$1/3$ & $[0.059862571395,\ 0.059862608229]$
+      & $[0.940137391771,\ 0.940137428605]$\\
+$1/4$ & $[0.023932466470,\ 0.023932468474]$
+      & $[0.976067531526,\ 0.976067533530]$\\
+$1/5$ & $[0.009987263535,\ 0.009987263648]$
+      & $[0.990012736352,\ 0.990012736465]$
+\end{tabular}
+\end{center}
+For $\alpha=1/2$ the displayed width is $0.000000707069$.
+The mesh-$4096$ interval is $[0.160399449123,0.160402279170]$,
+of width $0.000002830047$. The ratio of these displayed widths is
+greater than four, since $2830047>4\cdot707069$.
+
+Run the following from the directory containing \texttt{main.tex};
+the Python programs need only the standard library:
+\begingroup\footnotesize
+\begin{verbatim}
+python3 code/density_intervals.py --mesh 4096 \
+  > density_4096.rerun.txt
+python3 code/density_intervals.py --mesh 16384 \
+  > density_16384.rerun.txt
+cmp code/density_4096.txt density_4096.rerun.txt
+cmp code/density_16384.txt density_16384.rerun.txt
+python3 code/check_convolution.py
+\end{verbatim}
+\endgroup
+The convolution check compares packed powers to independent
+nested-loop convolution for $s\in\{2,3,4,5\}$, $M\in\{8,16,31\}$,
+$R=12$, both choices of coefficient bounds, and $k=1,2,3,4$:
+$4\cdot3\cdot2\cdot4=96$ exact comparisons. It prints
+\begingroup\footnotesize
+\begin{verbatim}
+96 packed polynomial powers agree with independent nested-loop convolutions.
+\end{verbatim}
+\endgroup
+These finite checks test the implementation; the certification rests on
+\eqref{eq:loginterval}--\eqref{eq:width}. Neither the table nor the
+checks supply an effective exceptional-set rate for the density theorem.
+
+\section*{Provenance and verification status}
+The density theorem, its proof and the certified evaluation were found by
+a GPT-6 Astra agent (OpenAI) on 2026-09-09; the present text, which applies
+the referees' repairs, was written by a second Astra session on
+2026-10-10. Two isolated cross-vendor referee reports by Claude Opus
+(Anthropic), dated 2026-10-10, both returned \emph{PASS-WITH-REPAIRS}
+with no fatal gap. Both asked for the same three repairs, all applied here:
+the decreasing-term inequality behind $0\leq\cn(\alpha)\leq A(\alpha)$
+(Lemma~\ref{lem:alternating}); the localized moment statement written out
+(Lemma~\ref{lem:local}); and the scope $0<\alpha\leq1/2$
+(Remark~\ref{rem:scope}). Each referee reran the certificate program at
+both meshes with byte-identical output, and computed the four constants
+by an independent method; all values fell inside the certified intervals.
+A separate Claude verifier reproduced the certificates byte for byte and
+checked $v_2\bigl(\binom{2^{h+1}}{2^h}\bigr)=1$ exactly for
+$1\leq h\leq300$. Empirical proportions at $n\approx10^{9}$--$10^{12}$
+lie 9--12\% below the limits, which is consistent with slow convergence
+in $n$. These are sanity checks, not evidence for the theorem.
+No formal (Lean) verification has been carried out.
+
+\begin{thebibliography}{99}
+\bibitem{EGRS}
+P. Erd\H{o}s, R. L. Graham, I. Z. Ruzsa and E. G. Straus,
+\emph{On the prime factors of $\binom{2n}{n}$},
+Mathematics of Computation \textbf{29} (1975), 83--92.
+\href{https://doi.org/10.1090/S0025-5718-1975-0369288-3}
+{doi:10.1090/S0025-5718-1975-0369288-3}.
+\bibitem{RS}
+J. B. Rosser and L. Schoenfeld,
+\emph{Approximate formulas for some functions of prime numbers},
+Illinois Journal of Mathematics \textbf{6} (1962), 64--94.
+\bibitem{EP377}
+T. F. Bloom, \emph{Erd\H{o}s Problems}, Problem 377,
+\url{https://www.erdosproblems.com/377}, accessed 10 October 2026.
+\bibitem{FK21}
+K. Ford and S. Konyagin,
+\emph{Divisibility of the central binomial coefficient $\binom{2n}{n}$},
+Transactions of the American Mathematical Society \textbf{374} (2021), 923--953.
+\bibitem{FC5792}
+Google DeepMind, \emph{formal-conjectures}, pull request 5792 (merged
+12 September 2026),
+\url{https://github.com/google-deepmind/formal-conjectures/pull/5792}.
+\bibitem{Po15}
+C. Pomerance, \emph{Divisors of the middle binomial coefficient},
+American Mathematical Monthly \textbf{122} (2015), 636--644.
+\bibitem{Po26}
+C. Pomerance, \emph{Remarks on the middle binomial coefficient},
+Integers \textbf{26} (2026), A47.
+\bibitem{Sa18}
+C. Sanna, \emph{Central binomial coefficients divisible by or coprime to
+their indices}, International Journal of Number Theory \textbf{14} (2018),
+1135--1141.
+\end{thebibliography}
+\end{document}
