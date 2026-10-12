@@ -1,0 +1,10 @@
+1 min_a a*sum_k z_ka >= 1.000001000240445  total <= 1.000001000240446  theorem bound 1.0087578638+87.5686331624/n = 88.577391026200000  feasible True mass<=bound True
+2 min_a a*sum_k z_ka >= 1.054504025727510  total <= 1.054504025727511  theorem bound 1.0087578638+87.5686331624/n = 44.793074445000000  feasible True mass<=bound True
+5 min_a a*sum_k z_ka >= 1.000001000240445  total <= 1.064258680849652  theorem bound 1.0087578638+87.5686331624/n = 18.522484496280000  feasible True mass<=bound True
+11 min_a a*sum_k z_ka >= 1.000001000240445  total <= 1.031375302518033  theorem bound 1.0087578638+87.5686331624/n = 8.969542696745455  feasible True mass<=bound True
+100 min_a a*sum_k z_ka >= 1.000001000240445  total <= 1.000001000367039  theorem bound 1.0087578638+87.5686331624/n = 1.884444195424000  feasible True mass<=bound True
+997 min_a a*sum_k z_ka >= 1.000001000085223  total <= 1.009992335549399  theorem bound 1.0087578638+87.5686331624/n = 1.096589993351054  feasible True mass<=bound True
+1000 min_a a*sum_k z_ka >= 1.000001000085223  total <= 1.009017157250768  theorem bound 1.0087578638+87.5686331624/n = 1.096326496962400  feasible True mass<=bound True
+5040 min_a a*sum_k z_ka >= 1.000001000085223  total <= 1.008592039315766  theorem bound 1.0087578638+87.5686331624/n = 1.026132592602064  feasible True mass<=bound True
+20011 min_a a*sum_k z_ka >= 1.000001000085223  total <= 1.008750262227068  theorem bound 1.0087578638+87.5686331624/n = 1.013133888644456  feasible True mass<=bound True
+CROSSCHECK OK

@@ -1,0 +1,38 @@
+<p>For a positive integer n let &rho;(n) be the maximum of &sum;<sub>a&isin;A</sub> 1/a over all sets
+A &sube; {1,&hellip;,n} such that lcm(a,b) &gt; n for all distinct a, b &isin; A (Erd&#337;s Problem #542).
+We prove that &rho;(n) &le; 1.0087578638 + 87.5686331624/n for every integer n &ge; 1. In particular
+&rho;(n) &le; 1.0170 for n &ge; 10625 and &rho;(n) &le; 1.01 for n &ge; 70499; these are the least onsets
+that follow from the displayed constants.</p>
+
+<p>The proof uses weak linear-programming duality. If A is such a set, the sets of multiples of its elements
+are pairwise disjoint, so nonnegative weights z<sub>m</sub> that put mass at least 1/a on the multiples of
+every a &le; n bound &rho;(n) by &sum; z<sub>m</sub>. We take z<sub>m</sub> = c<sub>gcd(m,6)</sub>(m/n)/m
+with four step functions on (1/10, 1]. Because 6 is squarefree, the dual constraints for all n at once
+reduce to inequalities that do not involve n. A certificate of 67 dyadic rationals reduces them to
+239&thinsp;980 finite inequalities and four tail inequalities. A short Python program (standard library
+only, about 2 CPU seconds) checks all of them in exact integer and rational arithmetic. The theorem does
+not prove the conjecture &rho;(n) &le; 1 + o(1), and the constant 1.0087578638 is not claimed to be
+sharp.</p>
+
+<p><b>Literature.</b> As n &rarr; &infin; the bound improves the leading constant 1.0170166 of
+Y.-G. Chen, <i>On a problem of P. Erd&#337;s</i>, Acta Sci. Math. (Szeged) 62 (1996), 101&ndash;114,
+Theorem 2. That is the strongest bound we located in a literature search of 12 October 2026. Chen's
+explicit form 1.0170166 + 14.21/(n &minus; 58), valid for n &ge; 59, remains smaller for
+70 &le; n &le; 8871. Weighted counting over disjoint sets of multiples already appears in Chen's paper.
+The contribution of this note is the family of weights, which depend on gcd(m,6), and the exact
+certificate. The search
+was bounded and not exhaustive: one citation index was rate-limited and could not be used, another did not
+resolve Chen's 1996 paper, so its forward citations could not be traced there, and the community chat
+archive was searched only in part.</p>
+
+<p><b>Provenance and verification status.</b> The theorem, the certificate and the verification programs
+were found by a Claude Opus 5.5 agent (Anthropic). Two isolated cross-vendor referees (GPT-6 Astra, OpenAI)
+reviewed the proof. In the first round they required repairs: an exact integer and rational verifier
+replaced a floating-point check, and decimals are now rounded outward. Both referee reports returned
+PASS-WITH-REPAIRS, and all requested repairs have been made. One referee carried out the repair
+confirmation, re-verified the certificate exactly with an independent program, and again returned
+PASS-WITH-REPAIRS with a single wording correction, now applied (not re-reviewed). Each referee recomputed
+the finite check with an independent implementation and found the same minimum. A separate Claude verifier
+checked the certificate exactly, against the first version of the report and again on the final files;
+both checks passed. No Lean formalisation.
+Code and certificate: https://github.com/chy4pro/automath-papers/tree/main/erdos542</p>

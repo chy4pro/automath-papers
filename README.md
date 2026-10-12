@@ -7,6 +7,15 @@ The Lean 4 proof library formerly at `lean/` has migrated to its own
 repository: [chy4pro/automath-lean-proofs](https://github.com/chy4pro/automath-lean-proofs)
 (history preserved in this repo's git log; see `lean/README.md`).
 
+## Erdős Problem #542 — explicit upper bound for reciprocal sums of lcm-separated sets (small result)
+
+**Claim.** If A ⊆ {1,…,n} and lcm(a,b) > n for all distinct a, b ∈ A, then Σ_{a∈A} 1/a ≤ 1.0087578638 + 87.5686331624/n
+for every n ≥ 1 (leading constant below Chen's 1.0170166 from 1996). Weak LP duality with weights depending on m/n and
+gcd(m,6); 67-entry dyadic certificate checked in exact arithmetic. The conjecture ρ(n) ≤ 1 + o(1) is not proved.
+
+- Paper and code: [`erdos542/`](erdos542/) — DOI [10.5281/zenodo.23311400](https://doi.org/10.5281/zenodo.23311400)
+- Status: two cross-vendor referees (PASS-WITH-REPAIRS, repairs applied and confirmed), verifier reproduction; bounded literature search; no Lean
+
 ## Erdős–Graham–Ruzsa–Straus 1975, Theorem 4 — density interpretation (small result)
 
 **Claim.** For each fixed 0 < α ≤ 1/2, the proportions of m ≤ n^α that divide / do not divide C(2n,n) converge in
