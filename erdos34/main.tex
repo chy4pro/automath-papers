@@ -1,0 +1,1448 @@
+\documentclass[10pt]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{pdftitle={Explicit upper and lower bounds for distinct consecutive sums in permutations},pdfauthor={Haoyu Chen},colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\allowdisplaybreaks
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\theoremstyle{remark}
+\newtheorem{remark}[lemma]{Remark}
+\newcommand{\Fp}{\mathbb F_p}
+\newcommand{\E}{\mathbb E}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\normA}[1]{\lVert #1\rVert_A}
+\newcommand{\pos}[1]{(#1)_+}
+\newcommand{\Sset}{\mathcal S}
+\newcommand{\Uset}{\mathcal U}
+\newcommand{\Cset}{\mathcal C}
+\newcommand{\Bset}{\mathcal B}
+\newcommand{\Aset}{\mathcal A}
+\title[Distinct consecutive sums in permutations]{Explicit upper and lower bounds for distinct consecutive sums in permutations}
+\author{Haoyu Chen}
+\address{Independent researcher}
+\date{12 October 2026}
+\subjclass[2020]{11B75, 05A05, 11T23}
+\keywords{Consecutive sums, permutations, explicit bounds, exponential sums}
+\begin{document}
+\begin{abstract}
+Let $f(n)$ be the largest number of distinct nonempty consecutive sums in
+a permutation of $\{1,\ldots,n\}$. We prove
+$f(n)\le (4435834/10^7)n^2+1100n$ for every $n\ge1$, and
+$f(n)\ge0.309799n^2$ for every $n\ge2^{4096}$.
+The upper bound uses coupled rearrangement inequalities and an exact
+integer certificate. The lower bound uses constant-sum triples ordered
+by affine images of primitive-root powers, with the zero field label
+retained, and Fourier completion with restricted translations.
+At length $3p$, for every prime $p\ge2^{16}$, the construction gives
+$(803/288)p^2-50000p^{7/4}(\log p+3)^8$ distinct sums; this expression
+becomes positive only at about $p=2^{304.22}$, and gives the coefficient
+$0.309799$ for $p\ge2^{416}$. Dusart's explicit prime-interval theorem
+supplies the extension to all lengths. Both limiting coefficients
+improve those of Konieczny, the strongest coefficients we located in a
+bounded literature search completed on 12 October 2026. The search was
+not exhaustive and does not establish priority. Neither the limiting
+value of $f(n)/n^2$ nor its existence is determined.
+\end{abstract}
+\maketitle
+
+\section{Introduction and statements}\label{sec:intro}
+For a permutation $a=(a_1,\ldots,a_n)$ of $\{1,\ldots,n\}$, put
+\[
+ \Sset(a)=\{a_{i+1}+\cdots+a_j:0\le i<j\le n\},
+ \qquad f(n)=\max_a |\Sset(a)|.
+\]
+Intervals are linear and nonempty, and sums are counted by distinct
+values, without multiplicity. This extremal quantity occurs in
+Erd\H{o}s Problem~34 \cite{Bloom}. All logarithms below are natural.
+Every error in our bounds is explicit.
+
+\begin{theorem}[Upper bound]\label{thm:upper}
+For every integer $n\ge1$,
+\[
+ f(n)\le\frac{4435834}{10^7}n^2+1100n.
+\]
+Consequently $f(n)\le0.4436n^2$ for every integer $n\ge66\,265\,061$.
+\end{theorem}
+
+\begin{theorem}[Prime lengths]\label{thm:prime}
+Let $p\ge2^{16}$ be prime, $k=(p-1)/2$, $m=\lfloor p^{3/4}\rfloor$,
+and $I_p=\{k-m,\ldots,k+m\}$. The explicit family $a(p,c,t)$ of
+Section~\ref{sec:construction}, with $c\in\Fp^*$, $t\in I_p$, and
+the label $x_{p-1}=0$ retained, satisfies
+\begin{equation}\label{eq:mainlower}
+ \max_{c\in\Fp^*,\ t\in I_p}|\Sset(a(p,c,t))|
+ \ge \frac{803}{288}p^2-50000p^{7/4}(\log p+3)^8.
+\end{equation}
+In fact the average over this parameter set has the same lower bound.
+For every prime $p\ge2^{416}$, a member of this family has at least
+$0.309799(3p)^2$ distinct sums.
+\end{theorem}
+
+The threshold $2^{16}$ in Theorem~\ref{thm:prime} is a technical side
+condition, not an onset of numerical content. For an exact description,
+let $u_*>29$ be the unique solution of
+\begin{equation}\label{eq:positivity}
+ 50000e^{-u_*/4}(u_*+3)^8=803/288.
+\end{equation}
+Within the theorem's range the right side of \eqref{eq:mainlower} is
+positive exactly when $p>e^{u_*}$. Numerically
+$u_*/\log2\approx304.220$; a directed integer-series check encloses
+it strictly between $304.219$ and $304.221$. These numbers describe
+the real threshold, not a particular prime. Section~\ref{sec:onsets} proves the exact
+criterion and the stated effective onsets. At all experimentally
+accessible lengths the error-bearing bound is vacuous.
+
+\begin{theorem}[All lengths]\label{thm:all}
+For every integer $n\ge2^{4096}$,
+\[
+ f(n)\ge0.309799n^2.
+\]
+Consequently
+\[
+ 0.309799\le\liminf_{n\to\infty}\frac{f(n)}{n^2}
+ \le\limsup_{n\to\infty}\frac{f(n)}{n^2}\le0.4435834.
+\]
+\end{theorem}
+
+The proof of Theorem~\ref{thm:all} uses precisely the following
+published input, with the indicated endpoints:
+\begin{equation}\tag{P}\label{eq:P}
+ x\ge3275\quad\Longrightarrow\quad
+ \text{there is a prime }p\text{ with }
+ x<p\le x\left(1+\frac1{2(\log x)^2}\right).
+\end{equation}
+This is Dusart's 1998 thesis, Th\'eor\`eme~1.9, printed p.~35
+\cite{Dusart}. The prime-length result does not use this input.
+The maximizing parameters in Theorem~\ref{thm:prime} can be selected
+by finite search with an exact tie rule; no efficient algorithm at
+these large onsets is claimed.
+
+\section{Related work}\label{sec:related}
+Konieczny \cite[Theorem~1.2, p.~415]{Konieczny} proved
+\[
+ \frac32-\frac2{\sqrt e}\le\liminf_{n\to\infty}\frac{f(n)}{n^2}
+ \le\limsup_{n\to\infty}\frac{f(n)}{n^2}
+ \le\frac14+\frac\pi{16}.
+\]
+The endpoints are $0.286938680574\ldots$ and $0.446349540849\ldots$.
+The preprint first appeared in 2015; the journal version appeared in
+2021. Our bounds improve the strongest coefficients we located in a
+bounded literature search completed on 12 October 2026, namely these
+coefficients of Konieczny. The search was not exhaustive and does not
+establish priority. It covered the problem's public records, relevant
+title and abstract searches, forward-citation records and selected
+public mathematical repositories. Such a search can miss unindexed
+work or work using different terminology.
+
+Hegyv\'ari's earlier quadratic-residue construction
+\cite[Theorem~1, pp.~193--194]{Hegyv} gives coefficient $1/18$ after
+extension to a full permutation, as explained in
+\cite[Section~1.5, p.~417]{Konieczny}. Its short sequence has the form
+$a_{i+1}=2p+r_{i+1}-r_i$, where $r_i=[i^2]_p$, and prefix sums
+$2pi+r_i$. Algebraic labels and distinct-difference methods are thus
+historical ingredients. The fixed-lag injectivity of primitive-root
+powers is also classical Welch--Costas machinery; see
+\cite[Theorem~7.29]{Drakakis} and the construction attributed there to
+Golomb \cite{Golomb}. We claim no originality for that ingredient.
+
+Konieczny's lower construction randomizes complementary pairs
+\cite[Section~4.2, Proposition~4.2]{Konieczny}. The construction here
+uses complementary triples, a restricted translation average and
+explicit restoration of overlaps already covered by a base set.
+The upper reduction in \cite[Section~5.1, (97)]{Konieczny} counts low
+values and high-sum intervals. We retain this reduction and add
+coupled information about two high intervals and lower-threshold
+intervals. Sharpness of the auxiliary high-interval count is different
+from sharpness for distinct sums, as already emphasized in
+\cite[Remark~5.2]{Konieczny}. The original assertion $f(n)=o(n^2)$ was
+already disproved; the present paper sharpens coefficients and does
+not claim a solution of the remaining extremal questions.
+
+\section{The upper bound}\label{sec:upper}
+\subsection{Rearrangement and the baseline deficit}
+Fix $a$, use half-open position intervals, and let $s(X)$ denote the
+sum on a set of positions $X$. Set
+\[
+ T_n=n(n+1)/2,\quad U_n(r)=r(2n-r+1)/2,\quad V(r)=r(r+1)/2.
+\]
+Every $r$ positions have sum in $[V(r),U_n(r)]$. Weighted
+rearrangement follows by swapping an inverted pair: if weights
+$c_i>c_j$ receive entries $a_i<a_j$, the swap gains
+$(c_i-c_j)(a_j-a_i)>0$. This applies also to negative weights.
+Two length-$k$ intervals at integer start separation $\delta\le k$
+therefore satisfy
+\begin{equation}\label{eq:pair}
+ s(\Aset)+s(\Bset)\le U_n(k-\delta)+U_n(k+\delta)
+ =2nk-k^2-\delta^2+k.
+\end{equation}
+
+Let $H_k$ count length-$k$ intervals with sum $>T_n/2$, and put
+\[
+ x_*=1-1/\sqrt2,\qquad b(x)=\sqrt{1/2-(1-x)^2},
+ \qquad
+ g_0(x)=\begin{cases}
+ 0,&x<x_*,\\ b(x),&x_*\le x\le1/2,\\1-x,&1/2\le x\le1.
+ \end{cases}
+\]
+Two such intervals cannot be disjoint. For $k\le n/2$, their extreme
+starts have separation $\delta$ satisfying
+\[
+ \delta^2<n^2 b(k/n)^2+k-n/2\le n^2b(k/n)^2.
+\]
+Applying the same calculation to a single interval twice excludes
+$k/n<x_*$. A set of starts of span $\delta$ has at most $\delta+1$
+members, so
+\[
+ e_k=g_0(k/n)-(H_k-1)_+/n\ge0.
+\]
+The function $g_0$ has variation $1$ and integral $\pi/16$.
+Indeed, after putting $r^2=1/2$ and $u=1-x$, the triangle and circular
+segment have combined area $\pi r^2/8$; integration of the circular
+part uses $u=r\sin\theta$. For variation $V_g$, the normalized
+right-endpoint sum differs from the integral by at most $V_g/n$:
+on each cell bound the error by its width times its variation, and add.
+Consequently
+\[
+ \sum_k H_k\le(\pi/16)n^2+2n-n\sum_ke_k.
+\]
+There are at most $T_n/2$ integer values at or below $T_n/2$; count
+higher values by representing intervals. With $B_0=1/4+\pi/16$,
+\begin{equation}\label{eq:baseline}
+ |\Sset(a)|\le B_0n^2+\frac94n-n\sum_ke_k.
+\end{equation}
+
+\subsection{Anchors and general complement inequalities}
+Suppose a bin $[\alpha,\beta)\subset(x_*,1/2)$ contains a length $k/n$
+with $e_k\le v<b(\alpha)$. Then $H_k\ge2$. Choose its extreme high
+intervals $\Aset=[s,s+k)$ and $\Bset=[t,t+k)$, and set
+\[
+ x=k/n,\quad d=(t-s)/n,\quad I=\Aset\cap\Bset,\quad
+ \Uset=\Aset\cup\Bset,\quad c=1-x-d.
+\]
+Here $|I|/n=x-d$, $|\Uset^c|/n=c$, and
+\[
+ b(x)-v\le d<b(x),\qquad d\ge b(\alpha)-v>0.
+\]
+The positive rank deficit is
+\begin{equation}\label{eq:rankdef}
+ E_u=U_n(|I|)+U_n(|\Uset|)-T_n
+ =n^2\{b(x)^2-d^2\}+k-n/2
+ \le n^2\{b(x)^2-d^2\}.
+\end{equation}
+Also $s(I)>s(\Uset^c)\ge V(nc)$, since the anchor sums total $>T_n$.
+
+Choose rational $\varepsilon$ satisfying
+\begin{equation}\label{eq:epscond}
+ 0<\varepsilon<1/16,\qquad
+ 4\varepsilon\le(1-\beta-b(\beta))^2,\qquad
+ \varepsilon\le2(1/2-\beta)^2.
+\end{equation}
+Here $1-\beta-b(\beta)>0$: for $\beta<1/2$, $(1-\beta)^2>1/4$
+and $b(\beta)^2=1/2-(1-\beta)^2<(1-\beta)^2$.
+Put $Q=(1/4-\varepsilon)n^2+n/2$. Suppose two disjoint length-$j$
+intervals $L,R$ have sums $>Q$. Let $G$ be their intervening gap,
+$\Cset=(L\cup R)^c$, and
+\[
+ \ell=j/n=1/2-y,\qquad h=2y,\qquad z=|G|/n.
+\]
+Since $|\Cset|=nh$,
+\begin{equation}\label{eq:complementmass}
+ s(\Cset)<T_n-2Q=2\varepsilon n^2-n/2,
+ \qquad 0\le y<\sqrt\varepsilon.
+\end{equation}
+The latter follows from $s(\Cset)\ge n^2h^2/2$.
+The function $1-x-b(x)$ decreases, so \eqref{eq:epscond} gives $h\le c$ and
+\begin{equation}\label{eq:coremass}
+ s(I)>V(nc)\ge n^2c^2/2\ge2\varepsilon n^2>s(\Cset).
+\end{equation}
+Thus $G$ cannot contain $I$.
+
+Use the integer counts
+$Z=|\Uset^c|$, $m_C=|\Cset|$, $J=|\Cset\cap\Uset|$,
+$K_C=|\Cset\cap I|$, and $W_a=2nd$.
+Rearrangement with weights $\ind_{\Aset}+\ind_{\Bset}-\ind_{\Cset}$ gives
+\begin{align}
+ s(\Cset)&>H_1-E_u,\label{eq:H1}\\
+ H_1&=V(m_C-J)+Z(J-K_C)+V(J-K_C)
+ +(Z+W_a)K_C+V(K_C).\notag
+\end{align}
+Indeed its weighted maximum is
+$U_n(|I|-K_C)+U_n(|\Uset|-(J-K_C))-V(m_C-J)$.
+Subtracting from $U_n(|I|)+U_n(|\Uset|)$ proves the formula.
+Weights $\ind_{\Aset}+\ind_{\Bset}-2\ind_{\Cset}$ similarly give
+\begin{align}
+ 2s(\Cset)&>H_2-E_u,\label{eq:H2}\\
+ H_2&=V(m_C-J)+V(m_C-K_C)+V(Z+J)+V(Z+W_a+K_C)
+       -V(Z)-V(Z+W_a).\notag
+\end{align}
+The weighted maximum here is
+$U_n(|I|-K_C)+U_n(|\Uset|-J)-V(m_C-K_C)-V(m_C-J)$.
+Listing the weights $2,1,0,-1,-2$ proves both identities, including
+the finite linear terms, without any assumption $j\ge k$.
+
+Put $u=J/n$, $w=K_C/n$. Discarding nonnegative linear terms in
+\eqref{eq:H1} and using \eqref{eq:rankdef} yields
+\begin{equation}\label{eq:quad1}
+ \frac{s(\Cset)}{n^2}>
+ \frac{(h-u)^2}{2}+c(u-w)+\frac{(u-w)^2}{2}
+ +(c+2d)w+\frac{w^2}{2}-b(x)^2+d^2.
+\end{equation}
+For completeness, the corresponding expression from \eqref{eq:H2} is
+\begin{equation}\label{eq:quad2}
+ \frac{2s(\Cset)}{n^2}>
+ \frac{(h-u)^2}{2}+\frac{(h-w)^2}{2}+cu+\frac{u^2}{2}
+ +(c+2d)w+\frac{w^2}{2}-b(x)^2+d^2.
+\end{equation}
+This uses $V(Z+J)-V(Z)=ZJ+V(J)$ and its analogue with $K_C$.
+In \eqref{eq:quad1}, the derivatives before the constant term are
+$c-h+2u-w\ge0$ and $2d-u+2w\ge0$ on the feasible domain
+$w\le u$, $w\ge\max(0,u-2d)$, since $h\le c$.
+For the second derivative, when $u\le2d$ use $w\ge0$; when $u>2d$
+use $w\ge u-2d$. Lower bounds $u\ge z$, $w\ge(z-\eta)_+$,
+$0\le\eta\le d$, can therefore be substituted together: minimize
+first over $w\ge\max((z-\eta)_+,u-2d,0)$ and then over $u\ge z$.
+Along the moving edge $w=u-2d$ the derivative is $c-h+2u\ge0$;
+at $u=z$ the maximum is $(z-\eta)_+$ because $\eta\le d\le2d$.
+The derivatives of \eqref{eq:quad2} are $c-h+2u$ and
+$c+2d-h+2w$, also nonnegative.
+If $G\subset I$, substitute $u=w=z$ and use
+\eqref{eq:complementmass} to obtain
+\begin{align}
+ z^2+(1-x+d-h)z+h^2/2-b(x)^2+d^2&<2\varepsilon,\label{eq:full1}\\
+ z^2+(1-x-h)z+h^2/2-\{b(x)^2-d^2\}/2&<2\varepsilon.\label{eq:full2}
+\end{align}
+
+\subsection{Three bounds on a protruding wing}
+If $G$ extends to the left of $I$, then $L$ is disjoint from $\Bset$;
+the right case is its reflection. Define
+\[
+ D_a=t-s,\quad R_0=n-k-j,\quad
+ V_*= (L\cup\Bset)^c,\quad P=|V_*\cap(\Aset\setminus\Bset)|.
+\]
+Thus $0\le P\le D_a$, $P\le R_0$, and
+\begin{equation}\label{eq:smallV}
+ s(V_*)<T_n/2-Q=\varepsilon n^2-n/4.
+\end{equation}
+The weights $\ind_{\Aset}+\ind_{\Bset}-\ind_{V_*}$ give
+\begin{equation}\label{eq:wingseed}
+ s(V_*)>P^2+(|\Uset^c|-R_0)P+V(R_0)-E_u.
+\end{equation}
+The expression before subtracting $E_u$ is exactly
+$V(R_0-P)+|\Uset^c|P+V(P)$.
+Two further rearrangements give
+\begin{align}
+ s(\Aset)+s(\Bset)+s(L)&\le U_n(k-P)+U_n(k+j+P),\label{eq:triple1}\\
+ s(\Aset)+s(\Bset)+2s(L)&\le
+ U_n(D_a-P)+U_n(k-D_a+j)+U_n(k+j+P).\label{eq:triple2}
+\end{align}
+The displayed arguments are the superlevel sizes of the weights.
+Their largest size is at most $n$ because $P\le R_0$.
+Normalize $\eta=P/n$, $r=1-x-\ell$, and $U_0(v)=v-v^2/2$.
+The strict thresholds and \eqref{eq:rankdef} imply
+\begin{align}
+ \eta^2+(\ell-d)\eta+r^2/2-b(x)^2+d^2&<\varepsilon,\label{eq:seednorm}\\
+ \eta^2+\ell\eta&<U_0(x)+U_0(x+\ell)-3/4+\varepsilon,\label{eq:triple1norm}\\
+ \eta^2+(x+\ell-d)\eta&<
+ U_0(d)+U_0(x-d+\ell)+U_0(x+\ell)-1+2\varepsilon.\label{eq:triple2norm}
+\end{align}
+The omitted terms in \eqref{eq:seednorm} are the favorable
+$R_0/(2n^2)+1/(4n)$ on the left. The right-hand corrections in
+\eqref{eq:triple1norm} and \eqref{eq:triple2norm} are respectively
+$(2x+\ell-2)/(2n)<0$ and $(x+\ell-3/2)/n<0$.
+
+If $r^2/2\ge\varepsilon$, \eqref{eq:smallV} is impossible.
+Otherwise, when $P<D_a$, geometry gives
+\begin{equation}\label{eq:winggeometry}
+ G\subset\Uset,\qquad |\Cset\cap\Uset|\ge|G|,\qquad
+ |\Cset\cap I|\ge(|G|-P)_+.
+\end{equation}
+To see this, let $a_L$ be the end of $L$. A left protrusion has
+$a_L<t$; at least $\min(D_a,t-a_L)$ wing positions lie outside $L$.
+Thus $P<D_a$ forces $a_L>s$ and $t-a_L\le P$.
+By \eqref{eq:coremass} the other end of $G$ is before the other end of
+$I$, proving \eqref{eq:winggeometry}. It also covers a gap wholly in
+the wing. Additional exterior pieces of $\Cset$ only increase the
+intersection counts. No such conclusion is used when $P=D_a$.
+
+\subsection{The coupled retained-wing inequality}
+Choose rational $d_0$ with $0<d_0\le b(\alpha)-v\le d$ and write
+\[
+ X=\beta,\qquad \mathfrak b=b(X)^2,\qquad D_0=\mathfrak b-d_0^2,
+ \qquad r_X=1-X-\ell.
+\]
+Replacing $x$ by $X$ weakens the necessary inequalities.
+In \eqref{eq:seednorm}, $r^2/2-b(x)^2$ decreases with $x$;
+the right side of \eqref{eq:triple1norm} increases with $x$;
+the derivative of left minus right in \eqref{eq:triple2norm} is
+$\eta-2(1-x-\ell)-d\le0$, since $\eta\le d$.
+The derivative of the resulting gap lower bound is
+$-z-2(1-x)<0$. The analogous derivatives for
+\eqref{eq:full1}--\eqref{eq:full2} are $-z-2(1-x)$ and $-z-(1-x)$.
+
+If $r_X^2\ge2\varepsilon$, no protrusion on either side is possible;
+use \eqref{eq:full1}--\eqref{eq:full2} at $x=X,d=d_0$, as their left
+sides increase with $d$. Otherwise \eqref{eq:epscond} implies
+\begin{equation}\label{eq:elllarge}
+ \ell>1-X-\sqrt{2\varepsilon}\ge X>b(X)>d.
+\end{equation}
+Here $X^2-b(X)^2=2(X-1/2)^2>0$. In particular a protrusion forces
+$j>k$; shorter low intervals occur only in the complete-containment
+case, which needs no restriction on $j$.
+
+For $A>0$ put $\rho(A,N)=0$ when $N\le0$, and otherwise put
+$\rho(A,N)=(\sqrt{A^2+4N}-A)/2$. Define
+\begin{align}
+ t_S&=\rho(\ell-d_0,\varepsilon-r_X^2/2+D_0),\notag\\
+ t_1&=\rho(\ell,U_0(X)+U_0(X+\ell)-3/4+\varepsilon),\label{eq:roots}\\
+ t_2&=\rho(X+\ell-d_0,
+ U_0(d_0)+U_0(X-d_0+\ell)+U_0(X+\ell)-1+2\varepsilon).\notag
+\end{align}
+Let $t_* =\min(t_S,t_1,t_2)$.
+\begin{lemma}[Coupled retained wing]\label{lem:coupled}
+If $t_*<d_0$, then $q=d-\eta\ge d_0-t_*>0$.
+\end{lemma}
+\begin{proof}
+Inequality \eqref{eq:triple1norm} gives $\eta<t_1$ (or is impossible
+if its right side is nonpositive). For \eqref{eq:seednorm}, substitute
+$\eta=d-q$ to obtain the necessary inequality
+\[
+ F_S(d,q)=d^2+\ell d-(d+\ell)q+q^2+r_X^2/2-\mathfrak b
+ <\varepsilon.
+\]
+On $q\le d_0$, $d\ge d_0$, this increases with $d$; at $d=d_0$
+it decreases with $q$ because $2q-d_0-\ell<0$ by
+\eqref{eq:elllarge}. If $t_S<d_0$ and $q<d_0-t_S$, it is at least
+$\varepsilon$, a contradiction. This also covers $t_S=0$, since
+then $F_S(d_0,d_0)\ge\varepsilon$.
+
+The identity $U_0(d)+U_0(X+\ell-d)=U_0(X+\ell)+(X+\ell)d-d^2$
+turns \eqref{eq:triple2norm} into
+\[
+ F_2(d,q)=d^2-(X+\ell+d)q+q^2<2U_0(X+\ell)-1+2\varepsilon.
+\]
+Its derivative in $d$ is $2d-q>0$; at $d=d_0$ its derivative in $q$
+is $2q-X-\ell-d_0<0$. The same argument gives $q\ge d_0-t_2$,
+including the zero-root case. Use whichever root attains $t_*$.
+This bounds the retained wing $q$, not $\eta$ at a substituted
+diameter.
+\end{proof}
+
+When $q_0=d_0-t_*>0$, the wing is nonsaturated and
+\eqref{eq:winggeometry} applies. Substitution into \eqref{eq:quad1}
+gives, for $z\ge\eta$, exactly
+$z^2+(1-x-h+q)z+h^2/2-b(x)^2+q^2$.
+For $z<\eta$, the true expression exceeds this by
+$(d+q)(\eta-z)\ge0$. It increases in $q$, with derivative $z+2q$.
+Thus in both cases
+\begin{equation}\label{eq:coupledgap}
+ z^2+(1-X-h+q_0)z+h^2/2-\mathfrak b+q_0^2<2\varepsilon.
+\end{equation}
+If $G\subset I$, \eqref{eq:full1} at $X$ and the actual $d$ implies
+the same inequality since $q_0\le d_0\le d$ and its left side
+increases with that parameter. Right protrusions follow by reflection.
+If $t_*\ge d_0$, only the crude bound $z\le h$ is used.
+
+\subsection{Counting at the lower threshold}
+Let $M_j$ count length-$j$ intervals with sum $>Q$. Put
+$r_\varepsilon^2=1/2+2\varepsilon$ and
+\[
+ g_\varepsilon(x)=\begin{cases}0,&x<1-r_\varepsilon,\\
+ \min\{1-x,\sqrt{r_\varepsilon^2-(1-x)^2}\},&x\ge1-r_\varepsilon.
+ \end{cases}
+\]
+For overlapping or adjacent extreme intervals, \eqref{eq:pair}
+bounds their separation by $ng_\varepsilon(j/n)$; the remaining
+finite correction is $j-n\le0$. Using one interval twice excludes
+$j/n<1-r_\varepsilon$. Otherwise \eqref{eq:complementmass} applies
+and the separation is $n(\ell+z)$. For $y=1/2-j/n\in[0,\sqrt\varepsilon]$,
+\begin{equation}\label{eq:rowcount}
+ M_j\le ng_\varepsilon(j/n)+1+nF(y),\qquad
+ F(y)=(K_{\rm span}(y)-b_\varepsilon(y))_+,
+\end{equation}
+where $b_\varepsilon(y)=\sqrt{1/4+2\varepsilon-y-y^2}$.
+An upper bound $K_{\rm span}$ is the minimum of applicable caps:
+\begin{align*}
+ &1/2+y;\\
+ &\ell+\rho(1-X+d_0-2y,2\varepsilon-2y^2+D_0),\quad
+  \ell+\rho(1-X-2y,2\varepsilon-2y^2+D_0/2)
+     &&(r_X^2\ge2\varepsilon);\\
+ &\ell+\rho(1-X+d_0-2y-t_*,
+   2\varepsilon-2y^2+D_0+2d_0t_*-t_*^2)
+     &&(r_X^2<2\varepsilon, t_*<d_0).
+\end{align*}
+Outside this $y$ range no $F$ is needed. If $g_\varepsilon$ uses the
+total-start cap then $b_\varepsilon\ge1/2+y\ge K_{\rm span}$, so
+$F=0$ and \eqref{eq:rowcount} remains valid.
+As before, $g_\varepsilon$ has variation less than $2$ and integral
+$\pi/16+\pi\varepsilon/4$. Suppose an upper rectangle sum $B_i$
+for $F$ uses grid $M_{\rm grid}=100000$. Each grid cell contains at
+most $n/M_{\rm grid}+1$ possible $y$ values. Counting low values by
+$Q$ and high values by intervals therefore gives
+\begin{equation}\label{eq:lowerthreshold}
+ |\Sset(a)|\le\{B_0-(1-\pi/4)\varepsilon+B_i\}n^2
+       +\{7/2+M_{\rm grid}B_i\}n.
+\end{equation}
+The linear terms are $n/2$ from $Q$, at most $2n$ from the Riemann
+error, $n$ from the per-length allowance, and $nM_{\rm grid}B_i$
+from grid occupancy.
+
+\subsection{Certificate and exact verification}\label{sec:certificate}
+The electronic certificate contains $892$ disjoint bins. A row
+$[a_i,b_i,v_i',e_i']$ means
+\[
+ [\alpha_i,\beta_i)=[a_i/10000,b_i/10000),\quad
+ v_i=v_i'/10^6,\quad\varepsilon_i=e_i'/4000.
+\]
+They range from $2929/10000$ to $3821/10000$. The verifier checks their
+order and disjointness. We describe all directed-rounding conventions
+so that the finite certificate has a precise mathematical meaning.
+
+At scale $R_*=10^{12}$, round $b(\alpha_i)$ down and set the rational
+$d_0=b(\alpha_i)_{\rm down}-v_i$. Round $b(\beta_i)$ up for
+\eqref{eq:epscond}, and round $D_0$ up. Subsequent formulas use this
+particular rational $d_0$; upward rounding of $D_0$ weakens the bounds.
+The positive exterior lower bound also has a direct rational check:
+if $x=R_*\beta_i$ and $b_+$ is the integer upward root, verify
+$R_*-x-b_+>0$ before squaring. The preserved certificate program
+does not assert that sign separately; the supplemental publication
+check does, and the positivity follows analytically above.
+
+For a cell $[y_0,y_1]=[r/M_{\rm grid},(r+1)/M_{\rm grid}]$, start
+with cap $1/2+y_1$. If $(1/2+y_0-X)^2\ge2\varepsilon$, use the two
+complete-containment roots. Otherwise bound the three roots in
+\eqref{eq:roots} upward, using denominator coefficients at $y_1$ and
+numerators at $y_0$. The numerators decrease with $y$: $r_X$ increases,
+while $\ell$ and the arguments of the increasing function $U_0$ decrease.
+The denominator coefficients decrease as well. If the minimum upward
+root $t_{\rm up}<d_0$, use the partial cap; otherwise keep the crude
+cap. A cell crossing the complete-containment boundary may still use
+the partial cap, since on its complete part the retained parameter is
+$d\ge d_0\ge d_0-t_{\rm up}$.
+
+In the gap root use $h=2y_1$ in the coefficient and
+$2\varepsilon-2y_0^2$ in the right side. The term
+$2d_0t-t^2$ increases for $0\le t<d_0$, so use $t_{\rm up}$.
+Outside the root use $\ell\le1/2-y_0$. The preserved program further
+replaces the gap root by its maximum with $t_{\rm up}$, a conservative
+extra allowance. Subtract $b_\varepsilon(y_1)$ rounded down and take
+the positive part, obtaining an upper bound $U_{ir}$ on the cell.
+The final cell may extend past $\sqrt\varepsilon$; the bound is needed
+only on the intersection. Set $B_i=M_{\rm grid}^{-1}\sum_r U_{ir}$.
+
+All substantive arithmetic is integer arithmetic. For example the
+scaled function is $U(v)=v-\lfloor v^2/(2R_*)\rfloor$, an upward
+bound; every square root is explicitly rounded up or down, every
+positive-denominator division is directed, negative root numerators
+are replaced by zero, and every root coefficient is asserted positive.
+Thus no floating-point value decides a certificate inequality.
+The resulting exact checks are
+\begin{align}
+ W_{\rm def}:=\sum_i(\beta_i-\alpha_i)v_i&=0.002798309,
+ &\sum_i v_i&=27.98309,\label{eq:Wdef}\\
+ B_0-W_{\rm def}&\le C_*,
+ &C_*&=4435834/10^7,\label{eq:defcheck}\\
+ B_0-(1-\pi/4)\varepsilon_i+B_i&\le C_*&&\text{for all }i,\label{eq:rowcheck}\\
+ 9/4+\sum_i v_i&\le1100,
+ &7/2+M_{\rm grid}B_i&\le1100\quad\text{for all }i.\label{eq:lincheck}
+\end{align}
+There are $17\,430\,410$ rectangles: $8\,938\,271$ partial,
+$1\,221\,306$ crude-cap and $7\,270\,833$ complete cells.
+For orientation, the largest $B_i$ is approximately
+$0.01058603280678933$, the largest coefficient in \eqref{eq:rowcheck}
+is approximately $0.4435833245825063$, and the deficit coefficient is
+approximately $0.44355123184936207$. These decimals are descriptive;
+\eqref{eq:defcheck}--\eqref{eq:lincheck} use integer cross multiplication.
+
+The verifier proves $3.141592653589793<\pi<3.141592653589794$ by
+Machin's identity $\pi=16\arctan(1/5)-4\arctan(1/239)$, using $40$
+and $12$ alternating-series terms and directed first-omitted-term
+bounds. Tangent addition gives $\tan(2\arctan(1/5))=5/12$,
+$\tan(4\arctan(1/5))=120/119$, and
+$\tan(4\arctan(1/5)-\arctan(1/239))=1$; the last angle is in
+$(0,\pi/2)$, proving the identity.
+
+\subsection{Dichotomy and the linear term}
+If no bin supplies $e_k\le v_i$, each bin contains at least
+$n(\beta_i-\alpha_i)-1$ integer lengths. Disjointness and $e_k\ge0$
+give $\sum_ke_k\ge nW_{\rm def}-\sum_iv_i$, including bins whose
+lower count is negative. Equations \eqref{eq:baseline},
+\eqref{eq:defcheck}, and \eqref{eq:lincheck} prove
+$|\Sset(a)|\le C_*n^2+1100n$. Otherwise an anchor pair exists,
+and \eqref{eq:lowerthreshold}, \eqref{eq:rowcheck}, and
+\eqref{eq:lincheck} prove the same bound. This holds for every $a$
+and every positive integer $n$.
+Finally $166\cdot66\,265\,061=11\,000\,000\,126\ge11\,000\,000\,000$,
+so $1100/n\le0.0000166$ for $n\ge66\,265\,061$.
+This proves Theorem~\ref{thm:upper}.
+
+\section{The lower construction and its base}\label{sec:construction}
+Let $p=2k+1$ be prime, $N=p-1$, $T=(9p+3)/2$, and $g$ the least
+primitive root modulo $p$. For clarity, a finite subgroup of the
+multiplicative group of a field is cyclic: take, for each prime
+dividing its exponent, an element realizing the maximal prime-power
+part, and multiply the resulting coprime-order components. An element
+of order the exponent results. The polynomial root bound applied to
+$X^e-1$, and Lagrange's theorem, force this order to be the group size.
+Thus $g$ exists. Write $[x]_p$ for the least nonnegative residue and set
+\begin{equation}\label{eq:labels}
+ x_i=g^i\quad(0\le i<N),\qquad x_N=0.
+\end{equation}
+For $c\in\Fp^*$ and $t\in\Fp$ define
+\begin{equation}\label{eq:construction}
+ A_i=[cx_i+t]_p+1,\quad C_i=[cx_i+t+k]_p+1,\quad
+ Y_i=p+C_i,\quad Z_i=T-A_i-Y_i.
+\end{equation}
+The sequence $a(p,c,t)$ concatenates $(A_i,Z_i,Y_i)$ for
+$i=0,\ldots,p-1$, including the final zero label.
+Both $A$ and $C$ permute $1,\ldots,p$. If $A_i\le k+1$, then
+$C_i=A_i+k$ and $Z_i=6k+5-2A_i$; otherwise
+$C_i=A_i-k-1$ and $Z_i=8k+6-2A_i$. These ranges give respectively
+the odd and even integers in $2p+1,\ldots,3p$. Thus $a(p,c,t)$ is a
+permutation of $1,\ldots,3p$, and every triple sums to $T$.
+
+Its prefix sums are
+\[
+ U_j=jT\ (0\le j\le p),\quad V_i=iT+A_i,\quad
+ W_i=(i+1)T-p-C_i\ (0\le i<p).
+\]
+The positive chronological differences having an endpoint $U$ form
+a base set $\Bset_0$ with
+\begin{equation}\label{eq:basecount}
+ |\Bset_0|=2p^2+3p.
+\end{equation}
+Here is a direct count. Near $hT$, the central offsets are $+A_j$
+for $j\ge h$, $0\le h<p$, and $-A_i$ for $i\le p-h$, $1\le h\le p$;
+indices are always in $[0,p-1]$. They give $p(p+1)$ values.
+In each outer interval $(hT+p,(h+1)T-p)$, $0\le h<p$, the values are
+\begin{equation}\label{eq:basetails}
+ hT+p+C_i\quad(i\le p-1-h),\qquad
+ (h+1)T-p-C_j\quad(j\ge h).
+\end{equation}
+These give another $p(p+1)$ values. Their two ranges are disjoint
+because $T>4p$. The central bands $[hT-p,hT+p]$ and the outer
+intervals are disjoint. Finally the $p$ positive multiples of $T$
+are distinct from all these values, proving \eqref{eq:basecount}.
+
+Use the central candidates
+\begin{equation}\label{eq:centralcandidates}
+ dT+A_{i+d}-A_i,\qquad dT-C_{i+d}+C_i
+ \quad(1\le d<N, 0\le i<N-d).
+\end{equation}
+Each class is injective at fixed $d$, because its residue coefficient
+in $g^i$ is $\pm c(g^d-1)\ne0$. Distinct central bands are disjoint.
+Use also the cross candidates
+\begin{equation}\label{eq:crosscandidates}
+ R_{d,i}=(d+1)T-p-C_{i+d}-A_i,\qquad
+ Q_{d,i}=(d-1)T+p+C_i+A_{i+d},
+\end{equation}
+for $2\le d<N$, $d\ne k$, $0\le i<N-d$. The coefficients
+$\mp c(1+g^d)$ are nonzero precisely when $d\ne k$, so each class
+is injective in its outer interval. For $2\le d<N$ there are
+$(N-1)(N-2)$ cross candidates; deleting $d=k$ removes exactly $N$.
+Their number is $p^2-6p+7\ge p^2-6p$.
+The omitted lag $1$ costs only a linear term and makes later domains
+uniform. Central and cross regions are disjoint.
+
+\section{Fourier completion and the new central values}\label{sec:fourier}
+\subsection{Elementary Fourier norms}
+On a finite abelian group use normalized Fourier coefficients and
+inversion $f(x)=\sum_\chi\widehat f(\chi)\chi(x)$, and define
+$\normA f=\sum_\chi|\widehat f(\chi)|$. Convolution and the triangle
+inequality show that $\normA{fg}\le\normA f\normA g$.
+Affine pullback cannot increase this norm, since it only combines
+coefficients and attaches unit phases. Put $L=\log p+3$.
+
+On $\mathbb Z/q\mathbb Z$, $q\le p$, any cyclic interval has norm
+at most $L$. Its zero coefficient is at most $1$, and geometric
+summation with $\sin(\pi r/q)\ge2r/q$, $0\le r\le q/2$, bounds the
+coefficient at cyclic distance $r>0$ by $1/(2r)$. Summation gives
+$1+H_{\lfloor q/2\rfloor}\le2+\log q\le L$.
+For representatives $x,y\in[0,q)$, both $\ind_{x<y}$ and
+$\ind_{x+y<q}$ have norm at most $2L$. Indeed, put $s(x)=[x]_q/q$.
+Then
+\[
+ \ind_{x+y<q}=1-s(x)-s(y)+s(x+y),\qquad
+ \ind_{x<y}=s(y)+s(q-1-x)-s(q-1-x+y).
+\]
+Every nonconstant coefficient of $s$ has modulus
+$1/(q|1-e^{2\pi ir/q}|)\le1/(4|r|_q)$, so its nonconstant mass
+is at most $H_{\lfloor q/2\rfloor}/2$. The displayed identities
+have constant term at most $1$ and nonconstant mass at most
+$3H_{\lfloor q/2\rfloor}/2$, proving the bound.
+
+An ordered triangle in an ordinary interval $J$ has indicator
+$\ind_J(u)\ind_J(v)\ind_{u<v}$ and hence norm at most $2L^3$.
+This remains true after independent translations of $u,v$.
+For $1\le a,b\le p$, the triangle $a+b\le p$ is a reflected
+comparison, with norm at most $2L$. For
+$a+b\ge(3p+3)/2$, restrict $a\ge(p+3)/2$ and use
+$u=a-(p+3)/2$, $v=p-b$ and the comparison $v\le u$;
+the bound $2L^3$ is more than sufficient. We use the common bound
+$8L^3$ for all the two-variable indicators below.
+
+\subsection{A graph-completion lemma}
+Write $e_q(v)=\exp(2\pi iv/q)$. For an indicator $R$ on $\Fp^2$,
+write $|R|=\sum_{X,Y}R(X,Y)$.
+\begin{lemma}\label{lem:graph}
+Let $\alpha,\beta\in\Fp^*$, $s\in\Fp$, and
+$F(X,Y,Z)=R(X,Y)\ind_{Z=\alpha X+\beta Y+s}$, with
+$\normA R\le K_R$. For $D\subset(\mathbb Z/N\mathbb Z)^3$,
+\begin{equation}\label{eq:graph}
+ \left|\frac1N\sum_{c\ne0}\sum_{(d,i,j)\in D}
+ F(cg^i,cg^{i+d},cg^j)-\frac{|D|\,|R|}{p^3}\right|
+ \le K_R(p^{3/2}+3p)\normA{\ind_D}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The Fourier coefficient at $(u,v,w)$ is
+$p^{-1}e_p(-ws)\widehat R(u+\alpha w,v+\beta w)$.
+Its total mass is $\normA R$, and its mass on each of $u=0$, $v=0$,
+$w=0$ is $\normA R/p$: the relevant maps to the two arguments of
+$\widehat R$ are bijections, using $\alpha\beta\ne0$.
+Let $\chi_a(g^r)=e_N(ar)$ and
+$G(\chi,u)=\sum_{x\ne0}\chi(x)e_p(ux)$. Completing an index
+character gives exactly
+\begin{align}\label{eq:gausscompletion}
+ &\frac1N\sum_{c\ne0}\sum_{d,i,j\bmod N}
+ e_N(ad+bi+ej)e_p(c(ug^i+vg^{i+d}+wg^j))\notag\\
+ &\hspace{20mm}=\ind_{b+e=0}
+ G(\chi_{b-a},u)G(\chi_a,v)G(\chi_e,w).
+\end{align}
+Substitute $X=cg^i$, $Y=cg^{i+d}$, $Z=cg^j$; the residual character
+in $c$ is $\chi_{-b-e}(c)$, proving the identity.
+At zero additive frequency a Gauss sum is $N$ for the principal
+character and zero otherwise. The principal sum at nonzero frequency
+is $-1$. For nonprincipal $\chi$, rescaling to $u=1$ gives
+\[
+ |G(\chi,1)|^2=\sum_{z\ne0}\chi(z)
+ \sum_{y\ne0}e_p((z-1)y)
+ =N-\sum_{z\ne0,1}\chi(z)=p.
+\]
+Thus \eqref{eq:gausscompletion} is at most $p^{3/2}$ in modulus when
+$u,v,w$ are nonzero. If exactly one is zero it is at most $Np\le p^2$.
+If exactly two are zero, the condition $b+e=0$ forces all three
+characters to be principal and the modulus is at most $N^2\le p^2$.
+If all three are zero, only $a=b=e=0$ contributes, with value $N^3$.
+Fourier inversion gives the principal term $|D||R|/p^3$.
+The all-nonzero frequencies cost at most
+$K_Rp^{3/2}\normA{\ind_D}$; the other frequencies cost at most
+$3K_Rp\normA{\ind_D}$, using the three coordinate-plane masses.
+\end{proof}
+
+Every three-label index domain used below satisfies
+\begin{equation}\label{eq:domainnorm}
+ \normA{\ind_D}\le16L^5.
+\end{equation}
+Here are explicit factorizations. For representatives modulo $N$ put
+$U(a,b)=\ind_{[a]_N+[b]_N<N}$ and
+$T_<(a,b)=\ind_{[a]_N<[b]_N}$. Positive missing labels use
+$T_<(j,d)U(i,d)$; negative missing labels use
+\[
+ \ind_{[3,N-1]}(d)U(i,d)T_<(N-1-j,d-2).
+\]
+The latter says $j\ge N-d+2$ and has norm at most $4L^3$;
+the former has norm at most $4L^2$.
+The central-overlap domain has indicator
+\begin{equation}\label{eq:overlapdomain}
+ T_<(j,d)U(i,d)\ind_{[0,k-1]}(d)
+ \bigl(\ind_{[0,k-1]}(i+d)+\ind_{[k,N-1]}(i)\bigr).
+\end{equation}
+The no-wrap factor makes the two summands disjoint. Its norm is at
+most $8L^4$; reflecting $j$ preserves the bound.
+Cross-base domains have $d\in[2,N-1]$, $U(i,d)$, and one of
+$j\ge d$, $U(d-1,j)$, $U(d-2,j)$, $j\ge d-1$.
+Comparison complements have norm at most $1+2L\le3L$, so these
+domains have norm at most $6L^3$. These prove \eqref{eq:domainnorm}.
+For $p\ge2^{16}$, $p^{3/2}+3p\le2p^{3/2}$. With $K_R\le8L^3$,
+each such count has error at most
+\begin{equation}\label{eq:Eerror}
+ E_0=256p^{3/2}L^8.
+\end{equation}
+
+\subsection{Separate central novelty, uniformly in translation}
+At lag $d$, positive offset $A_j$ is missing from $\Bset_0$ exactly
+when $j<d$; negative offset $-A_j$ is missing exactly when $j>p-d$.
+For the negative sign use only $j\in[N-d+2,N-1]$, an empty set when
+$d<3$. Zero-label missing values are unused in this lower count.
+For either class in \eqref{eq:centralcandidates}, equality to a signed
+missing label is a graph as in Lemma~\ref{lem:graph}, with coefficients
+$\alpha,\beta\in\{1,-1\}$. Its two-variable indicator specifies the
+sign of a difference in $1,\ldots,p$, has mass $p(p-1)/2$, and obeys
+the norm bound above, for every $t$. For example
+$A(Y)-A(X)=A(Z)$ gives $Z=Y-X-t-1$ and $A(Y)>A(X)$.
+The other class uses $C(X)-C(Y)$.
+
+The domain sizes are
+\[
+ M_+=\sum_{d=1}^{N-1}(N-d)d=\frac{N(N^2-1)}6,\quad
+ M_-=\sum_{d=3}^{N-1}(N-d)(d-2)=\frac{(N-2)((N-2)^2-1)}6.
+\]
+Their sum is $p^3/3-2p^2+14p/3-4\ge p^3/3-2p^2$.
+Thus each class has expected new count, averaging $c\ne0$ with $t$
+fixed, at least
+\[
+ \frac{p-1}{2p^2}(p^3/3-2p^2)-2E_0
+ \ge p^2/6-3p/2-2E_0.
+\]
+There is a unique signed missing label for each value, and class
+injectivity prevents repetitions. Adding the two classes yields
+\begin{equation}\label{eq:separatecentral}
+ \E_c(\text{separate central new counts})\ge p^2/3-3p-4E_0.
+\end{equation}
+
+\subsection{Restricted translations and central overlap}
+Set
+\begin{equation}\label{eq:translationinterval}
+ m=\lfloor p^{3/4}\rfloor,\qquad I_p=\{k-m,\ldots,k+m\},\qquad M=2m+1.
+\end{equation}
+For $p\ge2^{16}$ this is an ordinary interval in $[0,p-1]$ and
+$2m\le k-1$. Indeed $p^{1/4}\ge16$ implies $2p^{3/4}\le p/8$,
+and $p/8\le(p-3)/2$ for $p\ge4$. From now on averages are over
+$c\in\Fp^*$ and $t\in I_p$.
+
+Equality between the central classes at the same lag forces the
+second start label to be $-g^i$. Thus $d<k$ and the possible starts are
+\begin{equation}\label{eq:centralstarts}
+ i\in[0,k-d-1]\ \cup\ [k,N-d-1].
+\end{equation}
+Write $X=cg^i$, $Y=cg^{i+d}$, $t=k+e$, $u=[X+t]_p$,
+$v=[Y+t]_p$, and $b=[2t+k]_p$. Since $C(-X)=[b-u]_p+1$,
+the lifts agree exactly when $u,v$ lie in the same one of $[0,b]$
+and $[b+1,p-1]$; the common lift is positive exactly when $u<v$.
+The condition $2|e|\le k-1$ gives $b=k-1+2e$.
+The positive and negative common-lift indicators $R_+,R_-$ on the
+whole field square have equal masses
+\begin{align}\label{eq:liftmass}
+ |R_\pm|&=\binom{k+2e}{2}+\binom{p-k-2e}{2}\notag\\
+ &=p^2/4-p/2+4e^2-2e+1/4
+ \le p^2/4+4m^2+2m+1.
+\end{align}
+Each is the sum of two same-side ordered triangles; consequently
+$\normA{R_\pm}\le4L^3$.
+
+A positive common lift equal to a missing $A_j$ gives
+$Z=Y-X-t-1$; a negative one gives $Z=X-Y-t-1$.
+For an upper bound enlarge the nonzero negative missing-label set to
+$j\in[N-d,N-1]$. Both signs now use \eqref{eq:overlapdomain}, or its
+reflection, with domain size
+\[
+ \sum_{d=1}^{k-1}d(N-2d)=(k^3-k)/3\le p^3/24.
+\]
+The zero label can occur only for the negative missing sign and
+contributes at most $p$ common values over all lags.
+Lemma~\ref{lem:graph} and \eqref{eq:liftmass} give
+\begin{align}\label{eq:centraloverlap}
+ \E(\text{central overlap outside }\Bset_0)
+ &\le p^2/48+(4m^2+2m+1)/12+p+2E_0\notag\\
+ &\le p^2/48+p^{3/2}+p+2E_0.
+\end{align}
+Here $m\ge1$ implies $4m^2+2m+1\le7m^2\le12p^{3/2}$.
+Subtracting \eqref{eq:centraloverlap} from \eqref{eq:separatecentral}
+proves
+\begin{equation}\label{eq:centralunion}
+ \E(\text{new central union})\ge5p^2/16-4p-p^{3/2}-6E_0.
+\end{equation}
+
+\section{Cross terms and restoration}\label{sec:cross}
+\subsection{Separate cross novelty}
+Put $H=T-2p=(5p+3)/2$. A collision of either cross class with the
+nearer base tail has form $a+b=C_j$, and one with the opposite tail
+has form $a+b+C_j=H$, where $(a,b)$ is $(A_i,C_{i+d})$ or
+$(C_i,A_{i+d})$. Each congruence is a three-label graph with both
+coefficients nonzero. The ordinary triangle has mass $p(p-1)/2$.
+The opposite triangle $a+b\ge H-p$ has mass
+$k(k+1)/2=(p^2-1)/8$: reflect from $(p,p)$ to nonnegative coordinates
+whose sum is at most $k-1$. Both obey the established norm bound.
+
+For $R$ the nonzero ordinary base indices are $j\ge d$ and the
+opposite indices $j\le N-d$. For $Q$ they are respectively
+$j\le N+1-d$ and $j\ge d-1$, always clipped to $[0,N-1]$.
+These are the four domain forms above. Include $d=k$ for upper bounds.
+For each of the ordinary and opposite totals, the two domain sizes sum
+to at most
+\begin{equation}\label{eq:crossdomainsize}
+ \sum_{d=1}^{N-1}(N-d)(2(N-d)+2)
+ =\frac{2(N-1)N(N+1)}3\le\frac23p^3.
+\end{equation}
+The zero label costs at most $4p$ collisions, by injectivity (one per
+lag, class and tail type). The ordinary loss is at most $p^2/3+2E_0$,
+and the opposite loss at most $p^2/12+2E_0$, by Lemma~\ref{lem:graph}.
+Subtracting these and the zero-label allowance from at least
+$p^2-6p$ candidates proves, uniformly in $t$,
+\begin{equation}\label{eq:separatecross}
+ \E(\text{separate cross new counts})\ge7p^2/12-10p-4E_0.
+\end{equation}
+
+\subsection{Four and five labels under restricted translation}
+Put $q=4p$, $L_0=\log p+2$, and, for $r\in\mathbb Z/q\mathbb Z$,
+\[
+ K(r)=p^{-1}\sum_{x=1}^p e_q(rx),\quad
+ B(r)=\min(1,2/|r|_q)\ (r\ne0),\quad B(0)=1,
+ \quad B_1=\sum_rB(r),\quad B_2=\sum_rB(r)^2.
+\]
+Geometric summation gives $|K(r)|\le B(r)$, while
+\begin{equation}\label{eq:Bbounds}
+ B_1\le1+4H_{2p}\le5+4\log(2p)\le4L_0,
+ \qquad B_2<15.
+\end{equation}
+The last inequality follows from
+$B_2\le1+8\sum_{j\ge1}j^{-2}$ and
+$\sum_{j\ge1}j^{-2}<1+1/4+\int_2^\infty x^{-2}\,dx=7/4$.
+For representatives $1\le x_j\le p$ define
+\[
+ F_4(x)=\ind_{x_1+x_2+x_3+x_4=H},\qquad
+ F_5(x)=F_4(x_1,x_2,x_3,x_4)\ind_{x_3+x_4=x_5}.
+\]
+Congruences modulo $q$ impose exactly these integer equalities,
+because every possible nonzero discrepancy has magnitude less than
+$q$. Expanding them gives
+\begin{align}
+ \widehat F_4(\xi)&=q^{-1}\sum_a e_q(-aH)
+ \prod_{j=1}^4K(a-4\xi_j),\label{eq:F4hat}\\
+ \widehat F_5(\xi)&=q^{-2}\sum_{a,b}e_q(-aH)
+ K(a-4\xi_1)K(a-4\xi_2)\notag\\
+ &\hspace{14mm}\cdot K(a+b-4\xi_3)K(a+b-4\xi_4)K(-b-4\xi_5).
+ \label{eq:F5hat}
+\end{align}
+For every $s\in\Fp$,
+\begin{equation}\label{eq:planes}
+ \sum_{\sum\xi=s}|\widehat F_4(\xi)|\le B_1^4/p,
+ \qquad
+ \sum_{\sum\xi=s}|\widehat F_5(\xi)|\le B_1^5/q.
+\end{equation}
+For \eqref{eq:F4hat} put $r_j=a-4\xi_j$. A fixed tuple $r$ obeys
+$\sum r_j=4a-4s\pmod q$ and allows at most four $a$; for each,
+the $\xi_j$ are unique if they exist. For \eqref{eq:F5hat} use its
+five arguments $r_j$; then $\sum r_j=4a+b-4s$, so there are at most
+$q$ choices of $a$, with $b,\xi$ determined. This proves the bounds.
+On the exceptional subspaces, still for every plane $\sum\xi=s$,
+\begin{align}
+ \sum_{\sum\xi=s,\ \xi_5=0}|\widehat F_5|&\le4B_1^5/q^2,
+ \notag\\
+ \sum_{\sum\xi=s,\ \xi_1=\xi_2=0}|\widehat F_5|&\le B_2B_1^3/q^2,
+ \label{eq:exceptionalplanes}\\
+ \sum_{\sum\xi=s,\ \xi_3=\xi_4=0}|\widehat F_5|&\le3B_2B_1^3/q^2.
+ \notag
+\end{align}
+In the first case $b=-r_5$ and $4a=\sum r_j+r_5+4s$, with at most
+four roots. In the second $r_1=r_2=a$ and
+$b=r_3+r_4+r_5-2a+4s$; summing the repeated factor gives $B_2$.
+In the third put $w=a+b=r_3=r_4$; then
+$3a=r_1+r_2+w+r_5+4s$. There is exactly one root since
+$\gcd(3,4p)=1$ for $p>3$. We retain the conservative factor $3$
+in \eqref{eq:exceptionalplanes}.
+
+The translation weight $w_I(t)=p/M$ on $I_p$, zero elsewhere, has
+mean one and
+\begin{equation}\label{eq:weightnorm}
+ W_I:=\normA{w_I}\le(p/M)L\le p^{1/4}L.
+\end{equation}
+Indeed $2\lfloor p^{3/4}\rfloor+1\ge p^{3/4}$.
+Translation averaging attaches $\widehat w_I(-\sum\xi)$ to a
+Fourier character. Thus multiplying the plane estimates
+\eqref{eq:planes}--\eqref{eq:exceptionalplanes} by these absolute
+weights and summing over $s$ costs at most the factor $W_I$.
+The zero frequency keeps weight one. This accounts for every
+nonzero total-frequency plane; no independence or fixed-translation
+equidistribution is assumed.
+
+For an interval $J$ of power indices put
+$S_J(v)=\sum_{j\in J}e_p(vg^j)$. Interval completion with the Gauss
+sums in \eqref{eq:gausscompletion}, and additive orthogonality, gives
+\begin{equation}\label{eq:incomplete}
+ |S_J(v)|\le\sqrt p L_0\quad(v\ne0),\qquad
+ \sum_{v\in\Fp}|S_J(v)|^2=p|J|.
+\end{equation}
+For the first, the cyclic interval norm is at most
+$1+H_{N/2}\le L_0$ and completed Gauss sums have modulus at most
+$\sqrt p$. The second uses the distinctness of $g^j$.
+
+\subsection{Total cross overlap}
+Only $R$ at lag $d$ and $Q$ at lag $d+1$ share an outer interval.
+Their equality is
+\begin{equation}\label{eq:crossintersection}
+ A_i+C_{i+d}+C_u+A_{u+d+1}=H.
+\end{equation}
+For an upper bound include every $0\le d\le p-3$,
+$0\le i\le p-2-d$, $0\le u\le p-3-d$. The tuple count satisfies
+\[
+ M_4\le\sum_{d=0}^{p-3}(p-1-d)(p-2-d)
+ =p(p-1)(p-2)/3\le p^3/3.
+\]
+After $c$-averaging the character at $\xi$, apart from a fixed unit
+phase, equals
+\begin{equation}\label{eq:caverage}
+ \frac{p\ind_{(\xi_1+g^d\xi_2)g^i+(\xi_3+g^{d+1}\xi_4)g^u=0}-1}{p-1}.
+\end{equation}
+For $\xi\ne0$ at most $2p^2$ tuples satisfy the indicated equation.
+Unless both coefficients vanish, each $i$ admits at most one $u$,
+or none if exactly one coefficient vanishes. Both coefficients can
+vanish at at most one lag unless $\xi=0$; that lag contributes at
+most $p^2$ tuples and all other lags at most $p^2$.
+The summed absolute average is thus at most
+$(2p^3+M_4)/(p-1)\le4p^2$ for $p\ge3$.
+Equations \eqref{eq:planes}, \eqref{eq:weightnorm}, and
+\eqref{eq:Bbounds} bound the nonzero-frequency contribution by
+\begin{equation}\label{eq:crossfourerror}
+ 4W_IpB_1^4\le1024W_IpL_0^4.
+\end{equation}
+Inclusion-exclusion for four positive summands bounded by $p$ gives
+\begin{equation}\label{eq:F4volume}
+ |F_4|=\binom{5k+3}{3}-4\binom{3k+2}{3}+6\binom{k+1}{3}
+ =\frac{23p^3+15p^2+p+9}{48}.
+\end{equation}
+Three variables cannot exceed $p$ simultaneously in this count.
+Multiplying $|F_4|/p^4$ by $M_4\le p^3/3$ gives at most
+$23p^2/144+p$. Hence
+\begin{equation}\label{eq:totalcross}
+ \E(\text{total cross intersection})
+ \le23p^2/144+p+1024W_IpL_0^4.
+\end{equation}
+
+\subsection{A five-label estimate}
+Let $D$ be a subset of lag indices and let $I_d,U_d,J_d$ be intervals
+of power indices, each of size at most $N$. Insert in $F_5$ the
+representatives in $1,\ldots,p$ of
+\[
+ cg^i+t+\kappa_1,\quad cg^{i+d}+t+\kappa_2,\quad
+ cg^u+t+\kappa_3,\quad cg^{u+d+1}+t+\kappa_4,\quad
+ cg^j+t+\kappa_5,
+\]
+where the shifts are fixed. Let $M_5=\sum_d|I_d||U_d||J_d|$.
+We claim
+\begin{equation}\label{eq:fiveestimate}
+ \left|\E\sum_{d,i,u,j}F_5-\frac{|F_5|}{p^5}M_5\right|
+ \le20000W_Ip^{3/2}L_0^6.
+\end{equation}
+For a frequency $\xi$ put $a_d=\xi_1+g^d\xi_2$,
+$b_d=\xi_3+g^{d+1}\xi_4$, $e=\xi_5$.
+If all three are nonzero, \eqref{eq:incomplete} and Cauchy--Schwarz give
+\begin{align}\label{eq:threeintervals}
+ &\frac1N\sum_{c\ne0}
+ |S_{I_d}(ca_d)S_{U_d}(cb_d)S_{J_d}(ce)|\notag\\
+ &\qquad\le\sqrt pL_0\frac{p\sqrt{|U_d||J_d|}}N
+ \le2p^{3/2}L_0.
+\end{align}
+In fact the final factor $2$ is unnecessary since
+$\sqrt{|U_d||J_d|}\le N$; we retain it throughout.
+If exactly two coefficients are nonzero, the two-factor
+Cauchy--Schwarz bound with the remaining interval length is at most
+$2p^2$. If exactly one is nonzero, average before taking absolute
+values: each nonzero field power has character average $-1/N$, so
+the modulus is the product of the three lengths divided by $N$,
+at most $2p^2$.
+
+Outside the union of the three subspaces in
+\eqref{eq:exceptionalplanes}, both $a_d,b_d$ are nonzero polynomials
+of degree at most one in $g^d$, and $e\ne0$. At most two lags have
+a vanishing coefficient. Thus the summed character contribution is
+at most $2p^{5/2}L_0+4p^2$. On that union, for $\xi\ne0$ all
+coefficients can vanish at at most one lag: two distinct such lags
+would force $\xi=0$. That exceptional lag costs at most $p^3$, and
+all other lags at most $2p^2$ each, giving $3p^3$.
+Using the plane bounds, the nonzero-frequency error is at most
+$W_I$ times
+\begin{align*}
+ &\tfrac12p^{3/2}L_0B_1^5+\tfrac74pB_1^5
+       +\tfrac{3B_2}{4}pB_1^3\\
+ &\qquad\le(512+1792+720)p^{3/2}L_0^6
+ <20000p^{3/2}L_0^6.
+\end{align*}
+The zero frequency supplies the stated main term, proving
+\eqref{eq:fiveestimate}. Exchanging the first and second coordinate
+pairs merely exchanges the exceptional subspaces and obeys the same
+bound.
+
+\subsection{Restoring intersections already in the base}
+Count $F_5$ by $s=x_3+x_4=x_5$. Necessarily $k+2\le s\le2k+1$;
+there are $(s-1)(s-k-1)$ choices for the two pairs. Therefore
+\begin{equation}\label{eq:F5volume}
+ |F_5|=\sum_{s=k+2}^{2k+1}(s-1)(s-k-1)
+ =\frac{k(k+1)(5k+1)}6=\frac{(p^2-1)(5p-3)}{48}.
+\end{equation}
+Use the retained lags $d\in\{2,\ldots,p-3\}\setminus\{k-1,k\}$,
+$I_d=[0,p-2-d]$, and $U_d=[0,p-3-d]$.
+At a cross overlap put $s=C_u+A_{u+d+1}$, $v=A_i+C_{i+d}$.
+Then $s+v=H$ and the common sum is $dT+p+s=(d+1)T-p-v$.
+It is already in $\Bset_0$ if either
+\begin{equation}\label{eq:restorebranches}
+ s=C_j,\quad 0\le j\le p-2-d,
+ \qquad\text{or}\qquad
+ v=C_j,\quad d\le j\le p-2.
+\end{equation}
+These are valid subsets of \eqref{eq:basetails}, using only nonzero
+labels. The first branch deliberately drops the additional valid
+index $j=p-1-d$, to keep both branch lengths $|J_d|=p-1-d$.
+The branches are disjoint because $s,v\le p$ together contradict
+$H>2p$. The outer interval fixes $d$; injectivity fixes the $R$ and
+$Q$ indices and the covering base label. Thus each branch restores
+distinct values, without repetitions between branches.
+
+Each branch has tuple count
+\begin{equation}\label{eq:M5bounds}
+ M_5=\sum_d(p-1-d)^2(p-2-d),\qquad
+ p^4/4-6p^3\le M_5\le p^4.
+\end{equation}
+For the lower bound begin with
+$\sum_{s=1}^p s^3\ge\int_0^p x^3\,dx=p^4/4$.
+First use lags $1\le d\le p-3$, corresponding to $2\le s=p-1-d\le p-2$.
+Removing the top two cubes costs at most $2p^3$, and replacing
+cubes by $s^3-s^2$ costs at most $p^3$ (the $s=1$ term becomes zero).
+Removing lags $k-1,k$ costs at most $2p^3$, and removing lag $1$
+at most $p^3$. This proves the lower bound; the upper follows from
+at most $p$ terms, each at most $p^3$.
+Equation \eqref{eq:F5volume} gives
+$|F_5|/p^5\ge5/(48p^2)-1/(6p^3)$.
+Using the lower bound on $M_5$ for its positive coefficient and the
+upper bound for its negative coefficient, each principal term is at least
+\[
+ \frac5{48p^2}(p^4/4-6p^3)-\frac{p^4}{6p^3}
+ =5p^2/192-19p/24.
+\]
+Applying \eqref{eq:fiveestimate} twice and using $19p/12\le2p$ proves
+\begin{equation}\label{eq:restoration}
+ \E(\text{restored base intersections})
+ \ge5p^2/96-2p-40000W_Ip^{3/2}L_0^6.
+\end{equation}
+The accounting identity behind this step is
+\[
+ |(R\cup Q)\setminus\Bset_0|
+ =|R\setminus\Bset_0|+|Q\setminus\Bset_0|-|R\cap Q|
+  +|R\cap Q\cap\Bset_0|.
+\]
+The last term is bounded from below only by the two disjoint branches
+just proved; the subtraction uses the enlarged domain in
+\eqref{eq:totalcross}.
+
+\section{Explicit errors, onsets and padding}\label{sec:onsets}
+\subsection{Combining the counts and selecting parameters}
+The base, new central union and new cross union are disjoint.
+Add \eqref{eq:basecount}, \eqref{eq:centralunion} and
+\eqref{eq:separatecross}, subtract \eqref{eq:totalcross}, and restore
+\eqref{eq:restoration}. The quadratic coefficient is
+\[
+ 2+5/16+7/12-23/144+5/96=803/288.
+\]
+The error is at most
+\[
+ 14p+p^{3/2}+10E_0+1024W_IpL_0^4+40000W_Ip^{3/2}L_0^6.
+\]
+Using $E_0=256p^{3/2}L^8$, $W_I\le p^{1/4}L$, $L_0\le L$ and
+$p,L\ge1$, this is at most
+\begin{equation}\label{eq:totalerror}
+ (14+1+2560+1024+40000)p^{7/4}L^8
+ =43599p^{7/4}L^8\le50000p^{7/4}L^8.
+\end{equation}
+This proves the average assertion and hence \eqref{eq:mainlower}.
+Define $a^{(3p)}$ by evaluating every $c=1,\ldots,p-1$ and every
+$t\in I_p$, taking a pair maximizing $|\Sset|$, and breaking ties
+lexicographically by $(t,c)$. Compute $m$ as the largest integer with
+$m^4\le p^3$. All construction steps and comparisons can use integer
+arithmetic. This is an unambiguous finite definition.
+
+To justify the exact positivity statement after Theorem~\ref{thm:prime},
+write $u=\log p$. The normalized error in units of $p^2$ is
+$50000e^{-u/4}(u+3)^8$. Its logarithmic derivative is
+$8/(u+3)-1/4$, positive for $u<29$ and negative for $u>29$.
+At $u=16\log2$ its value is greater than $50000\cdot3^8/16>803/288$;
+also $16\log2<29$. It tends to zero as $u\to\infty$.
+This proves existence, uniqueness and the exact criterion
+\eqref{eq:positivity}. The approximate exponent $304.220$ is a
+numerical description only; it is not used to prove an onset.
+For a fully explicit vanishing-error estimate, when $u\ge3$,
+$(u+3)^8\le2^8u^8$ and $e^{u/8}\ge(u/8)^8/8!$, whence
+\[
+ 50000e^{-u/4}(u+3)^8
+ \le50000\cdot2^8\cdot8^8\cdot8!\,e^{-u/8}.
+\]
+In particular no unspecified asymptotic error is needed for the
+leading coefficient $803/2592$ at prime lengths.
+
+\subsection{Certified prime-length onsets}
+Put $x=\log_2p$. Since $\log p\le\log_2p$, the normalized error is
+at most $50000(x+3)^8 2^{-x/4}$.
+Its logarithmic derivative is $8/(x+3)-(\log2)/4<0$ for $x\ge416$,
+using $\log2>2/3$. One elementary proof of the latter is the positive
+series $\log2=2\sum_{j\ge0}(1/3)^{2j+1}/(2j+1)$.
+The exact integer comparisons
+\begin{align}
+ 50000\cdot419^8\cdot9000000&<31\cdot2^{104},\label{eq:onset416}\\
+ 50000\cdot451^8\cdot90000000&<67\cdot2^{112}\label{eq:onset448}
+\end{align}
+and the identities
+\[
+ \frac{803}{288}-9\frac{309799}{10^6}=\frac{31}{9000000},\qquad
+ \frac{803}{288}-9\frac{3097993}{10^7}=\frac{67}{90000000}
+\]
+prove $|\Sset(a^{(3p)})|\ge0.309799(3p)^2$ for $p\ge2^{416}$,
+and the stronger $|\Sset(a^{(3p)})|\ge0.3097993(3p)^2$ for
+$p\ge2^{448}$. This proves Theorem~\ref{thm:prime}.
+These onsets are sufficient and are not claimed minimal.
+
+\subsection{Padding using the prime-interval theorem}
+Let $n\ge2^{4096}$, $b=\lfloor n/3\rfloor$ and
+$x=(9999999/10000000)b$. Since $n\ge30$,
+$b\ge3n/10$ and $x>n/4\ge2^{4094}>3275$.
+Thus $\log x>4094(2/3)>2700$ and
+$1/(2\log^2x)<1/14000000$. The rational inequality
+\[
+ \frac{9999999}{10000000}\frac{14000001}{14000000}<1
+\]
+shows that \eqref{eq:P} supplies a prime in $(x,b]$.
+Choose the largest prime $p\le b$. Then $p>x>2^{4094}$, in particular
+$p\ge2^{448}$. Append $3p+1,\ldots,n$ to $a^{(3p)}$; all old
+consecutive sums persist. Also
+$3b/n\ge1-2/n\ge999999999/1000000000$, so
+\[
+ \frac{3p}{n}>
+ \frac{9999999}{10000000}\frac{999999999}{1000000000}
+ >\frac{99999989}{100000000}.
+\]
+Using \eqref{eq:onset448}, the padded permutation satisfies
+\begin{equation}\label{eq:paddingfinal}
+ \frac{|\Sset|}{n^2}\ge
+ \frac{3097993}{10000000}\left(\frac{99999989}{100000000}\right)^2
+ >\frac{309799}{1000000}.
+\end{equation}
+The last comparison is exact rational arithmetic. This proves the
+all-integer statement. Taking lower and upper limits and using
+$1100/n\to0$ proves Theorem~\ref{thm:all}.
+
+\section{Computations and reproduction}\label{sec:computations}
+The electronic bundle contains the complete upper table, the exact
+certificate program and its per-row output, the finite-check program
+and output, and all lower-construction programs and recorded outputs.
+The README gives exact commands and identifies every file;
+\texttt{SHA256SUMS} records their hashes. The supplied programs and
+outputs are preserved byte for byte. A separate small publication
+check verifies the positive exterior sign mentioned in
+Section~\ref{sec:certificate} and the onset arithmetic.
+All programs use the Node.js standard library. The upper certificate
+uses arbitrary-precision integers, including directed square roots.
+Floating decimals in its output are summaries, not certificate inputs.
+
+\subsection{Upper certificate and finite checks}
+The $892$-row, $17\,430\,410$-cell certificate is part of the proof;
+the following finite permutation checks are supporting tests.
+All $46\,233$ permutations for $1\le n\le8$ were enumerated, giving
+\[
+ (f(1),\ldots,f(8))=(1,3,6,9,13,19,25,32).
+\]
+For every nontrivial extreme half-high pair with $k\le n/2$, the
+checker considers all disjoint equal-length low pairs, including
+lengths below $k$, for the general category inequalities and the
+three protrusion rearrangements when applicable.
+Additional tests use the tent $1,3,5,\ldots$, followed by descending
+even entries, its reversal, and $40$ seeded Fisher--Yates permutations
+at each $n\in\{16,32,64,128,256,512\}$.
+The seed is hexadecimal $17\mathrm d34210$, and the threshold
+numerators are $80,100,120,140,160,180,200,220$ over $4000$.
+Three $3000$-swap searches at each $n\in\{32,64,128\}$ retain counts
+$375,1399,5335$, with $9003$ objective evaluations per length.
+
+In total the preserved checker processes $46\,488$ permutations,
+$34\,699$ anchor pairs, $2\,025\,199$ category tests,
+$2\,312\,221$ tests of each protrusion rearrangement,
+$12\,828$ nonsaturated geometry cases, $10\,999$ saturated cases,
+$404\,887$ low rows and $458$ coupled checks.
+The coupled trial loop imposes $j\ge k$; this is adequate for its
+protrusion branch because \eqref{eq:elllarge} forces $j>k$.
+The complete-containment proof itself imposes no such restriction.
+Finite tests cannot replace the universal rearrangement argument.
+For this bundle the exact certificate and this checker were replayed;
+their outputs agree with the preserved outputs after removing timing
+fields.
+
+\subsection{Lower-construction checks}
+Direct bitset enumeration covers all $(c,t)$ for
+$p=5,7,11,17,31,61,101$, including means and extrema by translation.
+A separate rotating-window multiset counter covers every $(c,t)$ for
+$p=5,7,11,17,31,101,251,503,1009$, a total of $1\,343\,802$ pairs.
+Counts through $p=31$ are cross-checked against the direct counter;
+the two independent scans also agree on the maximum and mean at
+$p=101$. The maximum counts for $p=251,503,1009$ are
+$176\,678$, $707\,901$, and $2\,844\,224$ respectively.
+The largest exhaustively scanned prime is $1009$.
+
+The exact audit examines all $3190$ pairs for
+$p=5,7,11,13,17,19,23,29,31$. It checks the permutation, base
+cardinality, direct bitset count against a separate set enumeration,
+class injectivity, missing-label characterization, membership of
+candidates among interval sums, and $64\,199$ restored overlap
+values with disjoint restoration branches. It also checks $82\,115$
+central-lift equivalences, $69\,492$ domain masks, $27$ domain-size
+identities and $173$ volume identities, together with
+\eqref{eq:onset416}--\eqref{eq:paddingfinal} in arbitrary-precision
+integer arithmetic. This audit was replayed for the bundle and agrees
+with its preserved output apart from timing.
+
+The recorded samples at $p=251,503,1009,2003,3331$ use multipliers
+$1,2,g,p-1$ and translations
+$0,\lfloor p/8\rfloor,\lfloor p/4\rfloor,\lfloor3p/8\rfloor,
+(p-1)/2,\lfloor5p/8\rfloor,\lfloor3p/4\rfloor,\lfloor7p/8\rfloor$,
+for $160$ counts. Padded examples give $30\,981\,553$ sums at
+$n=10000$, using $(p,c,t)=(3331,3,1665)$, and $69\,813\,779$ at
+$n=15010$, using $(5003,2,2501)$. These are counts for particular
+permutations, not the extremal values $f(n)$.
+These finite computations test combinatorial identities. They cannot
+test the content of \eqref{eq:mainlower} at its enormous onset, and
+finite unrestricted maxima above $0.31n^2$ do not prove an asymptotic
+gain. The theorem averages over the narrower set $I_p$.
+
+The rotating counter is exact for the tested range. Multiplication
+$c=g^r$ rotates the $N$ nonzero triple blocks, while the zero block
+stays last. It maintains the multiset of intervals inside that core,
+inside the zero block, and joining the core to the zero block.
+A one-block rotation removes the core intervals starting in the
+three departing positions and adds those ending in the three new
+positions, then replaces the joining intervals. Other sums persist.
+Changes of multiplicity across zero update the distinct-value count.
+The $N$ rotations visit each nonzero multiplier once. This reduces
+the full affine scan from fourth-power enumeration to third-power
+multiset updates. The provided finite counters use fixed-width typed
+arrays and ordinary exact-range integer arithmetic; they are test
+programs for the documented sizes, not implementations for the
+astronomical theorem onsets. The finite-search definition of
+$a^{(3p)}$ permits arbitrary-precision integer arithmetic instead.
+
+\section{Limits and unsuccessful routes}\label{sec:limits}
+The bounds $f(n)\le0.44n^2$ eventually and $f(n)\ge0.31n^2$
+eventually are not proved here. Nor do we prove that $f(n)/n^2$
+converges. The following remarks describe obstructions encountered
+by these particular arguments, not impossibility theorems for
+stronger bounds.
+
+\begin{remark}[Upper-bound obstructions]
+The present table has $W_{\rm def}=0.002798309$, whereas a deficit
+branch proving $0.44$ would require
+$W_{\rm def}\ge B_0-0.44>0.006349540849362$.
+Its deficit exceeds $0.003551231849362$, so these rows cannot prove
+that target. Averaging inequalities of the form
+$|\Sset|/n^2\le B_0-E$ and $|\Sset|/n^2\le B_0-A_x(e_x)$ adds no
+constraint: a saving $s$ still requires the integrated inverse
+threshold $\int v_s(x)\,dx\ge s$, where
+$v_s(x)=\sup\{v:A_x(v)\ge s\}$.
+
+High anchors alone are not mutually incompatible in the continuous
+relaxation. The symmetric tent $a(t)=1-2|t-1/2|$ has nested maximal
+cores and minimal exteriors. For symmetric windows of length $x$
+and span $d$, exterior mass is $((1-x)^2+d^2)/2$ and common window
+mass is $1/2-((1-x)^2+d^2)/2$; setting the latter to $1/4$ gives
+$d=b(x)$. Thus the high-interval envelope can be attained in that
+relaxation without information about low rows or distinct values.
+
+Substituting an independent small diameter in the rank deficit and
+a large diameter in the wing is unjustified, as is replacing
+$\eta$ by the third root evaluated at $d_0$. Lemma~\ref{lem:coupled}
+instead bounds $d-\eta$. A saturated wing $P=D_a$ can allow the gap
+to extend outside the anchor union: \eqref{eq:coremass} excludes
+containing the whole core but does not force a gap to meet the core.
+This is why nonsaturation is proved before using
+\eqref{eq:winggeometry}.
+
+A floating scan using only the seed bound, at coefficient $0.4436$
+and bin width $0.0002$, gave inverse-threshold integral about
+$0.00265469$, below $B_0-0.4436\approx0.00274954$.
+This is exploratory evidence, not a certified limitation.
+Joint multipliers for two complements reproduced existing
+single-complement or mass-only constraints; no further retained-wing
+gain was established. A four-window floating relaxation used all
+nonzero weight vectors in $\{0,1,2,3,4\}^4$, normalized by their sum,
+gap increments $0.001$, start increments $0.003$, the parameter
+triples $(x,v,\varepsilon)=(.33,.03,.03),(.31,.07,.03),
+(.35,.015,.025),(.3,.09,.035)$, and
+$y\in\{.01,.03,.05,.07,.1\}$. Off-center configurations survived;
+for example the first triple at $y=.05$ allowed a tested gap $.1$
+against a core-only root about $.07998$. Survival on a finite grid
+is not a feasibility proof and supplies no symmetrization lemma.
+Finally, an exploratory midpoint integration underestimated some
+rectangle bounds; those provisional rows were discarded or reduced,
+and only the passing directed-rounding certificate is used here.
+\end{remark}
+
+\begin{remark}[Lower-bound obstructions]
+The coefficient $803/2592$ is below $31/100$ by exactly $13/64800$,
+or $13/7200$ in units of $p^2$. Reducing the error term alone cannot
+close this quadratic gap. The minimum central lift mass in the
+present calculation is asymptotically $p^2/4$; no variance or
+positive-fraction argument supplying an additional fixed gain is
+proved here.
+
+Fixing a translation in the four- and five-label estimates retains
+all total-frequency planes without the controlled weight
+\eqref{eq:weightnorm}. Deleting the translation average is therefore
+not justified. The restricted interval average, together with the
+estimates on every plane, is the proved replacement.
+Optimizing finite affine scans does not establish a uniform
+asymptotic gain, and unrestricted numerical maximizers are not
+substituted for the theorem's parameter set.
+
+Four- and five-row alternatives were also tested. For odd $p=2k+1$
+and a permutation $\sigma$ of $1,\ldots,r$, take $z_1=x$,
+$z_j=[2z_{j-1}]_p$ and the rows
+\[
+ (\sigma_1-1)p+x+1,\qquad
+ (\sigma_j-1)p+k+1+z_j-z_{j-1}\ (2\le j<r),\qquad
+ \sigma_rp-z_{r-1}.
+\]
+Since $[2z]_p-z$ permutes $[-k,k]$, these rows partition $1,\ldots,rp$
+and have constant total $r(rp+1)/2$. All row orders at $r=4,5$,
+$p=101,503$, $c=1$, $t=0,k$ give $576$ recorded counts; $18$ further
+counts use selected orders at $p=1009,3331,5003$.
+The order $(2,1,3,4)$ gives a finite ratio approximately $0.3125323102$
+at $p=3331$ but $0.2895592821$ at $p=5003$. No uniform overlap
+estimate for the additional prefix classes was proved, so this
+route is neither established nor ruled out. Two interleaved triple
+families and a second-moment approach were considered, but no
+construction or estimate was completed for them.
+\end{remark}
+
+\section*{AI use and verification status}
+The two proofs, the upper certificate and the accompanying programs
+were developed with GPT-6 Astra (OpenAI). Each proof was reviewed in
+isolation by two Claude (Anthropic) referees, both of whom returned
+PASS. A separate Claude verification process returned PASS for the
+upper certificate and PASS-WITH-REPAIRS for the lower result, with a
+wording-only correction concerning the lower inequality's vacuity.
+That correction is included in Theorem~\ref{thm:prime}'s discussion
+and Section~\ref{sec:onsets}. The expository corrections from the
+referees have also been incorporated. The review records report
+independent exact certificate checks and finite combinatorial tests;
+they do not constitute a formal proof verification. This manuscript
+was prepared with GPT-6 from the reviewed proofs. Its presentation
+has not undergone a separate referee round. No Lean formalization
+has been carried out. The bounded literature search described in
+Section~\ref{sec:related} does not certify priority.
+
+\begin{thebibliography}{9}
+\bibitem{Bloom}
+T.~F. Bloom, \emph{Erd\H{o}s Problems}, Problem~34,
+\url{https://www.erdosproblems.com/34}, accessed 12 October 2026
+in the literature search described in Section~\ref{sec:related}.
+\bibitem{Konieczny}
+J. Konieczny, \emph{On consecutive sums in permutations},
+Journal of Combinatorics \textbf{12} (2021), no.~3, 413--477.
+Theorem~1.2, p.~415; Sections~1.5, 4.2 and 5.1.
+\url{https://archive.intlpress.com/site/pub/files/_fulltext/journals/joc/2021/0012/0003/JOC-2021-0012-0003-a003.pdf}.
+Preprint first posted 27 April 2015, \url{https://arxiv.org/abs/1504.07156}.
+\bibitem{Hegyv}
+N. Hegyv\'ari, \emph{On consecutive sums in sequences},
+Acta Mathematica Hungarica \textbf{48} (1986), nos.~1--2, 193--200.
+\url{https://doi.org/10.1007/BF01949064}.
+\bibitem{Drakakis}
+K. Drakakis, \emph{A review of Costas arrays},
+Journal of Applied Mathematics \textbf{2006}, Article~26385,
+Theorem~7.29, pp.~20--21.
+\url{https://www.pure.ed.ac.uk/ws/portalfiles/portal/10369967/A_review_of_Costas_arrays.pdf}.
+\bibitem{Golomb}
+S.~W. Golomb, \emph{Algebraic constructions for Costas arrays},
+Journal of Combinatorial Theory, Series~A \textbf{37} (1984), 13--21.
+\bibitem{Dusart}
+P. Dusart, \emph{Autour de la fonction qui compte le nombre de nombres
+premiers}, doctoral thesis, Universit\'e de Limoges, 26 May 1998.
+Th\'eor\`eme~1.9, printed p.~35 (supporting Proposition~1.10, p.~34).
+\url{https://www.unilim.fr/pages_perso/pierre.dusart/Documents/T1998_01.pdf}.
+\end{thebibliography}
+\end{document}

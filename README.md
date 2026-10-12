@@ -7,6 +7,29 @@ The Lean 4 proof library formerly at `lean/` has migrated to its own
 repository: [chy4pro/automath-lean-proofs](https://github.com/chy4pro/automath-lean-proofs)
 (history preserved in this repo's git log; see `lean/README.md`).
 
+## Erdős Problem #34 — explicit upper and lower bounds for distinct consecutive sums in permutations (important milestone)
+
+**Claim.** Let f(n) be the maximum, over permutations of {1,…,n}, of the number of distinct consecutive sums. Then
+f(n) ≤ 0.4435834 n² + 1100 n for every n ≥ 1 (so f(n) ≤ 0.4436 n² for n ≥ 66,265,061). For every prime p ≥ 2^16 an explicit
+complementary-triple permutation of length 3p has at least (803/288)p² − 50000 p^{7/4}(log p+3)^8 distinct sums, hence
+≥ 0.309799 (3p)² for p ≥ 2^416; with Dusart's prime-interval theorem, f(n) ≥ 0.309799 n² for every n ≥ 2^4096. This improves
+both coefficients of the strongest bounds we located (Konieczny: 3/2 − 2/√e ≈ 0.28694 and 1/4 + π/16 ≈ 0.44635); bounded search,
+no priority claim. The lower bound's onset is astronomically large.
+
+- Paper and code: [`erdos34/`](erdos34/) — DOI [10.5281/zenodo.23322918](https://doi.org/10.5281/zenodo.23322918)
+- Status: two cross-vendor referees per bound (PASS), independent exact verifier (PASS; wording repair applied), transcription check; bounded literature search; no Lean
+
+## Erdős Problem #1179 — balanced random subset sums with explicit corrections (important milestone)
+
+**Claim.** For every finite abelian group of order N, q = log₂N: k = ⌈q + 1000q/log₂q⌉ (N ≥ 2^(2^20)), k = ⌈q + 3400q^{4/5}⌉
+(N ≥ 2^64) and every k ≥ q + 8400√(q log₂q) (N ≥ 2^64; 200 in place of 8400 for N ≥ 2^486018750) random elements make all
+subset-sum counts within a factor 1 ± 1/2 of 2^k/N, with failure probability ≤ 1/(2q) (independent entries) or ≤ 1/q
+(uniform k-subset; k ≤ 2^(q/2) for the last statement). Explicit constants and onsets; Erdős–Hall (1976) gave the
+qualitative q(1 + O(log log q/log q)). Each bound beats the trivial 2q + log₂q + 3 only in the range stated in the paper.
+
+- Paper and code: [`erdos1179/`](erdos1179/) — DOI [10.5281/zenodo.23322923](https://doi.org/10.5281/zenodo.23322923)
+- Status: two cross-vendor referees per proof (PASS / PASS-WITH-REPAIRS, repairs applied and re-verified), exact verifier, transcription check; bounded literature search (Hall 1977 not accessible); no Lean
+
 ## Erdős Problem #542 — explicit upper bound for reciprocal sums of lcm-separated sets (small result)
 
 **Claim.** If A ⊆ {1,…,n} and lcm(a,b) > n for all distinct a, b ∈ A, then Σ_{a∈A} 1/a ≤ 1.0087578638 + 87.5686331624/n

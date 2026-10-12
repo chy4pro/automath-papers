@@ -1,0 +1,1106 @@
+\documentclass[11pt]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\usepackage[margin=1in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={Balanced random subset sums in finite abelian groups: explicit corrections of order sqrt(q log q)},pdfauthor={Haoyu Chen}}
+\allowdisplaybreaks
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem*{lemma2prime}{Lemma 2$'$}
+\newtheorem*{propM}{Proposition M}
+\newtheorem*{corC}{Corollary C}
+\newtheorem*{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\F}{\mathbb F}
+\newcommand{\E}{\mathbb E}
+\newcommand{\PI}{\mathbb P_{\mathrm I}}
+\newcommand{\PU}{\mathbb P_{\mathrm U}}
+\newcommand{\Fail}{\mathcal F}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\lo}{P_{\mathrm{low}}}
+\newcommand{\hi}{P_{\mathrm{high}}}
+\newcommand{\LB}{\Lambda_B}
+\newcommand{\LC}{\Lambda_C}
+\newcommand{\QB}{Q_B}
+\title[Explicit corrections for balanced subset sums]{Balanced random subset sums in finite abelian groups:\ explicit corrections of order $\sqrt{q\log q}$}
+\author{Haoyu Chen}
+\address{Independent researcher}
+\date{12 October 2026}
+\subjclass[2020]{Primary 11B13; Secondary 20K01, 60C05}
+\keywords{Random subset sums, finite abelian groups, character sums, integer lattices}
+\begin{document}
+\begin{abstract}
+Let $G$ be any finite abelian group of order $N$, and put $q=\log_2N$.
+We give explicit sufficient sample sizes for all subset-sum representation
+counts to lie within relative error $1/2$ of $2^k/N$. For independent
+uniform samples, every integer $k\ge q+8400\sqrt{q\log_2q}$ has failure
+probability at most $1/(2q)$ when $N\ge2^{64}$. The constant is $200$
+when $N\ge2^{486018750}$. For a uniform $k$-element subset the failure
+bound is $1/q$, provided also $k\le\sqrt N$. We give two intermediate
+explicit bounds and a corollary with $k=\lceil q+3q^{4/5}\rceil$ at the
+larger onset. The proof splits a Fourier power according to integer
+relation lattices, bounds the low-rank part deterministically on a
+common event, and takes an unconditional second moment of the remaining
+polynomial. A count of bounded-generator lattices yields the square-root
+correction. The leading-coefficient-one question is already known to
+have an affirmative answer; the subject here is its explicit correction,
+uniformly over all finite abelian groups.
+\end{abstract}
+\maketitle
+
+\section{Introduction and statements}\label{sec:intro}
+Write the operation of a finite abelian group $G$ additively, and let
+$N=|G|$. For a tuple $A=(g_1,\ldots,g_k)$ define
+\[
+ R_A(g)=\#\bigl\{S\subseteq\{1,\ldots,k\}:\ \sum_{i\in S}g_i=g\bigr\}.
+\]
+The empty subset has sum zero. Repeated entries retain distinct indices.
+In model \textup{(I)}, the entries are independent and uniform in $G$.
+In model \textup{(U)}, $A$ is a uniform $k$-element subset of $G$, and
+$R_A$ counts subsets of this set. In either model put
+\[
+ q=\log_2N,\qquad L=\log_2q,\qquad
+ D(g)=\frac{NR_A(g)}{2^k}-1,\qquad
+ \Fail=\{\max_{g\in G}|D(g)|>1/2\}.
+\]
+Thus ``balanced'' means the non-strict inequality
+$\max_g|D(g)|\le1/2$. The numbers $q$ and $L$ are real, and are never
+assumed integral. Every probability assertion below is for each fixed
+group separately, with the same bound for every group of the given order.
+
+The question recorded as Erd\H{o}s Problem~1179 \cite{EP1179} asks for
+leading coefficient one in the sample size for near-equal subset-sum
+counts, with high probability. Erd\H{o}s and Hall \cite{EH76} already
+settled that question. We study explicit smaller corrections. We retain
+the following two intermediate results to display the successive
+parameter choices; Theorem~\ref{thm:sqrt} is the main estimate.
+
+\begin{theorem}\label{thm:log}
+Let $G$ be any finite abelian group of order $N\ge2^{2^{20}}$, and let
+\[
+ k=\left\lceil q+\frac{1000q}{\log_2q}\right\rceil.
+\]
+Then $\PI(\Fail)\le1/(2q)$. Moreover $k\le N$, and
+$\PU(\Fail)\le1/q$.
+\end{theorem}
+
+\begin{theorem}\label{thm:power}
+Let $G$ be any finite abelian group of order $N\ge2^{64}$, and let
+$k=\lceil q+3400q^{4/5}\rceil$. Then $\PI(\Fail)\le1/(2q)$.
+Moreover $k\le N$, and $\PU(\Fail)\le1/q$.
+\end{theorem}
+
+\begin{theorem}\label{thm:sqrt}
+Let $G$ be any finite abelian group of order $N$.
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
+\item If $N\ge2^{64}$, every integer $k\ge q+8400\sqrt{qL}$ satisfies
+$\PI(\Fail)\le1/(2q)$. If also $k\le2^{q/2}$, then
+$\PU(\Fail)\le1/q$.
+\item If $N\ge2^{486018750}$, the same assertions hold with $200$ in
+place of $8400$, retaining the condition $k\le2^{q/2}$ for model
+\textup{(U)}.
+\end{enumerate}
+The admissible integer interval in model \textup{(U)} is nonempty in
+both parts.
+\end{theorem}
+
+\begin{corC}\label{cor:power}
+For every finite abelian group of order $N\ge2^{486018750}$ and
+$k=\lceil q+3q^{4/5}\rceil$, one has $\PI(\Fail)\le1/(2q)$ and
+$\PU(\Fail)\le1/q$.
+\end{corC}
+
+There are no asymptotic error terms in these statements or their proofs.
+For the minimal rounded size in Theorem~\ref{thm:sqrt}, the correction
+is at most $C\sqrt{qL}+1$, with $C=8400$ or $200$ and exactly the onsets
+displayed above. In particular, using $L\le4\sqrt q$ for $q\ge1$,
+\begin{equation}\label{eq:explicit-asymptotic}
+ \frac{\lceil q+C\sqrt{qL}\rceil-q}{q}
+ \le2Cq^{-1/4}+q^{-1},\qquad
+ \frac{\sqrt{qL}}{q^{4/5}}\le2q^{-1/20}.
+\end{equation}
+The second ratio is at most $\epsilon>0$ for
+$q\ge\max\{1,(2/\epsilon)^{20}\}$; the first is at most $\epsilon$
+for $q\ge\max\{1,(4C/\epsilon)^4,2/\epsilon\}$.
+These quantify the asymptotic language in the title.
+
+\begin{remark}[Finite-size scope]\label{rem:scope}
+The elementary $L^2$ estimate already gives the tuple failure bound for
+$k\ge2q+L+3$. The theorems above do not improve this sample requirement
+throughout all their stated ranges. Here are exact sufficient comparison
+ranges, with all comparisons made at the \emph{minimal} allowed integer
+$k$. In Theorem~\ref{thm:log},
+\[
+ \frac{1000q}{L}\le q\quad\Longleftrightarrow\quad
+ L\ge1000\quad\Longleftrightarrow\quad q\ge2^{1000}.
+\]
+Thus for $q\ge2^{1000}$ (equivalently $N\ge2^{2^{1000}}$) its size is
+at most $\lceil2q\rceil<2q+L+3$. In Theorem~\ref{thm:power} the
+corresponding condition is
+\[
+ q\ge3400^5=454\,354\,240\,000\,000\,000,
+\]
+and for Theorem~\ref{thm:sqrt}(a) it is
+$q/L\ge8400^2=70\,560\,000$. Below each of these respective
+conditions the unrounded size, and hence its ceiling, exceeds $2q$;
+any improvement over $\lceil2q+L+3\rceil$ is then less than $L+4$,
+if there is an improvement at all. These are not claimed to be the
+exact crossover points after the logarithmic term and ceilings are
+included. For a correction $c(q)$ the exact integer comparison is
+\[
+ \lceil q+c(q)\rceil<\lceil2q+L+3\rceil
+ \quad\Longleftrightarrow\quad
+ q+c(q)\le\lceil2q+L+3\rceil-1.
+\]
+Theorem~\ref{thm:sqrt}(b) improves the elementary size throughout its
+range: with $\QB=486\,018\,750$, monotonicity of $q/\log_2q$ gives
+$q/L\ge\QB/\log_2\QB>\QB/29>40000$, so $200\sqrt{qL}<q$.
+At the onset of Theorem~\ref{thm:log}, its size is $53\,477\,376$,
+whereas the elementary size is $2\,097\,175$. Constants have not been
+optimized. The transfer to model \textup{(U)} is proved separately in
+Section~\ref{sec:transfer}.
+\end{remark}
+
+\section{Related work}\label{sec:related}
+Erd\H{o}s and R\'enyi \cite[Theorem 1, pp.~131--132]{ER65} give
+simultaneous relative error at most $\epsilon$ with probability greater
+than $1-\delta$ for independent uniform samples if
+\[
+ k\ge2\log_2N+2\log_2(1/\epsilon)+\log_2(1/\delta).
+\]
+With $\epsilon=1/2$ and $\delta=1/(2q)$ this is precisely the
+$2q+L+3$ benchmark. Erd\H{o}s and Hall
+\cite[unnumbered Theorem, p.~174]{EH76} prove simultaneous
+$(1\pm\eta)2^k/N$ counts for almost all independent uniform tuples
+in every finite abelian group, for fixed $\eta>0$, when
+\[
+ k>q\{1+O_\eta(\log\log q/\log q)\}.
+\]
+This cited historical statement has an unspecified implied constant
+and no numerical finite onset or failure function. It is not used as
+an effective premise here. As we read their proof, their Lemma~2, p.~176, drops a
+product-principal constraint on characters and overcounts binary
+relations; their Lemma~3 passes to a maximum-count estimate. Our proof
+instead separates tuples before taking an unconditional second moment.
+
+Hall's 1977 paper \cite{Hall77} is bibliographically confirmed, but its
+theorem statements were unavailable in the literature search underlying
+this comparison. We assign no mathematical conclusion to it. This
+access gap, and incomplete forward-citation coverage, limit any claim
+about the record.
+
+Stronger results for restricted groups must also be distinguished.
+For $G=(\Z/2)^d$, the representation function is constant on the
+span of the sampled elements and zero off it. Erd\H{o}s and Hall
+\cite[p.~449, Theorem 3 and preceding paragraph]{EH78} give failure
+of coverage less than $2^{d-k}$; coverage is exact uniformity in this
+family. Thus $k\ge d+\lceil\log_2(2d)\rceil$ suffices for the tuple
+failure target here.
+
+Dhar and Dvir \cite[Theorem 2.1]{DD24} establish simultaneous two-sided
+relative guarantees for finite-field linear hashing. In the prime-field
+case, for $S\subseteq\F_p^n$, $n\ge5$, $\tau>0$, $0<\delta<1$,
+\[
+ p\ge32\max\{n(1+\tau)/(\tau\delta)^2,n\},\qquad
+ p^r<|S|\le p^{r+1},\qquad4\le r\le n-1,
+\]
+at least a $1-\delta$ fraction of surjective linear maps to
+$\F_p^{r-3}$ give relative error at most $\tau$ at every point.
+Their Theorems~2.2 and~2.4 give binary variants with logarithmic
+entropy loss under explicit size hypotheses. These are genuine
+pointwise balance results, with a finite-field domain.
+
+Lund's preprint \cite[Corollary 1.4]{Lund26} gives a further two-sided
+hashing statement for nonempty $S\subseteq\F_p^n$, $1\le d\le n$,
+$0<\tau\le1$, and $0<\delta<1$. If an integer $a\ge1$ satisfies
+\[
+ p^{a-1}\ge16(d+a),\qquad
+ \frac{|S|}{p^d}\ge\frac{192p^a}{\tau^2\delta},
+\]
+the relative error of every fiber is at most $\tau$ with probability
+greater than $1-\delta$, for either uniform surjections or unrestricted
+uniform matrices. Taking $S=\{0,1\}^k$, $N=p^d$, $\tau=1/2$, and
+$\delta=1/(2q)$ makes the second condition
+$2^{k-q}\ge1536qp^a$. For each fixed prime this gives logarithmic
+overhead. We cite the preprint's theorem statement without claiming
+an independent review of its proof. Neither the field-dependent
+condition nor the domain supplies a bound uniform over all finite
+abelian groups, and no without-replacement conclusion is inferred
+without a transfer argument.
+
+Our quantifier is over \emph{every} finite abelian group, with explicit
+constants, onsets, and probabilities. Within a literature search of
+12 October 2026 we did not locate an explicit bound of this form for
+all finite abelian groups. This is a bounded search statement, with
+Hall 1977 unread, and makes no priority claim. The paper does not claim
+a new solution of the original leading-coefficient question.
+
+\section{Proof of Theorem 1}\label{sec:proof1}
+We supply the algebraic ingredients and the Fourier argument in full.
+Write $H=\widehat G$ additively, with identity $0$, while evaluating
+characters multiplicatively: $(\chi+\psi)(x)=\chi(x)\psi(x)$.
+The structure theorem gives $|H|=N$. For $\Lambda\le\Z^s$, define
+\[
+ d_p(\Lambda)=\dim_{\F_p}\operatorname{im}(\Lambda\longrightarrow\F_p^s),
+ \quad r_p(\Lambda)=s-d_p(\Lambda),\quad
+ r_G(\Lambda)=\max_{p\mid N}r_p(\Lambda).
+\]
+Here $r_p(\Lambda)=\dim_{\F_p}((\Z^s/\Lambda)/p(\Z^s/\Lambda))$.
+We use ``lattice'' for any subgroup of $\Z^s$, not necessarily full rank
+or saturated.
+
+\begin{lemma}\label{lem:hom}
+For every $\Lambda\le\Z^s$,
+\begin{equation}\label{eq:hom}
+ |\Hom(\Z^s/\Lambda,H)|\le N^{r_G(\Lambda)}.
+\end{equation}
+If finitely generated abelian groups satisfy $S\le K$ and $S\twoheadrightarrow Q$,
+then for every prime $p$,
+\begin{equation}\label{eq:subquot}
+ \dim(Q/pQ)\le\dim(S/pS)\le\dim(K/pK).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Write $K$ as a free abelian group of rank $m$ plus finite torsion. If
+its $p$-primary part has $b_p$ cyclic factors, then
+$\dim(K/pK)=m+b_p$. Each free generator and each $p$-primary cyclic
+generator has at most $|H_p|$ images in the $p$-primary part $H_p$ of
+$H$. Torsion at other primes maps to zero, so
+$|\Hom(K,H_p)|\le|H_p|^{m+b_p}$. Taking $K=\Z^s/\Lambda$ and
+multiplying over $p\mid N$ proves \eqref{eq:hom}. A subgroup $S$
+has free rank at most $m$, and $S[p]$ embeds in $K[p]$, so its number
+of $p$-primary cyclic factors is at most $b_p$. This proves the second
+inequality of \eqref{eq:subquot}. The first follows from the induced
+surjection $S/pS\twoheadrightarrow Q/pQ$.
+\end{proof}
+
+\begin{lemma}\label{lem:coarse}
+Let $s,B\ge1$ be integers. A lattice generated by a prescribed set of
+vectors in $[-B,B]^s\cap\Z^s$ is generated by at most
+\[
+ J(s,B)=s+\lfloor\log_2(s!B^s)\rfloor
+\]
+vectors from that set. Hence there are at most
+$(2B+1)^{sJ(s,B)}$ such lattices. For lattices generated by binary
+vectors the number is at most
+\begin{equation}\label{eq:binarypatterns}
+ 2^{s^2(1+\lceil\log_2s\rceil)}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Let $d$ be the rational rank and choose $d$ independent prescribed
+generators, spanning $\Lambda_0$. Projection to $d$ coordinates with
+nonsingular minor $M$ is injective on the rational span. It follows that
+\[
+ [\Lambda:\Lambda_0]\le|\det M|\le d!B^d\le s!B^s.
+\]
+The determinant estimate is the Leibniz expansion, with $d!$ terms
+of size at most $B^d$. If the chosen vectors do not yet generate
+$\Lambda$, adjoining one prescribed generator reduces the remaining
+integer index by a factor at least two. At most
+$\lfloor\log_2(s!B^s)\rfloor$ additions suffice. Rank zero is immediate.
+Pad lists with zero vectors for counting; this gives the first count.
+In the binary case
+$J(s,1)\le s(1+\lceil\log_2s\rceil)$, and each entry has $2^s$
+choices, which proves \eqref{eq:binarypatterns}.
+\end{proof}
+
+\begin{lemma}\label{lem:cube}
+For every lattice $\Lambda\le\Z^s$, writing $r=r_G(\Lambda)$, one has
+$|\Lambda\cap\{0,1\}^s|\le2^{s-r}$.
+\end{lemma}
+\begin{proof}
+Choose $p\mid N$ attaining the maximum $r$. The image of $\Lambda$
+modulo $p$ has dimension $s-r$. Some $s-r$ coordinate positions give
+an injective projection on that image, by a nonsingular coordinate
+minor of a basis. Integer binary vectors stay distinct modulo any prime,
+including two. Their projections have at most $2^{s-r}$ binary choices.
+\end{proof}
+
+\begin{lemma}\label{lem:intersection}
+If $t\ge1$ and $\Lambda\le\Z^{2t}$ is generated by binary vectors,
+then $\Lambda\cap(\Z^t\times\{0\})$ is generated by vectors whose
+first $t$ coordinates have absolute value at most
+\begin{equation}\label{eq:box}
+ B_t=2^{4t}t!.
+\end{equation}
+\end{lemma}
+\begin{proof}
+List distinct generators as columns of $(X;Y)$, with $t$ rows in each
+block and $n\le2^{2t}$ columns. The intersection consists of $(Xz,0)$
+for $z\in\Z^n$ with $Yz=0$. If $n=0$ it is zero. Let
+$r=\operatorname{rank}_{\Q}Y$. If $r=0$, coordinate vectors generate
+the kernel and their images have coordinates at most one. If $n=r$,
+the kernel is zero. Otherwise choose $r$ columns and $r$ rows giving
+a nonsingular matrix $C$, and write $F$ for the remaining columns on
+those rows. The selected rows are independent, since $C$ is invertible,
+and span the row space of $Y$, since its rank is $r$. With the pivot
+coordinates first, the full kernel condition is therefore
+\[
+ z=(x,y),\qquad x=-C^{-1}Fy.
+\]
+Put $D_0=|\det C|$, so $1\le D_0\le r!$. The allowed integer $y$
+form a lattice $T$ containing $D_0\Z^{n-r}$. Reducing coordinates
+modulo $D_0$ shows that $T$ is generated by $D_0e_j$ and its elements
+in $\{0,\ldots,D_0-1\}^{n-r}$. Every adjugate entry of $C$ has
+absolute value at most $(r-1)!$. For a representative in this box,
+each coordinate of $x$ is at most
+\[
+ \frac{r(r-1)!(n-r)(D_0-1)}{D_0}\le nr!.
+\]
+For $y=D_0e_j$ the bound is $r!$. The $y$ coordinates are also at
+most $D_0\le r!$. Thus the integer kernel is generated by $z$ with
+$\|z\|_\infty\le nr!$. Every coordinate of $Xz$ is at most
+$n^2r!\le2^{4t}t!$, as required.
+\end{proof}
+
+For $u=(u_1,\ldots,u_t)\in H^t$ and $\theta\in H^{2t}$ set
+\begin{align*}
+ \LB(u)&=\left\langle c\in[-B_t,B_t]^t\cap\Z^t:
+                         \sum_jc_ju_j=0\right\rangle,\\
+ \LC(\theta)&=\left\langle e\in\{0,1\}^{2t}:
+                         \sum_je_j\theta_j=0\right\rangle.
+\end{align*}
+\begin{lemma}\label{lem:persist}
+If the first $t$ entries of $\theta$ are $u$, then
+$r_G(\LB(u))\le r_G(\LC(\theta))$.
+\end{lemma}
+\begin{proof}
+Identify the intersection of $\LC(\theta)$ with the first coordinate
+block with a lattice $I\le\Z^t$. Every vector in $\LC(\theta)$ is
+an actual relation. Lemma~\ref{lem:intersection} therefore generates
+$I$ by bounded relations of $u$, and $I\le\LB(u)$. The coordinate
+inclusion gives an injection
+$\Z^t/I\hookrightarrow\Z^{2t}/\LC(\theta)$, and there is a
+surjection $\Z^t/I\twoheadrightarrow\Z^t/\LB(u)$. Apply
+\eqref{eq:subquot} for each $p\mid N$ and take maxima. The maximizing
+primes need not coincide.
+\end{proof}
+
+\subsection{Fourier coefficients and a common event}
+In model \textup{(I)}, let
+\[
+ a_\chi=\prod_{i=1}^k\frac{1+\chi(g_i)}2,\qquad h=k-q>0.
+\]
+Orthogonality gives
+\begin{equation}\label{eq:fourier}
+ D(g)=\sum_{\chi\ne0}a_\chi\overline{\chi(g)}.
+\end{equation}
+Indeed expanding the product and then summing all characters detects
+each subset sum. A nonprincipal character has sum zero over $G$,
+because translation by an element on which it is not one both preserves
+and nontrivially multiplies that sum. All sums here are finite.
+
+Let $\rho=2^{-q/16}$ and define
+\[
+ E=\{a_\chi=0\text{ for every }\ord(\chi)=2\}
+ \cap\{|a_\chi|\le\rho\text{ for every }\ord(\chi)\ge3\}.
+\]
+An order-two coefficient is zero or one and is one with probability
+$2^{-k}$. Its union bound is at most $N2^{-k}=2^{-h}$. If
+$\ord(\chi)\ge3$, then for uniform $x\in G$
+\[
+ \E\left|\frac{1+\chi(x)}2\right|^4
+ =\frac1{16}\E(6+4\chi(x)+4\chi(x)^{-1}+\chi(x)^2+\chi(x)^{-2})
+ =\frac38.
+\]
+All four nonconstant characters in the expansion are nonprincipal.
+Independence and Markov's inequality now give
+\[
+ \PI(\exists\chi,\ \ord(\chi)\ge3:\ |a_\chi|>\rho)
+ \le N\rho^{-4}(3/8)^k
+ \le2^{5q/4}(3/8)^q\le2^{-q/8}.
+\]
+The last step uses $\log_2(8/3)>11/8$, equivalently
+$3^8=6561<8192=2^{13}$. Consequently
+\begin{equation}\label{eq:E}
+ \PI(E^c)\le2^{-h}+2^{-q/8}.
+\end{equation}
+
+\subsection{A split of the Fourier power}
+Fix integers $t\ge6$, $1\le a\le t$, and let $\ell=\lceil\log_2t\rceil$.
+Expand \eqref{eq:fourier} to obtain $D(g)^t=\lo(g)+\hi(g)$, where
+$\lo$ collects the ordered nonprincipal tuples $u$ with
+$r_G(\LB(u))<a$, and $\hi$ collects the rest. Multiplicities are
+those of ordered tuples. Lemma~\ref{lem:coarse} bounds the number of
+possible $\LB(u)$ by $2^{A_t}$, where
+\begin{equation}\label{eq:oldA}
+ A_t=2t^4(6+\ell)^2\le8t^6.
+\end{equation}
+To see every factor, use
+\begin{align*}
+ \log_2B_t&\le t(4+\ell),\\
+ J(t,B_t)&\le t+t\ell+t^2(4+\ell)\le t^2(5+2\ell),\\
+ t\log_2(2B_t+1)&\le t(\log_2B_t+2)\le t^2(6+\ell).
+\end{align*}
+The product is at most $2t^4(6+\ell)^2$. Since $\ell\le t$ and
+$6+\ell\le2t$ for $t\ge6$, \eqref{eq:oldA} follows. For a fixed
+low pattern $\Lambda$, the tuples are among the homomorphisms from
+$\Z^t/\Lambda$ to $H$. Writing $r=r_G(\Lambda)<a$, their number is
+at most $N^r\le N^{a-1}\le N^a$. Thus on $E$, for every $g$,
+\begin{equation}\label{eq:low}
+ |\lo(g)|\le2^{A_t+aq-tq/16}.
+\end{equation}
+
+The crucial second moment is unconditional:
+\begin{equation}\label{eq:high}
+ \E|\hi(g)|^2\le2^{C_t-ah},\qquad
+ C_t=4t^2(2+\ell)\le8t^3.
+\end{equation}
+Indeed for two high tuples $u,v$, set $\theta=(u,-v)$. Independence
+and orthogonality give the exact nonnegative expectation
+\begin{equation}\label{eq:moment}
+ \E\left[\prod_ja_{u_j}\prod_j\overline{a_{v_j}}\right]
+ =\left[2^{-2t}\#\{e\in\{0,1\}^{2t}:\sum_je_j\theta_j=0\}\right]^k.
+\end{equation}
+The phase from evaluating at $g$ has absolute value one. The triangle
+inequality therefore bounds the expanded second moment by the sum of
+the right sides of \eqref{eq:moment}. Group pairs by
+$\Lambda=\LC(\theta)$ and put $r=r_G(\Lambda)$. The binary vectors
+of $\Lambda$ are exactly the binary relations of $\theta$: all
+generators are relations and all binary relations were included.
+Lemma~\ref{lem:cube} bounds the bracket by $2^{-r}$, and
+Lemma~\ref{lem:persist} gives $r\ge a$. By \eqref{eq:hom} at most
+$N^r$ tuples $\theta$, hence at most $N^r$ pairs $(u,v)$, have this
+pattern. Its contribution is at most
+$N^r2^{-rk}=2^{-rh}\le2^{-ah}$. Lemma~\ref{lem:coarse} gives at
+most $2^{C_t}$ binary patterns, since
+$\lceil\log_2(2t)\rceil=1+\lceil\log_2t\rceil$. Finally
+$2+\ell\le2t$ for $t\ge2$, proving \eqref{eq:high}.
+The event $E$ is absent from this expectation. No signed polynomial
+is treated as a nonnegative random variable.
+
+\subsection{The parameters for Theorem 1}
+Assume first $L\ge500$ and take $t=\lfloor L\rfloor$,
+$a=\lfloor t/32\rfloor$. For every integer $t\ge64$,
+\begin{equation}\label{eq:induction}
+ 512t^5\le2^t.
+\end{equation}
+At $t=64$ the left side is $2^{39}\le2^{64}$. Its successive ratio
+is at most $(65/64)^5<(9/8)^5<2$, the last comparison being
+$59049<65536$. Induction proves \eqref{eq:induction}. Since
+$q=2^L\ge2^t$, it follows that $A_t\le8t^6\le tq/64$, and
+\[
+ |\lo(g)|\le2^{-tq/64}\le2^{-t-1}\quad(g\in G)\quad\text{on }E.
+\]
+Here $a\le t/32$, $q\ge128$, and $2t\ge t+1$ justify the exponents.
+Also
+\[
+ C_t+2t+2\le8t^3+2t+2\le16t^3\le512t^5\le q.
+\]
+As $t\ge500$, we have $a\ge t/32-1\ge t/40$, and
+\[
+ ah\ge\frac{t}{40}\frac{1000q}{L}
+ \ge\frac{25tq}{t+1}\ge24q,
+\]
+where $L<t+1$ and $t\ge24$. If $E$ holds and $|D(g)|>1/2$,
+then $|\hi(g)|>2^{-t-1}$. Markov's inequality for $|\hi(g)|^2$
+and a union bound over $N$ points therefore give
+\begin{equation}\label{eq:oldfailure}
+ \PI(\Fail)\le2^{-h}+2^{-q/8}
+       +2^{q+2t+2+C_t-ah}
+ \le2^{-h}+2^{-q/8}+2^{-22q}.
+\end{equation}
+For real $x\ge4$, $2^x\ge x^2$: equality holds at four and the
+logarithmic derivative is $\ln2-2/x>0$ thereafter, since
+$\ln2>1/2$. Thus $q\ge L^2$. For $L\ge20$,
+$L^2\ge8(L+3)$, by its value at twenty and positive derivative of
+the difference. We obtain $h\ge1000q/L\ge1000L\ge L+3$ and
+$q/8\ge L+3$. Each term in \eqref{eq:oldfailure} is consequently
+at most $1/(8q)$, so the sum is at most $3/(8q)$.
+
+For $20\le L\le500$ the stated size gives $k\ge3q$. Orthogonality
+gives $\E|a_\chi|^2=2^{-k}$ for every nonprincipal character. Parseval
+in \eqref{eq:fourier}, followed by Markov's inequality, gives the
+general elementary estimate
+\begin{equation}\label{eq:L2}
+ \E\sum_g|D(g)|^2=N(N-1)2^{-k},\qquad
+ \PI(\Fail)\le4\,2^{2q-k}.
+\end{equation}
+In this range it is at most $4\,2^{-q}\le1/(2q)$, since
+$q\ge2^{20}$ and $2^q\ge q^2\ge8q$. The two ranges cover all
+$L\ge20$, including their common boundary. This proves the tuple
+part of Theorem~\ref{thm:log}; Section~\ref{sec:transfer} proves the
+subset part. Notice also the general consequence of \eqref{eq:L2}:
+\begin{equation}\label{eq:benchmark}
+ k\ge2q+L+3\quad\Longrightarrow\quad\PI(\Fail)\le\frac1{2q}.
+\end{equation}
+
+\section{A sharper lattice count and Proposition M}\label{sec:M}
+\begin{lemma2prime}
+For integers $s,B\ge1$, the number of lattices in $\Z^s$ generated
+by vectors of $[-B,B]^s\cap\Z^s$ is at most
+\begin{equation}\label{eq:sharper}
+ (s+1)2^s(2B+1)^{s^2}(s!B^s)^s.
+\end{equation}
+\end{lemma2prime}
+\begin{proof}
+Let $d>0$ be the rank. Choose independent box vectors
+$v_1,\ldots,v_d$ in $\Lambda$ and a set $S$ of $d$ coordinates giving
+a nonsingular minor $M$. Put $V=\Q\Lambda$ and
+$\Lambda_0=\sum_i\Z v_i$. Coordinate projection $\pi$ restricts to
+an isomorphism $V\to\Q^d$: it takes the chosen basis to independent
+vectors. The finite group
+\[
+ T_0=\Z^d/\pi(\Lambda_0)
+\]
+has order $D_0=|\det M|\le d!B^d$ and is generated by $d$ elements.
+Each subgroup $U$ of $T_0$ is also generated by at most $d$ elements.
+Indeed \eqref{eq:subquot} bounds its number of $p$-primary cyclic
+factors by $d$ for every prime. Pad the primary decompositions to $d$
+factors and combine across primes by the Chinese remainder theorem.
+Thus $U$ has a generating ordered $d$-tuple in $T_0^d$, and there
+are at most $D_0^d$ possible $U$.
+
+The data $(d,v_1,\ldots,v_d,S,U)$, with
+$U=\pi(\Lambda)/\pi(\Lambda_0)$, determine $\Lambda$. They determine
+$V$ and the full inverse image $\pi(\Lambda)$ of $U$, and
+\[
+ \Lambda=\{x\in V:\ \pi(x)\in\pi(\Lambda)\}.
+\]
+For if $\pi(x)=\pi(y)$ with $y\in\Lambda$, injectivity on $V$ gives
+$x=y$; integrality follows as well. Unrealized data can only overcount.
+For fixed $d$ there are at most
+$(2B+1)^{sd}2^s(d!B^d)^d$ data, which is at most the same expression
+with $d=s$. Sum over $d=0,\ldots,s$, including the unique zero
+lattice, to prove \eqref{eq:sharper}.
+\end{proof}
+
+For $t\ge3$, $\ell=\lceil\log_2t\rceil$, and $B_t$ from
+\eqref{eq:box}, this gives at most $2^{A'_t}$ patterns $\LB(u)$, where
+\begin{equation}\label{eq:newA}
+ A'_t=t^3(10+2\ell).
+\end{equation}
+In fact $t!\le2^{t\ell}$, $\log_2B_t\le4t+t\ell$, and
+$2B_t+1\le4B_t$, so the logarithm of \eqref{eq:sharper} is at most
+\[
+ t^3(8+2\ell)+t^2(2+\ell)+t+\log_2(t+1).
+\]
+For integer $t\ge3$, $\ell\le t$ and $\log_2(t+1)\le t$; the
+latter follows by induction from $t+1\le2^t$. The remainder is at
+most $t^3+2t^2+2t\le2t^3$, because $t^2\ge2t+2$ for $t\ge3$.
+This proves \eqref{eq:newA}.
+
+\begin{propM}
+Suppose $q\ge128$, $k$ is an integer, $h=k-q>0$, and integers
+$t\ge6$, $1\le a\le t$, with $\ell=\lceil\log_2t\rceil$, satisfy
+\begin{align}
+ A'_t+aq+t+1&\le tq/16, \tag{P1}\label{eq:P1}\\
+ q+2t+2+C_t+3+L&\le ah, \tag{P2}\label{eq:P2}\\
+ h&\ge3+L. \tag{P3}\label{eq:P3}
+\end{align}
+Then
+\[
+ \PI(\Fail)\le2^{-h}+2^{-q/8}+\frac1{8q}
+ \le\frac3{8q}<\frac1{2q}.
+\]
+\end{propM}
+\begin{proof}
+Use exactly the event and split of Section~\ref{sec:proof1}.
+Replace the low-pattern count by \eqref{eq:newA}. On $E$,
+\eqref{eq:P1} gives $|\lo(g)|\le2^{A'_t+aq-tq/16}\le2^{-t-1}$.
+The unconditional estimate \eqref{eq:high} is unchanged, since it
+uses the binary-pattern count. Markov's inequality and the union
+bound therefore give
+\[
+ \PI(E\cap\Fail)\le2^{q+2t+2+C_t-ah}\le2^{-3-L}=\frac1{8q}
+\]
+by \eqref{eq:P2}. Combine with \eqref{eq:E}. Condition
+\eqref{eq:P3} bounds the first exponential by $1/(8q)$. For real
+$q\ge128$, $q/8\ge3+\log_2q$: it holds at $128$ since $16>10$,
+and the derivative of the difference is
+$1/8-1/(q\ln2)>0$. This bounds the second exponential too.
+\end{proof}
+
+The conditions involving $h$ are monotone in $h$. This will give
+the ``every integer $k$'' assertion of Theorem~\ref{thm:sqrt}.
+
+\section{Parameters and exact arithmetic for Theorems 2 and 3}
+\label{sec:parameters}
+We use the following elementary facts for real variables. For $x\ge1$,
+$\log_2x\le4\sqrt x$, since
+$\ln x=2\ln\sqrt x\le2(\sqrt x-1)\le2\sqrt x$ and
+$1/\ln2<2$. The function $2^x/x^2$ increases for $x\ge64$,
+as its logarithmic derivative is $\ln2-2/x>0$. The functions
+$x/\log_2x$ and $x^{3/5}/\log_2x$ increase for $x\ge e$ and
+$x\ge e^{5/3}$, respectively: the signs of their derivatives are
+those of $\ln x-1$ and $(3/5)\ln x-1$. Also
+$q\ge3+\log_2q$ for $q\ge8$, by checking eight and the positive
+derivative of $q-\log_2q$. Finally, for integer $t\ge2$,
+\[
+ 2^{\ell(t)-1}<t\le2^{\ell(t)},\qquad
+ \ell(t+1)\le\ell(t)+1,\qquad \ell(t)=\lceil\log_2t\rceil.
+\]
+The step bound follows from $t+1\le2t$.
+
+For transparency all numerical endpoint comparisons used below are
+listed in Table~\ref{tab:constants}. Every entry is an integer
+inequality. It can be checked by multiplication alone; the supplied
+program also checks it. A positive margin in a row means left side
+minus right side for the displayed $\ge$ comparison. Define
+\[
+ Q_1=512\cdot160^5=53\,687\,091\,200\,000,\qquad
+ \QB=49\cdot575^2\cdot30=486\,018\,750.
+\]
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}cl@{}}
+\toprule
+Label & Exact comparison\\
+\midrule
+A1 & $3400^5\,160^5\ge512\cdot960^5\,161^5$\\
+A2 & $3400^5\ge32Q_1$\\
+A3 & $2^{64}\ge3402^2\,64^2$\\
+B0 & $2^{28}\le\QB<2^{29}$, $\ell(575)=10$\\
+B1 & $25(575-23)=24\cdot575$\\
+B2 & $200^2\,49^2\,575^2\ge1300^2\cdot56\cdot576^2$\\
+B3 & $8400^2\cdot28\ge4\QB$\\
+B4 & $2^{64}\ge8402^2\,64^2$\\
+B5 & $\QB\ge343^2$\\
+B6 & $49\cdot4^9\cdot30>2^{28}$\\
+C1 & $9^5\QB^3\ge(40000\cdot29)^5$\\
+\bottomrule
+\end{tabular}
+\caption{Exact endpoints. The margins in B2 and B3 are
+$353\,944\,360\,000$ and $31\,605\,000$; the margin in C1 is
+$4\,678\,751\,774\,701\,839\,942\,138\,671\,875\,000$.}
+\label{tab:constants}
+\end{table}
+
+\subsection{Theorem 2}
+Let $q\ge64$ and $h=k-q\ge3400q^{4/5}$. If $q<Q_1$, A2 gives
+$3400^5\ge32Q_1>32q$, hence $h\ge2q$. It follows that
+$k-2q\ge q\ge3+L$, so \eqref{eq:benchmark} applies.
+
+If $q\ge Q_1$, take the largest integer $t$ with $512t^5\le q$.
+Then $t\ge160$ and $q<512(t+1)^5$. Put $a=\lfloor t/32\rfloor$;
+then $t/40\le a\le t/32$, since
+$\lfloor t/32\rfloor>t/32-1\ge t/40$ for $t\ge160$.
+The correction guarantees
+\begin{equation}\label{eq:A-h}
+ h\ge960q/t.
+\end{equation}
+Indeed maximality, $(t+1)/t\le161/160$, and A1 give
+\[
+ 960^5q<512\cdot960^5(t+1)^5
+ \le512\cdot960^5(161/160)^5t^5\le3400^5t^5.
+\]
+Taking positive fifth roots and rearranging gives
+$960q/t<3400q^{4/5}\le h$.
+
+Now $10+2\ell\le8t^3$ (use $\ell\le t$ and $t\ge3$), so
+\[
+ A'_t\le8t^6\le tq/64,\qquad aq\le tq/32,\qquad
+ t+1\le2t\le tq/64.
+\]
+Their sum proves \eqref{eq:P1}. Next
+\[
+ C_t+2t+2\le16t^3\le512t^5\le q,\qquad3+L\le q.
+\]
+Thus the left side of \eqref{eq:P2} is at most $3q$, while
+\eqref{eq:A-h} gives $ah\ge24q$. Finally $t^2\le t^5\le512t^5\le q$
+implies $t\le\sqrt q$, and
+$h\ge960\sqrt q\ge4\sqrt q+3\ge L+3$. This proves
+\eqref{eq:P3}. All hypotheses of Proposition M hold, proving the
+tuple assertion. The subset assertion follows in Section~\ref{sec:transfer}.
+
+\subsection{Theorem 3(b): the main branch}
+For positive integers $t$ define
+\[
+ f(t)=49t^2(10+2\ell(t)).
+\]
+It is strictly increasing and unbounded. Suppose $q\ge\QB=f(575)$,
+and choose maximal $t$ with $f(t)\le q$. Then $t\ge575$,
+$\ell\ge10$, and $q<f(t+1)$. Set $a=\lfloor t/24\rfloor$.
+Since an integer has remainder at most $23$ modulo $24$,
+\begin{equation}\label{eq:B-a}
+ t/25\le(t-23)/24\le a\le t/24;
+\end{equation}
+the first inequality is exactly $t\ge575$.
+
+For \eqref{eq:P1}, use
+\[
+ tq/48\ge(49/48)t^3(10+2\ell)=A'_t+A'_t/48\ge A'_t+t+1.
+\]
+The last step holds for $t\ge3$: $A'_t\ge14t^3$,
+$t+1\le4t/3$, and $14t^3/(t+1)\ge(21/2)t^2\ge189/2>48$.
+Adding $aq\le tq/24$ proves \eqref{eq:P1}.
+
+For \eqref{eq:P2},
+\[
+ C_t=4t^2(2+\ell)\le2t^2(10+2\ell)\le2q/49.
+\]
+Directly from $q\ge f(t)\ge t^2$ we have $t\le\sqrt q$; no
+stronger hypothesis on $q$ is invoked. By B5, $\sqrt q\ge343$, so
+\[
+ 2t+5+L\le6\sqrt q+5\le7\sqrt q\le q/49.
+\]
+The left side of \eqref{eq:P2} is at most $52q/49$. In view of
+\eqref{eq:B-a}, it suffices that
+\begin{equation}\label{eq:B-h}
+ h\ge\frac{1300}{49}\frac qt.
+\end{equation}
+This also gives \eqref{eq:P3}, since
+$h\ge26\sqrt q\ge4\sqrt q+3\ge L+3$.
+
+We deduce \eqref{eq:B-h} from $h\ge200\sqrt{qL}$.
+Since $t>2^{\ell-1}$ and $\ell\ge10$,
+\[
+ q\ge f(t)>49\cdot4^{\ell-1}(10+2\ell)
+ \ge\frac{735}{2}\,4^\ell>2^{2\ell+8}.
+\]
+Thus $L>2\ell+8\ge28$. Maximality of $t$ now gives
+\begin{align*}
+ q&<49(t+1)^2(10+2\ell(t+1))\\
+  &\le49(t+1)^2(12+2\ell)
+   <56(t+1)^2L
+   \le56(576/575)^2t^2L.
+\end{align*}
+Here $12+2\ell<L+4<(8/7)L$, using $L>28$. By B2,
+\[
+ (1300/49)^2q<40000t^2L.
+\]
+Multiply by $q/t^2$ and take positive square roots to obtain
+$(1300/49)q/t<200\sqrt{qL}\le h$. Proposition M proves
+$\PI(\Fail)\le3/(8q)$ for every integer $k\ge q+200\sqrt{qL}$.
+
+\subsection{Theorem 3(a): the remaining onset range}
+If $64\le q<\QB$, monotonicity and B0 give
+\[
+ q/L<\QB/\log_2\QB\le\QB/28.
+\]
+By B3, $8400^2L\ge4q$, so $h\ge8400\sqrt{qL}$ implies
+$h\ge2q$. Therefore $k-2q\ge q\ge3+L$, and
+\eqref{eq:benchmark} applies. For $q\ge\QB$ use the main branch
+and $8400\ge200$. This proves the tuple assertion for every required
+integer $k$. The endpoint $q=\QB$ belongs to the main branch, so
+the ranges leave no gap.
+
+\subsection{Corollary C}
+For $k=\lceil q+3q^{4/5}\rceil$ it suffices to prove
+$3q^{4/5}\ge200\sqrt{qL}$, equivalently
+$9q^{3/5}\ge40000L$. The ratio $q^{3/5}/\log_2q$ is increasing
+for $q\ge\QB$. At $q=\QB$, C1 and $\log_2\QB<29$ imply
+\[
+ 9\QB^{3/5}\ge40000\cdot29>40000\log_2\QB.
+\]
+Thus the sufficient inequality holds throughout this range. The
+ceiling preserves the lower bound on $k$, so Theorem~\ref{thm:sqrt}(b)
+gives the tuple conclusion. The required upper bound for the subset
+conclusion is verified next.
+
+\section{Transfer from independent sampling to a uniform subset}
+\label{sec:transfer}
+For independent uniform samples the collision probability is at most
+\[
+ \binom{k}{2}/N=\frac{k(k-1)}{2N}.
+\]
+If $k(k-1)\le N$, distinctness therefore has probability at least
+$1/2$. For nonnegative integer $k$ and $N\ge2$ this condition also
+implies $k\le N$: $k\ge N+1$ would give $k(k-1)\ge N(N+1)>N$.
+Conditional on distinctness, the ordered sample is uniform on all
+ordered distinct tuples. Forgetting order gives exactly model
+\textup{(U)}, and the indexed subset counts become the subset counts
+of that set. Balance is invariant under ordering, so
+\begin{equation}\label{eq:transfer}
+ \PU(\Fail)=\PI(\Fail\mid\text{distinct})
+ \le\frac{\PI(\Fail)}{\PI(\text{distinct})}
+ \le2\PI(\Fail).
+\end{equation}
+In particular $k\le2^{q/2}$ is a sufficient upper bound.
+
+For Theorem~\ref{thm:log}, $L\ge20$ and
+\[
+ k\le q+1000q/L+1\le51q+1\le52q.
+\]
+For real $x\ge16$, $2^x\ge x^4$: equality holds at sixteen and
+the logarithmic derivative $\ln2-4/x$ is positive thereafter. Since
+$q\ge2^{20}\ge52$, it follows that
+$2^q\ge q^4\ge2704q^2\ge k^2$. This proves both $k\le N$
+and the distinctness condition, completing Theorem~\ref{thm:log}.
+
+For Theorem~\ref{thm:power}, $k\le3402q$ because $q^{4/5}\le q$
+and $1\le q$. By A3 and monotonicity of $2^q/q^2$ for real
+$q\ge64$, $(3402q)^2\le2^q$, so \eqref{eq:transfer} applies.
+For Theorem~\ref{thm:sqrt}, the stipulated upper bound on $k$
+is sufficient. Its interval is nonempty: $L\le q$ and B4 imply
+\[
+ \lceil q+8400\sqrt{qL}\rceil\le8402q\le2^{q/2}
+ \qquad(q\ge64).
+\]
+The assertion for constant $200$ follows a fortiori. Finally, in
+Corollary C, $k\le5q\le2^{q/2}$, using the same bound with $8402$.
+This proves all the subset conclusions. No conclusion for arbitrary
+larger $k$ in model \textup{(U)} is needed or asserted.
+
+\section{Scope and limits}\label{sec:limits}
+Remark~\ref{rem:scope} gives the finite-size comparison with $L^2$.
+The group-uniform statements include elementary abelian groups, cyclic
+groups of every order, and mixed-primary groups: $r_G$ takes all primes
+dividing $N$ into account. In particular, neither a rational-rank
+approximation nor a prime-exponent hypothesis is implicit in the proof.
+
+\begin{proposition}[A limit of the displayed sufficient conditions]
+If $q\ge128$, $t\ge6$, $a\ge1$, and $h>0$ satisfy
+\eqref{eq:P1}--\eqref{eq:P2}, then
+\begin{equation}\label{eq:barrier}
+ h>16q/t+64t(2+\ell)
+   \ge64\sqrt{q(2+\ell)}\ge128\sqrt q.
+\end{equation}
+\end{proposition}
+\begin{proof}
+The positive terms in \eqref{eq:P1} give $a<t/16$.
+Equation~\eqref{eq:P2} gives $ah>q+C_t$. Since $a>0$,
+$h>(q+C_t)/a>16(q+C_t)/t=16q/t+64t(2+\ell)$.
+Apply $x+y\ge2\sqrt{xy}$, and use $\ell\ge2$.
+\end{proof}
+This is only a limitation of these sufficient conditions. It is not
+a lower bound for sharper estimates using realized patterns, their
+ranks, their weights, or extra structure of the group.
+
+There is also a much smaller necessary correction for a theorem
+uniform over groups in model \textup{(I)}. For $G=(\Z/2)^n$,
+$N\ge4$, and $h=k-q\ge1$, let $E_\chi$ be the event that a nonzero
+character annihilates every sample. It forces failure, since all sums
+then lie in a proper kernel. Each $E_\chi$ has probability $2^{-k}$,
+and two distinct nonzero characters have joint kernel of index four,
+so $\PI(E_\chi\cap E_\psi)=2^{-2k}$. Bonferroni gives
+\begin{align*}
+ \PI(\Fail)&\ge(N-1)2^{-k}-\binom{N-1}{2}2^{-2k}\\
+ &\ge(N-1)2^{-k}(1-2^{-h}/2)\ge(3/8)2^{-h}.
+\end{align*}
+The last bound uses $(N-1)/N\ge1/2$ and $1-2^{-h}/2\ge3/4$.
+Consequently $\PI(\Fail)\le1/q$ forces
+\[
+ h\ge\log_2q-\log_2(8/3).
+\]
+This argument concerns model \textup{(I)} on elementary abelian
+two-groups. It is neither a fluctuation claim for every group nor a
+lower bound proved here for model \textup{(U)}.
+
+\subsection{Heuristic discussion (not used in the theorems)}
+One motivation for a possible square-root scale is the balance between
+the spatial factor $2^q$ and the number of relation patterns. A
+typical-coefficient heuristic would suggest $|a_\chi|$ cannot all be
+much below $2^{-k/2}$ and hence that a low-rank cutoff must have $a$
+comparable to at most $t/2$. This heuristic is false for balanced
+samples in elementary abelian two-groups, where every nonprincipal
+coefficient vanishes. Even in other groups it is not proved here.
+Combining the heuristic cutoff with the spatial cost suggests
+$h$ of order $q/t$. There are at least $2^{t^2}$ binary-generated
+lattices in $\Z^{2t}$: the $2^{t^2}$ graph subspaces
+$\{(x,Mx):x\in\F_2^t\}$, as $M$ varies, have distinct mod-two
+images, and their binary lifts generate distinct lattices. Paying
+for all such patterns suggests a second cost of order $t$ in $h$.
+Balancing these two suggested costs gives a square-root scale, while
+the bounds actually used here include a logarithmic loss. The count
+of all lattices does not establish a lower bound on the number or
+weight of the high patterns realized for a fixed group. Thus this
+paragraph proves no barrier beyond \eqref{eq:barrier}.
+
+The large constant $8400$ also reflects the chosen hand-over to the
+$L^2$ branch. This is a comment about that strategy, not a lower bound
+on constants in other parameter choices. For example $f(48)=2\,483\,712$
+and the same cutoff would have $a=\lfloor48/24\rfloor=2$, whereas
+just below $f(48)$ maximality gives $t\le47$ and $a\le1$. Such
+small cutoffs make this particular hand-over costly. No optimized
+universal threshold is claimed.
+
+\subsection{Obstructions encountered in simpler approaches}
+These observations explain the ingredients used above; none is an
+impossibility theorem for alternative proofs.
+\begin{enumerate}
+\item Direct central moments with a union bound retain the terms
+$(N-1)2^{-k}$ from a repeated annihilating character in elementary
+two-groups. The additional spatial factor $N$ prevents that estimate
+from closing for $h\ll q$. Likewise \eqref{eq:L2} alone gives
+$4\,2^{q-h}$, which is uninformative in that regime.
+\item Fresh averaging by a random translate gives exact $L^2$
+contraction. For nonnegative mean-one $f$, put
+$S_p(f)=N^{-1}\sum_g f(g)^p$ and let $T_xf$ denote translation.
+Binomial expansion gives
+\[
+ \E_xS_p((f+T_xf)/2)=2^{1-p}S_p(f)
+ +2^{-p}\sum_{j=1}^{p-1}\binom pj S_j(f)S_{p-j}(f).
+\]
+For $p\ge3$, H\"older interpolation gives
+$S_j(f)\le S_{p-1}(f)^{(j-1)/(p-2)}$. Hence the sum term is at
+most $(1-2^{1-p})S_{p-1}(f)$. This recurrence still propagates the
+second-moment rate $1/2$ and supplied no needed maximum estimate.
+\item Taking absolute values before orthogonality loses the exact
+binary-relation identity \eqref{eq:moment}. The elementary
+Cauchy--Schwarz substitute only gives a square-root relation
+probability, losing the required cancellation between $N^r$ and
+$2^{-rk}$.
+\item A signed remainder cannot be bounded by first-moment Markov.
+In $C_5$, four characters with exponents $(1,1,1,2)$ have principal
+product, but at a generator the product of their $1+\chi$ factors is
+$-16\cos^3(\pi/5)\cos(2\pi/5)<0$. The squared modulus in
+\eqref{eq:high} avoids that problem.
+\item Binary or signed-binary relations within $u$ need not preserve
+rank after combining tuples. If $u_0$ has order five, $(u_0,2u_0)$
+has no nonzero relation in $\{-1,0,1\}^2$. But
+$(u_0,2u_0,-u_0,-u_0)$ has binary relations
+$(1,0,1,0),(1,0,0,1),(0,1,1,1)$; their quotient is infinite cyclic,
+and their coordinate intersection contains $(2,-1,0,0)$. The
+respective rank parameters are two and one. The enlarged box in
+Lemma~\ref{lem:intersection} is essential to this argument.
+\item Counting arbitrary subsets of the binary cube costs
+$2^{2^{2t}}$. Lemma~\ref{lem:coarse} replaces this by an integer
+lattice count. Rational rank alone is also inadequate: $\Z/2\Z$
+has rational rank zero but has $N$ homomorphisms into $(\Z/2)^n$.
+\item The common coefficient bound alone gives only
+$|D(g)|\le(N-1)N^{-1/16}$. In an elementary three-group the expected
+Fourier $\ell^1$ norm is $(N-1)(2/3)^k$, also too large near $k=q$.
+A split into two sample blocks followed by Cauchy--Schwarz requires
+small Fourier $\ell^2$ error in both blocks and did not retain the
+leading coefficient one.
+\item In primal subset-incidence moments, torsion induces
+dependencies beyond repeated subsets, already in elementary
+two-groups. An independent-row approximation therefore fails;
+\eqref{eq:moment} keeps those dependencies exactly. Higher even
+moments of $\hi$ were not developed into a stronger bound: combining
+$2m$ tuples gives length $2mt$, but the available rank guarantee is
+still only $a$, while the binary-pattern exponent grows with that
+length. No correction below the proved square-root logarithmic
+scale is established here.
+\end{enumerate}
+
+\section{Reproduction and finite checks}\label{sec:reproduce}
+The mathematical proof is analytic and uses only the finite integer
+comparisons explicitly displayed above. The companion programs are
+checks, not a sampling experiment at the enormous onsets and not a
+formal proof. They use integer group operations and exact modular
+elimination, JavaScript \texttt{BigInt}, or Python integers and
+\texttt{fractions.Fraction}; no solver or floating-point acceptance
+criterion is used. The two programs are
+identical to the reviewed versions except for the removal of an internal output path and of project labels in comments; the archived JSON outputs are unchanged. Their short filenames retain their original check-series
+labels; these labels play no mathematical role.
+
+The first program, \texttt{cr19-exact-checks.mjs}, reports $7072$
+assertions. For each of
+\[
+ C_2,C_3,C_4,C_5,C_6,C_7,C_8,C_9,C_{10},C_{12},
+ C_2^2,C_2^3,C_3^2,C_2\times C_4,C_2\times C_6,
+\]
+it enumerates all ordered character tuples of lengths two and four,
+including principal characters for pattern checks. It verifies the
+cube bound and the count of tuples per pattern. The binary relation
+set is an exact key for the generated relation lattice, since the
+lattice's intersection with the binary cube is exactly that set.
+It checks the fourth-moment relation counts $16,8,6$ at character
+orders one, two, and at least three. It also enumerates every ordered
+sample of sizes $k=0,1,2,3$ and checks, for $s=2,4$, the identities
+\begin{align*}
+ \sum_A(NR_A(0)-2^k)^s
+   &=N^k\sum_{u\in(H\setminus\{0\})^s}r(u)^k,\\
+ \sum_A\sum_g(NR_A(g)-2^k)^s
+   &=N^{k+1}\sum_{\substack{u\in(H\setminus\{0\})^s\\\sum_ju_j=0}}r(u)^k,
+\end{align*}
+where $r(u)=\#\{e\in\{0,1\}^s:\sum_je_ju_j=0\}$.
+It checks the three integer bases for the spectral estimate and
+induction, \eqref{eq:induction} for $64\le t\le2048$, and
+$\lfloor t/32\rfloor\ge t/40$ for $500\le t\le2048$.
+These sweeps supplement the general arguments, and do not check
+every onset inequality of Theorem~\ref{thm:log} by themselves.
+
+The second program, \texttt{cr19b\_checks.py}, reports $53\,325$
+assertions. It checks Table~\ref{tab:constants}, the two onset
+parameters, the elementary integer inequalities for $3\le t\le5000$
+(factorials through $1000$), and both transfer comparisons for integer
+$64\le q\le4096$. It enumerates all box-generated lattices by
+closure under adjoining a box vector, with canonical row Hermite
+normal forms. The exact totals are
+\[
+\begin{array}{c|rrrrrr}
+ (s,B)&(1,1)&(1,2)&(1,3)&(2,1)&(2,2)&(3,1)\\\hline
+ \text{lattices}&2&3&4&7&31&64
+\end{array}
+\]
+and all satisfy Lemma~2$'$. It also evaluates
+\eqref{eq:P1}--\eqref{eq:P3} at $q=Q_1m$ for
+$m\in\{1,2,7,10^3,10^6\}$, and at $q=\QB m$ for
+$m\in\{1,2,3,10,10^3,10^6,10^{12}\}$, using integer logarithm
+bounds and integer square roots in the conservative direction. These
+sample parameters are checks only; the proofs above cover all real
+$q$ in the stated ranges. The minimal positive integer constants
+passing the isolated comparisons A1, B2, and B3 are $3364$, $199$,
+and $8333$. This is not a claim of optimal theorem constants.
+
+From the bundle directory run
+\begin{verbatim}
+UV_THREADPOOL_SIZE=1 node --single-threaded code/run-checks.mjs results
+\end{verbatim}
+with Node.js and Python~3 available. The runner executes scratch copies,
+redirects the first program's legacy output destination, and compares
+the results with the archived JSON after removing timing fields. It
+never changes the archived JSON outputs. The checks are sequential and use
+one computation thread. The stored original runtimes are about $0.12$
+and $50.34$ CPU seconds; times vary by machine. The second program's
+last sample uses a long linear parameter search, which affects runtime
+but not the argument. The README gives individual commands and build
+instructions. \texttt{SHA256SUMS} records the publication files.
+
+\section*{AI use and verification status}
+The mathematical development and manuscript preparation used GPT-6
+Astra (OpenAI) and Claude Opus~5.5 (Anthropic). The first bound was
+developed using GPT-6 Astra and received two independent Claude proof
+reviews with verdict PASS, together with a separate exact-arithmetic
+verification. The sharper lattice count and subsequent bounds were
+developed using Claude and received two independent GPT-6 Astra
+reviews with verdict PASS-WITH-REPAIRS, and a separate numerical
+verification with verdict PASS. The repairs replaced an inapplicable
+parameter citation by a direct inequality, restricted the methodological
+barrier to the sufficient conditions actually proved, and clarified
+ceilings and the scope of the lower-bound example. A subsequent delta
+verification returned PASS; theorem statements, constants, and onsets
+were unchanged. All remaining editorial points are incorporated here.
+The exact checks shipped with the paper are the archived author
+programs and outputs; reviewer programs are not part of this bundle.
+These reviews were performed using AI systems, not human peer review.
+The present manuscript was assembled from the reviewed reports and
+checked again against their arguments. The literature comparison is
+bounded to the search of 12 October 2026 described in
+Section~\ref{sec:related}. No Lean or other proof-assistant
+formalization of these explicit bounds is supplied.
+
+\begin{thebibliography}{9}
+\bibitem{EP1179}
+T. F. Bloom, \emph{Erd\H{o}s Problems}, Problem 1179,
+\url{https://www.erdosproblems.com/1179}, literature search dated
+12 October 2026.
+\bibitem{ER65}
+P. Erd\H{o}s and A. R\'enyi, \emph{Probabilistic methods in group theory},
+J. Analyse Math. \textbf{14} (1965), 127--138.
+\url{https://users.renyi.hu/~p_erdos/1965-15.pdf}.
+\bibitem{EH76}
+P. Erd\H{o}s and R. R. Hall, \emph{Probabilistic methods in group theory II},
+Houston J. Math. \textbf{2} (1976), 173--180.
+\url{https://users.renyi.hu/~p_erdos/1976-34.pdf}.
+\bibitem{Hall77}
+R. R. Hall, \emph{Extensions of a theorem of Erd\H{o}s--R\'enyi in
+probabilistic group theory}, Houston J. Math. \textbf{3} (1977),
+225--234. Bibliographic record only; theorem statements not accessed.
+\url{https://www.math.uh.edu/~hjm/vol03-2.html}.
+\bibitem{EH78}
+P. Erd\H{o}s and R. R. Hall, \emph{Some new results in probabilistic
+group theory}, Comment. Math. Helv. \textbf{53} (1978), 448--457.
+\url{https://users.renyi.hu/~p_erdos/1978-45.pdf}.
+\bibitem{DD24}
+M. Dhar and Z. Dvir, \emph{Linear Hashing with $\ell_\infty$ guarantees
+and two-sided Kakeya bounds}, TheoretiCS \textbf{3} (2024), article 8;
+FOCS 2022 precursor.
+\url{https://theoretics.episciences.org/13338/pdf}.
+\bibitem{Lund26}
+B. Lund, \emph{Two-sided linear hashing and quadratic density bounds
+for smooth lattice coverings}, arXiv:2609.20351v1, 17 September 2026.
+\url{https://arxiv.org/abs/2609.20351}.
+\end{thebibliography}
+\end{document}

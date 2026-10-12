@@ -1,0 +1,115 @@
+{
+  "status": "PASS",
+  "arithmetic": "Integer group operations and modular elimination; BigInt for all moment identities and large inequalities. No floating-point acceptance tests.",
+  "results": [
+    {
+      "group": "C2",
+      "order": 2,
+      "tuplesEnumerated": 20,
+      "relationPatterns": 20,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C3",
+      "order": 3,
+      "tuplesEnumerated": 90,
+      "relationPatterns": 46,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C4",
+      "order": 4,
+      "tuplesEnumerated": 272,
+      "relationPatterns": 96,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C5",
+      "order": 5,
+      "tuplesEnumerated": 650,
+      "relationPatterns": 112,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C6",
+      "order": 6,
+      "tuplesEnumerated": 1332,
+      "relationPatterns": 142,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C7",
+      "order": 7,
+      "tuplesEnumerated": 2450,
+      "relationPatterns": 122,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C8",
+      "order": 8,
+      "tuplesEnumerated": 4160,
+      "relationPatterns": 137,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C9",
+      "order": 9,
+      "tuplesEnumerated": 6642,
+      "relationPatterns": 127,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C10",
+      "order": 10,
+      "tuplesEnumerated": 10100,
+      "relationPatterns": 137,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C12",
+      "order": 12,
+      "tuplesEnumerated": 20880,
+      "relationPatterns": 142,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C2 x C2",
+      "order": 4,
+      "tuplesEnumerated": 272,
+      "relationPatterns": 56,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C2 x C2 x C2",
+      "order": 8,
+      "tuplesEnumerated": 4160,
+      "relationPatterns": 71,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C3 x C3",
+      "order": 9,
+      "tuplesEnumerated": 6642,
+      "relationPatterns": 107,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C2 x C4",
+      "order": 8,
+      "tuplesEnumerated": 4160,
+      "relationPatterns": 137,
+      "momentIdentities": 16
+    },
+    {
+      "group": "C2 x C6",
+      "order": 12,
+      "tuplesEnumerated": 20880,
+      "relationPatterns": 142,
+      "momentIdentities": 16
+    }
+  ],
+  "assertions": 7072,
+  "cpuSeconds": 0.117351,
+  "wallSeconds": 0.117797872,
+  "computeThreads": 1
+}

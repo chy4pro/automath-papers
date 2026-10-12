@@ -1,0 +1,2 @@
+{"permutations":3190,"centralGeometry":82115,"domainChecks":27,"volumeChecks":173,"maskChecks":69492,"restoredChecks":64199,"onset1":{"left":"427488757278181203528450000000000","right":"628754697713201783142364789866496","pass":true},"onset2":{"left":"7702378366423707781204500000000000","right":"347883889521833451111543254057746432","pass":true},"padding":{"left":"30979923184415774857153","right":"30979900000000000000000","pass":true}}
+{"cost":{"cpuMicroseconds":{"user":817823,"system":15941},"elapsedSeconds":0.865314506,"maxRSSKiB":85096}}

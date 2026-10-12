@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "upperRows": 892,
+  "positiveExteriorRows": 892,
+  "minExteriorScaled": "274098327520",
+  "scale": "1000000000000",
+  "W": "2798309/1000000000",
+  "sumV": "2798309/100000",
+  "maxStoredB": "1058603280678933/100000000000000000",
+  "maxStoredRowCoefficientWithPiUpper": "1774333298330025353/4000000000000000000",
+  "upperOnsetExactMinimum": "66265061",
+  "onset416": true,
+  "onset448": true,
+  "padding": true,
+  "positivityThresholdLog2Bracket": [
+    "304.219",
+    "304.221"
+  ],
+  "thresholdBracketArithmetic": "directed BigInt log/exp series",
+  "latexStaticChecks": {
+    "balancedBraces": true,
+    "balancedEnvironments": true,
+    "uniqueLabels": 88,
+    "resolvedReferences": true,
+    "resolvedCitations": true,
+    "mainTheorems": 3,
+    "privacyScan": true,
+    "compiled": false
+  },
+  "cost": {
+    "cpuSeconds": 0.041797,
+    "wallSeconds": 0.042215495
+  }
+}
