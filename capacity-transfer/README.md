@@ -1,4 +1,6 @@
-## Repairs applied — 2026-10-02 (task 040b)
+## Historical record — paper-level repairs before publication (task 040b, 2026-10-02)
+
+*Historical: this section and the task-completion statements in it predate publication on 2026-10-03 and the Lean checks of the same day. Current publication and formalisation status are in the sections below.*
 
 - R1–R4: stated the triangular scale `T = V`; replaced undefined `a_y,b_y` with `a_2,b`; defined the horizontal factors and the general signed-kernel energy notation in Section 3.
 - R5–R6: stated the unit-mass normalization in the abstract and corrected the central perturbation term's variation bound from 2 to 4. The displayed total variation bound is unchanged.
@@ -55,7 +57,9 @@ The all-N square supplement has same-vendor review, manuscript formula checking 
 
 `\RefereeStatus` near the top of `main.tex` and the description's provenance paragraph both record these four reports and the applied repairs.
 
-Only the earlier ordinary Sidon bound, with coefficient 2√2/3, additive 1 and onset 120⁴, has been Lean-checked. None of the new transfers, kernel functional claims or analytic arguments in this note is claimed to be formalised.
+Formalisation (status 2026-10-03, after publication): the bounded-multiplicity bound (Theorem 1.3, `g_thin_second_order`), the weak Sidon bound (Theorem 1.2, `weakSidon_second_order`), the triangular sonar bound (the coefficient-2 bound of Theorem 1.1, `sonar_triangle_bound`) and the difference-triangle bounds (Theorem 1.4, `difference_triangle_scope_bound`, `difference_triangle_expanded_bound`) are kernel-checked in Lean 4 with Mathlib in [`lean/sidon30`](https://github.com/chy4pro/automath/tree/2f981a7/lean/sidon30); each reports only the axioms propext, Classical.choice and Quot.sound, enforced by `#guard_msgs` gates on GitHub Actions (run 37076247531, commit 2f981a7). The earlier ordinary Sidon bound (coefficient 2√2/3, additive 1, onset 120⁴) is checked in the same project. The cosine sonar bound, the Manhattan and box bounds, the all-N square supplement, the kernel functional results and the analytic capacity argument are not claimed to be formalised.
+
+Erratum (published v1 PDF): the last two sentences before §2.1 (page 3) still say that apart from the earlier Sidon bound no statement in the note is formalised. They predate the Lean checks and are superseded by the abstract and the final section, which state the four kernel-checked bounds above. No theorem statement is affected.
 
 ## Checks and their limits
 
@@ -63,8 +67,8 @@ All nine dependency-free Node checkers in the proof directory were executed and 
 
 These counts are not numerical evidence for the capacity step. The Manhattan and box scripts do not evaluate the capacity certificate. The small-parameter sonar sandwich tests use a generous exponential term and cannot meaningfully stress that step. The capacity inequality rests on the self-contained analytic proof. The referees report additional floating-point capacity tests; these are not proofs and were not rerun for the manuscript.
 
-A structural source check after the paper repairs passed: balanced environments and braces, 86 unique labels, 80 resolved internal references, 10 bibliography entries and 16 resolved citations. All 15 theorem, lemma and proposition statements, all 117 display blocks, the analytic capacity proof and the bibliography are byte-for-byte unchanged from the pre-repair source. HTML tags and public theorem descriptions were also checked. These are source checks, not a TeX compilation or a mathematical proof. The earlier separate informed OpenAI review compared every display in all six sections with the proof notes and returned PASS, then checked the README and corrected HTML quantifiers. Compilation and PDF inspection remain with the coordinator, as requested.
+A structural source check after the paper repairs passed: balanced environments and braces, 86 unique labels, 80 resolved internal references, 10 bibliography entries and 16 resolved citations. All 15 theorem, lemma and proposition statements, all 117 display blocks, the analytic capacity proof and the bibliography are byte-for-byte unchanged from the pre-repair source. HTML tags and public theorem descriptions were also checked. These are source checks, not a TeX compilation or a mathematical proof. The earlier separate informed OpenAI review compared every display in all six sections with the proof notes and returned PASS, then checked the README and corrected HTML quantifiers. Compilation and PDF inspection were then done by the coordinator before publication.
 
 Audited `main.tex` SHA-256 after task 040b: `c4c5a2dec85e144e37289750dee3f8ca360ab81e97986b49a9a8240f4aba5916`.
 
-No publication, upload, repository push, dependency installation or local TeX compilation was performed by this task.
+*Historical (task 040b, before publication):* no publication, upload, repository push, dependency installation or local TeX compilation was performed by that task.
