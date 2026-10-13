@@ -1,3 +1,4 @@
+% Version 2, 13 October 2026; supersedes version 1
 \documentclass[10pt]{article}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[T1]{fontenc}
@@ -6,689 +7,526 @@
 \usepackage{hyperref}
 \allowdisplaybreaks
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{lemma}[theorem]{Lemma}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 \newcommand{\lcm}{\operatorname{lcm}}
-\newcommand{\jn}{\vee}
-\newcommand{\pmodsix}{\ (\mathrm{mod}\ 6)}
+\newcommand{\B}{\widetilde B}
 \title{An explicit upper bound for reciprocal sums of sets with large
 pairwise least common multiples}
 \author{Haoyu Chen\\ Independent researcher}
-\date{}
+\date{Version 2, 13 October 2026; supersedes version 1}
 \begin{document}
 \maketitle
-
 \begin{abstract}
-For a positive integer $n$ let $\rho(n)$ be the maximum of
-$\sum_{a\in A}1/a$ over all sets $A\subseteq\{1,\dots,n\}$ such that
-$\lcm(a,b)>n$ for all distinct $a,b\in A$. We prove that
-$\rho(n)\leq 1.0087578638+87.5686331624/n$ for every $n\geq1$. In
-particular $\rho(n)\leq1.0170$ for $n\geq10625$ and $\rho(n)\leq1.01$ for
-$n\geq70499$. As $n\to\infty$ this improves the bound of Chen (1996),
-whose leading constant is $1.0170166$; that bound is the strongest we
-located in a literature search of 12 October 2026. For
-$70\leq n\leq8871$ Chen's explicit bound remains smaller. The proof uses
-weak linear-programming duality, with dual weights that depend on $m/n$
-and on $\gcd(m,6)$. A certificate of $67$ dyadic rationals reduces dual
-feasibility, for all $n$ at once, to $239\,980$ finite inequalities and
-four tail inequalities. A short Python program checks all of them in
-exact integer and rational arithmetic. The conjecture
-$\rho(n)\leq1+o(1)$ remains open.
+For a positive integer $n$, let $\rho(n)$ be the maximum of
+$\sum_{a\in A}1/a$ over sets $A\subseteq\{1,\ldots,n\}$ satisfying
+$\lcm(a,b)>n$ for distinct $a,b\in A$. We prove
+$\rho(n)\le 1.00189053+4162.91/n$ for every integer $n\ge1$.
+Two smaller certificates give $1.00271168+638.004/n$ and
+$1.00447967+133.853/n$. The proof assigns nonnegative weights to
+multiples, using integer cells and residue classes modulo $420$, $60$
+and $12$. Exact integer checks and an explicit Euler--Maclaurin
+remainder certify all constraints. As an improvement of the asymptotic
+leading constant, this improves the strongest bound we located in a
+literature search of 12 October 2026, including version 1 of this note
+and Chen's 1996 bound. The larger error coefficients require separate
+finite-$n$ comparisons, which we give exactly. The conjecture
+$\rho(n)\le1+o(1)$ is not proved.
 \end{abstract}
 
-\section{Introduction}\label{sec:intro}
-Let $n$ be a positive integer. We call a set $A\subseteq\{1,\dots,n\}$
-\emph{lcm-separated} if $\lcm(a,b)>n$ for all distinct $a,b\in A$, and we
-put
+\section{Statement and context}
+A set $A\subseteq\{1,\ldots,n\}$ is \emph{lcm-separated} if
+$\lcm(a,b)>n$ whenever $a,b\in A$ are distinct. Write
 \[
- \rho(n)=\max\Bigl\{\sum_{a\in A}\frac1a:\ A\subseteq\{1,\dots,n\}
- \text{ lcm-separated}\Bigr\}.
+ \rho(n)=\max\left\{\sum_{a\in A}\frac1a:
+ A\subseteq\{1,\ldots,n\}\text{ is lcm-separated}\right\}.
 \]
-Every singleton is lcm-separated, so $\rho(n)\geq1$; the set $\{1\}$ is
-allowed. Erd\H{o}s asked whether $\rho(n)\leq31/30$ for all $n$. This is
-part of Problem~542 in Bloom's list \cite{EP542}; Section~\ref{sec:related}
-recalls what is known. Our main result is an explicit bound with leading
-constant below $1.0088$.
+The singleton $\{1\}$ is allowed, so $\rho(n)\ge1$.
 
 \begin{theorem}\label{thm:main}
-Let $V_1$ and $E_1$ be the constants defined in \eqref{eq:VE} from the
-certificate in Appendix~\ref{app:cert}. They satisfy
-\begin{gather*}
- E_1=\frac{564156623381}{6442450944}=87.568633162261297305\ldots,\\
- 1.008757863713504319\leq V_1\leq1.008757863713504320 .
-\end{gather*}
-For every integer $n\geq1$ and every set $A\subseteq\{1,\dots,n\}$ with
-$\lcm(a,b)>n$ for all distinct $a,b\in A$,
+For every integer $n\ge1$,
+\begin{align*}
+ \rho(n)&\le1.00189053+\frac{4162.91}{n}, &&(L=420),\\
+ \rho(n)&\le1.00271168+\frac{638.004}{n}, &&(L=60),\\
+ \rho(n)&\le1.00447967+\frac{133.853}{n}, &&(L=12).
+\end{align*}
+The exact coefficients $K$ of the $1/n$ terms before the upward decimal
+roundings are, respectively,
 \[
- \sum_{a\in A}\frac1a\ \leq\ V_1+\frac{E_1}{n}\ \leq\
- 1.0087578638+\frac{87.5686331624}{n}.
+ \frac{2081454577}{500000}=4162.909154,\qquad
+ \frac{127600737}{200000}=638.003685,\qquad
+ \frac{2091444}{15625}=133.852416.
 \]
-In other words, $\rho(n)\leq1.0087578638+87.5686331624/n$ for all
-$n\geq1$.
 \end{theorem}
 
-\begin{corollary}\label{cor:onsets}
-$\rho(n)\leq1.0170$ for every $n\geq10625$, and $\rho(n)\leq1.01$ for
-every $n\geq70499$. These are the least onsets that follow from the
-displayed constants $1.0087578638$ and $87.5686331624$.
-\end{corollary}
+We prove this theorem directly from three finite arrays of nonnegative
+rational numbers. Every error term in the proof is explicit; no limit
+optimization or approximation theorem for a class of functions is used.
+The arrays have $39$ rows, with $24$, $12$, and $6$ columns respectively.
+They are supplied as JSON files, together with the verification programs.
 
-The proof (Sections~\ref{sec:duality} and~\ref{sec:cert}) is weak
-duality for the linear-programming relaxation of the problem. If $A$ is
-lcm-separated, the sets of multiples $\{m\leq n: a\mid m\}$, $a\in A$, are
-pairwise disjoint. So any nonnegative weights $z_1,\dots,z_n$ that put
-mass at least $1/a$ on the multiples of each $a\leq n$ give
-$\rho(n)\leq\sum_m z_m$. We take $z_m=c_{\gcd(m,6)}(m/n)/m$, where
-$c_1,c_2,c_3,c_6$ are step functions on $(1/10,1]$ with $54$ steps.
-Because $6$ is squarefree, the dual constraints for all $n$ at once
-reduce to inequalities $F_\gamma(x)\geq1$, for real $x\in(0,1]$ and
-$\gamma\mid6$, that do not involve $n$. The functions $F_\gamma$ are
-piecewise constant. This reduces the range $x\geq10^{-4}$ to $59\,995$
-points, and an elementary estimate for harmonic sums in arithmetic
-progressions handles $x<10^{-4}$. All resulting inequalities are checked
-in exact arithmetic.
-
-The dependence on $\gcd(m,6)$ lets the dual put more weight on integers
-with more small divisors. In floating-point experiments on the grids we
-tried, weights depending on $m/n$ alone did not get below about $1.0172$.
-This observation guided the search; it is not a statement about that
-family of weights, and it is not used in the proof.
-
-Theorem~\ref{thm:main} gives $\limsup_{n\to\infty}\rho(n)\leq
-1.0087578638$. It does not prove the conjecture $\rho(n)\leq1+o(1)$
-\cite{EP542}, and we do not claim that the constant is sharp
-(Remark~\ref{rem:small}). The error term $87.5686331624/n$ is explicit;
-no unspecified constants occur. The error term is larger than Chen's, so
-Theorem~\ref{thm:main} does not improve Chen's explicit bound for every
-$n$ (Remark~\ref{rem:chen}).
-
-\section{Related work}\label{sec:related}
-Problem~542 in Bloom's list \cite{EP542} asks whether every set
-$A\subseteq\{1,\dots,n\}$ with $\lcm(a,b)>n$ for all distinct $a,b\in A$
-satisfies $\sum_{a\in A}1/a\leq31/30$. It also asks a separate question
-about the integers $b\leq n$ that divide no element of $A$. The problem
-page records both questions as solved. The constant $31/30$ cannot be
-lowered, since $\{2,3,5\}$ is lcm-separated for $n=5$. The literature
-records $\rho(5)=31/30$ and $\rho(11)=4699/4620=1.01709\ldots$, the
-latter attained by $\{3,4,5,7,11\}$ \cite{Ch96,We}.
-
-The problem page and its discussion thread describe $\rho(n)\leq1+o(1)$
-as conjectural. They attribute to Erd\H{o}s, Schinzel and Szekeres the
-stronger conjecture that $\{2,3,5\}$ and $\{3,4,5,7,11\}$ are the only
-such sets with reciprocal sum greater than $1$ \cite{EP542}. The set
-$\{2,3,5\}$ is lcm-separated only for $n=5$, and $\{3,4,5,7,11\}$ only for
-$n=11$. Since $\{1\}$ is always admissible, this conjecture would give
-$\rho(n)=1$ for every $n$ other than $5$ and $11$, in particular for every
-$n\geq12$.
-
-Chen \cite[Theorem~2, p.~104]{Ch96} proved that $\rho(n)<1.0170166$ for
-all sufficiently large $n$, and explicitly
+\paragraph{Related work.}
+Problem 542 in Bloom's list \cite{EP542} includes the classical bound
+$31/30$ and a separate divisor question. The conjectural strengthening
+$\rho(n)\le1+o(1)$ remains distinct from those questions. The literature
+records $\rho(5)=31/30$ and $\rho(11)=4699/4620$ \cite{Ch96,We}.
+Chen \cite[Theorem 2, p.~104]{Ch96} proved, explicitly,
 \begin{equation}\label{eq:chen}
- \rho(n)<1.0170166+\frac{14.21}{n-58}\qquad\text{for every integer }n\geq59.
+ \rho(n)<B_C(n):=1.0170166+\frac{14.21}{n-58}\qquad(n\ge59).
 \end{equation}
-The same paper notes that $\rho(n)<1.017099<\rho(11)$ for
-$n\geq172509$. Its Theorem~1 is a conditional route to $\rho(n)\to1$,
-not an unconditional result. Weighted counting over the disjoint sets of
-multiples already appears in \cite{Ch96} (Lemma~1 on p.~105, and the
-proof of Theorem~1). The duality principle of Lemma~\ref{lem:dual} is
-therefore not new. The contribution of this note is the family of
-weights, which depend on $\gcd(m,6)$, and the exact certificate.
+Weighted counting over disjoint sets of multiples already appears in
+that paper (Theorem 1 and Lemma 1). The weak duality principle used here
+is therefore prior methodology. Our contribution is the three specific
+periodic arrays and their certified numerical costs. Chen's later
+paper \cite[Theorem 1]{Ch97} treats elements restricted to a smaller
+range $m$ relative to $n$, and does not supply the present bound at
+$m=n$. Weingartner \cite[Theorem 3 and Question 1]{We} studies the
+version excluding $1$ and gives a lower estimate; it is not an upper
+bound superseding \eqref{eq:chen}. The note \cite[Theorem 2.3, Corollary 2.6,
+Proposition 2.7]{SM} formulates a general occupation-weight bound and a
+finite acyclic flow linear program for weighted antichain problems and
+leaves a $1+o(1)$ certificate for this problem open \cite[Question 5.1]{SM};
+it supplies methodology, not a numerical bound of the present form.
 
-Chen \cite[Theorem~1]{Ch97} also studied a variant $\rho_m(n)$ in which
-the elements of $A$ are at most $m$ while their pairwise least common
-multiples exceed $n$. For fixed $0<\delta<1-\log2$ and every
-$\varepsilon>0$ he proved $|\rho_m(n)-1|<\varepsilon$ for all sufficiently
-large $n$ and $n\exp(-(\log n)^\delta)\leq m\leq\varepsilon n$. This
-regime, $m=o(n)$, does not include $m=n$. Weingartner
-\cite[Theorem~3 and Question~1]{We} considers a variant $R(x)$ in which
-the element $1$ is excluded. He proves the lower bound
-$R(x)\geq1-\kappa/\log x+O((\log x)^{-3/2})$ with
-$0.543595<\kappa<0.543804$, and asks whether this is the asymptotic
-value. He does not prove an upper bound of the form $1+o(1)$.
-
-We carried out a bounded literature search on 12 October 2026. It
-covered the problem page with its comments and discussion thread, arXiv
-and targeted web searches (on the numerical constants, on primitive and
-lcm-separated sets, and on linear-programming and flow certificates), the
-OpenAlex index and the formal-conjectures repository. We also examined
-results on primitive sets with the weight $1/(a\log a)$ and certificate
-frameworks for related problems; none of them gives a bound for
-$\rho(n)$ of the present kind. We did not locate a bound for $\rho(n)$
-with leading constant below $1.0170166$. Theorem~\ref{thm:main} therefore
-improves the strongest bound we located in this search. The search was
-not exhaustive: one further citation index refused our queries (rate
-limit) and could not be used, the OpenAlex index did not resolve the
-record of \cite{Ch96}, so its forward citations could not be traced
-there, and the community chat archive was searched only in part.
-
-\section{Duality and the dual weights}\label{sec:duality}
-\begin{lemma}[weak duality]\label{lem:dual}
-Let $n\geq1$ and let $z_1,\dots,z_n\geq0$ satisfy
-\begin{equation}\label{eq:dualfeas}
- \sum_{1\leq k\leq n/a}z_{ka}\ \geq\ \frac1a
- \qquad\text{for every }1\leq a\leq n.
+Version 1 \cite{V1} proved
+\begin{equation}\label{eq:v1}
+ \rho(n)\le B_0(n):=1.0087578638+\frac{87.5686331624}{n}
+ \qquad(n\ge1).
 \end{equation}
-Then $\rho(n)\leq\sum_{m=1}^n z_m$.
-\end{lemma}
+The present version improves the strongest bound we located in a
+literature search of 12 October 2026, in the sense of a smaller
+asymptotic leading constant. That comparison includes our own
+version 1 as well as Chen (1996). The search was bounded, not exhaustive:
+it covered the problem page and discussion, arXiv, targeted searches,
+and accessible citation and formalization records. A citation index
+was rate-limited, another did not resolve Chen's 1996 record, and the
+community discussion archive was only partly searchable. No priority
+claim follows from this search. Section~\ref{sec:comparison} states
+exactly where the displayed finite-$n$ bounds improve one another.
 
-\begin{proof}
-Let $A\subseteq\{1,\dots,n\}$ be lcm-separated and put
-$M(a)=\{ka: k\geq1,\ ka\leq n\}$. If $m\in M(a)\cap M(b)$ for distinct
-$a,b\in A$, then $\lcm(a,b)\mid m$, so $\lcm(a,b)\leq m\leq n$, which is
-impossible. Hence the sets $M(a)$, $a\in A$, are pairwise disjoint, and
-by \eqref{eq:dualfeas} and $z\geq0$,
-\[
- \sum_{a\in A}\frac1a\leq\sum_{a\in A}\ \sum_{m\in M(a)}z_m
- \leq\sum_{m=1}^n z_m . \qedhere
-\]
-\end{proof}
-
-\begin{remark}\label{rem:lp}
-If $A$ is lcm-separated, every $m\leq n$ has at most one divisor in $A$.
-So the indicator vector of $A$ is feasible for the linear program:
-maximize $\sum_{a\leq n}y_a/a$ subject to $\sum_{a\mid m}y_a\leq1$ for
-$1\leq m\leq n$ and $y\geq0$. Condition \eqref{eq:dualfeas} with $z\geq0$
-describes the feasible points of the dual program, which minimizes
-$\sum_m z_m$, and Lemma~\ref{lem:dual} is weak duality for this pair.
-\end{remark}
-
-\subsection{Weights depending on \texorpdfstring{$m/n$}{m/n} and on
-\texorpdfstring{$\gcd(m,6)$}{gcd(m,6)}}
-Let
-\[
- G=\{p/j:\ 1\leq p\leq4,\ p\leq j\leq10p\}.
-\]
-This set has $55$ elements $\tfrac1{10}=g_0<g_1<\dots<g_{54}=1$, listed in
-Appendix~\ref{app:cert}. They define the $54$ bins
-$I_b=(g_b,g_{b+1}]$, $0\leq b\leq53$. For each divisor $\eta$ of $6$ and
-each bin $b$ the certificate fixes a number
-\[
- c_{\eta,b}=C_{\eta,b}/2^{30},\qquad C_{\eta,b}\in\mathbb Z_{\geq0};
-\]
-$67$ of the $216$ integers $C_{\eta,b}$ are nonzero
-(Appendix~\ref{app:cert}). Define step functions on $(0,1]$ by
-\[
- c_\eta(t)=c_{\eta,b}\quad(t\in I_b),\qquad
- c_\eta(t)=0\quad(0<t\leq\tfrac1{10}),
-\]
-and, for a given $n\geq1$,
-\begin{equation}\label{eq:z}
- z_m=\frac{c_{\gcd(m,6)}(m/n)}{m}\qquad(1\leq m\leq n).
+\section{Weights and their total mass}\label{sec:weights}
+For $1\le a\le n$ let $M_a=\{ka:1\le k\le n/a\}$. If $A$ is
+lcm-separated then its sets $M_a$ are pairwise disjoint: an element of
+$M_a\cap M_b$ would be a multiple of $\lcm(a,b)$ not exceeding $n$.
+Consequently, if $z_m\ge0$ and
+\begin{equation}\label{eq:dual}
+ \sum_{k\le n/a}z_{ka}\ge\frac1a\qquad(1\le a\le n),
 \end{equation}
-For $\gamma\mid6$ and an integer $k$ write
-$\gamma\jn k=\lcm(\gamma,\gcd(k,6))$, with $\gcd(0,6)=6$. For real
-$0<x\leq1$ put
+then
+\[
+ \sum_{a\in A}\frac1a
+ \le\sum_{a\in A}\sum_{m\in M_a}z_m
+ \le\sum_{m=1}^n z_m.
+\]
+The last inequality uses both disjointness and nonnegativity. This is
+weak duality, and it includes the constraint for $a=1$.
+
+Fix $L\in\{12,60,420\}$, $T=40$, and $Q=10^6$. Let $D$ be the
+increasing list of divisors of $L$. The certificate provides integers
+$C_{j,d}\ge0$ for $1\le j<T$ and $d\mid L$, and we define
+\[
+ c_{j,d}=C_{j,d}/Q\quad(1\le j<T),\qquad
+ c_{0,d}=0,\quad c_{j,d}=0\quad(j\ge T).
+\]
+For positive integers $N$ and $g\mid L$ put
 \begin{equation}\label{eq:F}
- F_\gamma(x)=\sum_{1\leq k\leq1/x}\frac{c_{\gamma\jn k}(kx)}{k}.
+ F(N,g)=\sum_{k=1}^N\frac{c_{\lfloor N/k\rfloor,\,g\gcd(k,L/g)}}{k},
+ \qquad F(0,g)=0.
 \end{equation}
-Finally define the constants
-\begin{equation}\label{eq:VE}
- V_\gamma=\frac16\sum_{r=0}^{5}\sum_{b=0}^{53}c_{\gamma\jn r,b}
- \log\frac{g_{b+1}}{g_b},
- \qquad
- E_\gamma=\sum_{r=0}^{5}\sum_{b=0}^{53}\frac{c_{\gamma\jn r,b}}{g_b}.
+We shall certify $F(N,g)\ge1$ for every $N\ge1$ and $g\mid L$.
+Set
+\begin{equation}\label{eq:z}
+ z_m=\frac{c_{\lfloor n/m\rfloor,\gcd(m,L)}}m\qquad(1\le m\le n).
 \end{equation}
-For $\gamma=1$ these are the constants $V_1$ and $E_1$ of
-Theorem~\ref{thm:main}.
-
-\begin{lemma}[reduction to inequalities free of $n$]\label{lem:reduce}
-Suppose that $F_\gamma(x)\geq1$ for every $\gamma\mid6$ and every real
-$x\in(0,1]$. Then for every $n\geq1$ the weights \eqref{eq:z}, which are nonnegative
-because every $C_{\eta,b}\geq0$, satisfy \eqref{eq:dualfeas}, and hence
-$\rho(n)\leq\sum_{m\leq n}z_m$.
-\end{lemma}
-
-\begin{proof}
-Let $1\leq a\leq n$, $\gamma=\gcd(a,6)$ and $x=a/n$. A prime
-$p\in\{2,3\}$ divides $ka$ if and only if it divides $a$ or $k$; since
-$6$ is squarefree, $\gcd(ka,6)=\gamma\jn k$. Therefore
+For $N=\lfloor n/a\rfloor$ and $g=\gcd(a,L)$, writing $a=gb$ and
+$L=gh$ gives $\gcd(b,h)=1$, hence
 \[
- a\sum_{1\leq k\leq n/a}z_{ka}
- =\sum_{1\leq k\leq n/a}\frac{c_{\gamma\jn k}(ka/n)}{k}
- =F_\gamma(x)\geq1 .
+ \gcd(ka,L)=g\gcd(kb,h)=g\gcd(k,h),\qquad
+ \left\lfloor\frac{n}{ak}\right\rfloor=\left\lfloor\frac Nk\right\rfloor.
 \]
-Lemma~\ref{lem:dual} completes the proof.
+For the floor identity, write $n/a=N+\theta$, $0\le\theta<1$, and
+$N=qk+r$, $0\le r<k$; then $0\le r+\theta<k$.
+Thus the left side of \eqref{eq:dual} is $F(N,g)/a$, including at $a=1$.
+
+For the mass estimate, consider the positive integers
+$k_1<\cdots<k_s$ in $(X,Y]$ in one residue class modulo $L$, where
+$0<X<Y$. The empty case contributes zero. Otherwise $1/k_1\le1/X$,
+and for $i\ge2$ the spacing is $L$ and
+\[
+ \frac1{k_i}\le\frac1L\int_{k_{i-1}}^{k_i}\frac{dx}{x}.
+\]
+Summing these disjoint intervals inside $(X,Y]$ yields
+\begin{equation}\label{eq:massap}
+ \sum_{i=1}^s\frac1{k_i}\le\frac1L\log(Y/X)+\frac1X.
+\end{equation}
+The cell $\lfloor n/m\rfloor=j$ is $(n/(j+1),n/j]$. There are exactly
+$\varphi(L/d)$ residues $r\in\{1,\ldots,L\}$ with $\gcd(r,L)=d$;
+this follows by writing $r=du$ and counting the residues coprime to
+$L/d$. Multiply \eqref{eq:massap} by the nonnegative cell coefficients
+and sum to obtain
+\begin{equation}\label{eq:mass}
+ \sum_m z_m\le\tau+\frac Kn,
+\end{equation}
+where
+\begin{equation}\label{eq:tauK}
+ \tau=\frac1L\sum_{j=1}^{T-1}\sum_{d\mid L}
+ \varphi(L/d)c_{j,d}\log\frac{j+1}{j},\qquad
+ K=\sum_{j=1}^{T-1}\sum_{d\mid L}(j+1)\varphi(L/d)c_{j,d}.
+\end{equation}
+These formulas give an explicit error constant, with no asymptotic
+remainder.
+
+\section{The finite check}\label{sec:finite}
+\begin{lemma}\label{lem:increment}
+For every positive integer $N$ and every $g\mid L$,
+\[
+ F(N,g)-F(N-1,g)
+ =\sum_{\substack{j\mid N\\j\le T}}
+ \bigl(c_{j,e}-c_{j-1,e}\bigr)\frac jN,
+ \qquad e=g\gcd(N/j,L/g).
+\]
+\end{lemma}
+\begin{proof}
+For $k\le N-1$, the floor $\lfloor N/k\rfloor$ increases precisely
+when $k\mid N$, and then by one. The new term $k=N$ is covered by
+$c_{1,g}-c_{0,g}$. Substitute $j=N/k$. Terms with $j>T$ vanish, but the
+term $j=T$ must be retained because $c_{T-1,e}$ need not vanish.
+At $N=1$ the identity reads $F(1,g)=c_{1,g}$.
 \end{proof}
 
-The hypothesis of Lemma~\ref{lem:reduce} does not involve $n$; this is
-why a single certificate covers all $n$. Section~\ref{sec:cert} verifies
-it and bounds $\sum_{m\leq n}z_m$.
-
-\section{The certificate and its exact verification}\label{sec:cert}
-\subsection{Two elementary lemmas}
-\begin{lemma}[harmonic sums in progressions]\label{lem:ap}
-Let $L\geq1$ and $r$ be integers and let $0<A<B$ be real. Then
+Put $S=2^{64}$. For every increment in Lemma~\ref{lem:increment}, the
+program \texttt{check.c} adds
 \[
- \frac1L\log\frac{B}{A+L}\ \leq
- \sum_{\substack{A<k\leq B\\ k\equiv r\ (\mathrm{mod}\ L)}}\frac1k
- \ \leq\ \frac1A+\frac1L\log\frac BA .
+ \left\lfloor\frac{(C_{j,e}-C_{j-1,e})jS}{N}\right\rfloor
+ \quad\hbox{to }\mathrm{lo}_g,\qquad
+ \left\lceil\frac{(C_{j,e}-C_{j-1,e})jS}{N}\right\rceil
+ \quad\hbox{to }\mathrm{hi}_g.
 \]
-\end{lemma}
-
-\begin{proof}
-\emph{Lower bound.} If $A+L\geq B$ the left side is at most $0$.
-Otherwise every interval $(t,t+L]$ contains exactly one member of the
-progression, so the least member $k_0>A$ satisfies $k_0\leq A+L<B$; let
-$k_1$ be the largest member $\leq B$, so that $k_1+L>B$. The intervals
-$[k,k+L]$, for members $k$ with $k_0\leq k\leq k_1$, have disjoint
-interiors and cover $[A+L,B]$. Since
-$1/k\geq\frac1L\int_k^{k+L}dt/t$, the sum is at least
-$\frac1L\int_{A+L}^{B}dt/t$.
-
-\emph{Upper bound.} If the sum is empty there is nothing to prove.
-Otherwise its first term is $1/k_0<1/A$. Every later term satisfies
-$1/k\leq\frac1L\int_{k-L}^{k}dt/t$, and these intervals $[k-L,k]$ have
-disjoint interiors and lie in $[A,B]$.
-\end{proof}
-
-\begin{lemma}[piecewise constancy]\label{lem:pc}
-Let $S=\{p/N:\ 1\leq p\leq4,\ N\geq1\}$. For $x\in(0,1]$ let
-$v(x)=\min\{s\in S: s\geq x\}$. Then $F_\gamma(x)=F_\gamma(v(x))$ for
-every $\gamma\mid6$.
-\end{lemma}
-
-\begin{proof}
-The minimum exists because $S\cap[x,\infty)$ is finite (it lies in
-$\{p/N: N\leq4/x\}$) and contains $1$. Write $v=v(x)$. By minimality,
-for every $s\in S$ we have $x\leq s$ if and only if $v\leq s$. For each
-$k\geq1$, the $k$-th term of \eqref{eq:F} is determined by which of the
-following holds: $kx\leq g_0$ (the term is $0$); $g_b<kx\leq g_{b+1}$
-for some $0\leq b\leq53$ (the term is $c_{\gamma\jn k,b}/k$); or $kx>1$
-(the term is absent). These conditions are Boolean combinations of
-conditions $x\leq g_i/k$, and $g_i/k=p'/(jk)\in S$ whenever $g_i=p'/j$
-with $p'\leq4$. So $x$ and $v$ satisfy the same conditions.
-\end{proof}
-
-\subsection{The range \texorpdfstring{$10^{-4}\leq x\leq1$}{1e-4 <= x <= 1}:
-an exact integer check}\label{subsec:finite}
-Let $x_1=10^{-4}$. Since $x_1\in S$ and $1\in S$,
-Lemma~\ref{lem:pc} maps $[x_1,1]$ into $S\cap[x_1,1]$. In lowest terms
-the elements of $S\cap[x_1,1]$ are the fractions $v=p/N$ with
-$1\leq p\leq4$, $p\leq N\leq10^4p$ and $\gcd(p,N)=1$. There are
-$10000+9999+19998+19998=59\,995$ of them, so it suffices to verify the
-$4\cdot59\,995=239\,980$ inequalities $F_\gamma(v)\geq1$. For each of
-these points $\lfloor N/p\rfloor\leq10^4$.
-
-\emph{Integer enclosure.} Put $Q=2^{48}$ and, for $1\leq k\leq10^4$,
-$h_{\gamma,b}(k)=\lfloor2^{18}C_{\gamma\jn k,b}/k\rfloor$, so that
-\[
- \frac{h_{\gamma,b}(k)}{Q}\leq\frac{c_{\gamma\jn k,b}}{k}
- <\frac{h_{\gamma,b}(k)+1}{Q}.
-\]
-For $v=p/N$ let $K_i=\lfloor g_iN/p\rfloor$ $(0\leq i\leq54)$, the
-number of $k\geq1$ with $kv\leq g_i$. The $k$ with $kv\in I_b$ are
-exactly those with $K_b<k\leq K_{b+1}$, the $k\leq K_0$ contribute $0$,
-and $K_{54}=\lfloor N/p\rfloor$ is the cutoff $k\leq1/v$. Hence
-\begin{equation}\label{eq:T}
- T_\gamma(v):=\sum_{b=0}^{53}\ \sum_{K_b<k\leq K_{b+1}}h_{\gamma,b}(k)
- \quad\text{satisfies}\quad
- \frac{T_\gamma(v)}{Q}\leq F_\gamma(v)<\frac{T_\gamma(v)+10^4}{Q}.
+Starting at zero, addition of these directed bounds preserves
+\begin{equation}\label{eq:enclosure}
+ \mathrm{lo}_g\le QS F(N,g)\le\mathrm{hi}_g
 \end{equation}
+at every step. Signed integer division implements the floor and ceiling
+also for negative numerators. The test $\mathrm{lo}_g\ge QS$ proves
+feasibility; $\mathrm{hi}_g<QS$ is a violation, and
+$\mathrm{lo}_g<QS\le\mathrm{hi}_g$ is ambiguous and does not certify it.
 
-\emph{Arithmetic model.} The program \texttt{verify.py} computes
-$T_\gamma(v)$ from the prefix sums $\sum_{k\leq K}h_{\gamma,b}(k)$ and
-the integers $K_i$, which it obtains by exact integer division. All proof
-arithmetic uses Python integers and \texttt{fractions.Fraction}; no
-floating-point number enters the proof. The prefix sums are stored for
-$K\leq40\,000$ (only $K\leq10^4$ is queried) in arrays of signed
-$64$-bit integers. Every stored prefix is at most
+For these arrays, $0\le C_{j,d}\le1500031<2^{21}$ and $T=40<2^6$.
+The numerator has absolute value below $2^{91}$. For $N\le10^7<2^{24}$,
+partitioning $1,\ldots,N$ into $\{1\}$ and at most $24$ dyadic blocks
+gives $\sum_{k\le N}1/k\le25$. At an intermediate update, each term
+has either its old or its new nonnegative coefficient, so the exact
+scaled sum is at most $25\cdot1500031 S$. There have been at most
+$40N$ rounded increments. Therefore every accumulator has absolute value
+less than
 \[
- 2\,650\,000\,000\cdot2^{18}\cdot H_{40000}
- \leq2\,650\,000\,000\cdot2^{18}\cdot16
- =11\,114\,905\,600\,000\,000<2^{63},
+ 25\cdot1500031\cdot2^{64}+400000000<2^{90}.
 \]
-because every $C_{\eta,b}<2\,650\,000\,000$ and
-$H_{40000}=\sum_{k\leq40000}1/k\leq16$; for the latter, split
-$1,\dots,40000$ into the $16$ blocks $[2^j,2^{j+1})$, $0\leq j\leq15$,
-each contributing at most $1$. An out-of-range store would raise an
-error rather than wrap around.
+The signed 128-bit calculation cannot overflow. The ordinary integer
+indices also fit on a platform with 64-bit \texttt{long}.
 
-\emph{Result.} The minimum of $T_\gamma(v)/Q$ over all $239\,980$ pairs is
-\[
- \frac{281475258209621}{2^{48}}=1.000001000085223523\ldots>1,
-\]
-attained at $(v,\gamma)=(4/15,1)$. By \eqref{eq:T}, $F_\gamma(x)\geq1$
-for all $x\in[x_1,1]$ and all $\gamma\mid6$.
+The exact checks gave zero violations and zero ambiguous cases for all
+$g\mid L$. The original verification and two independent reviews checked
+$1\le N\le10^7$, a total of $420000000$ pairs $(N,g)$ across the
+three certificates. The independent Node program deposited with this
+version was run for $1\le N\le100000$, checking $4200000$ pairs.
+This shorter range already suffices with the tails below.
+The smallest normalized lower margin for $L=12$ and $60$ is
+$4/10^6$, at $N=1$; for $L=420$ the minimum occurs at $(N,g)=(2586,1)$
+and its numerator in units of $QS$ is $234328714177376032570$.
+All are strictly positive. The Node program additionally compared
+\eqref{eq:enclosure} against direct sum enclosures at
+$N=1,2,5,11,40,41,997,2586$ for every $g$, a total of $336$ checks.
+These checks also prove the direct lower enclosures at those points
+are at least $QS$.
 
-\emph{Exact minimum.} The program also evaluates $F_\gamma(v)$ exactly,
-as a rational number, for every pair with $T_\gamma(v)/Q\leq F_1(4/15)$.
-Only $(4/15,1)$ qualifies; every other pair has
-$F_\gamma(v)\geq T_\gamma(v)/Q>F_1(4/15)$. So the minimum over the
-finite range is
-\[
- F_1(4/15)=\frac{C_{2,48}}{2\cdot2^{30}}+\frac{C_{3,52}}{3\cdot2^{30}}
- =\frac{6442457387}{6442450944}=1.0000010000852247\ldots
-\]
-Here $k=1,2,3$, with $kv=4/15\in I_{36}$, $8/15\in I_{48}=(1/2,4/7]$
-and $4/5\in I_{52}=(3/4,4/5]$; the term $k=1$ vanishes because
-$C_{1,36}=0$.
-
-\subsection{The range \texorpdfstring{$0<x<10^{-4}$}{0 < x < 1e-4}}
-\label{subsec:tail}
-Let $0<x<x_1$ and $\gamma\mid6$. Group the terms of \eqref{eq:F} by the
-residue $r$ of $k$ modulo $6$ and by bin. We have $\gamma\jn k=\gamma\jn
-r$; moreover $kx\in I_b$ if and only if $g_b/x<k\leq g_{b+1}/x$, and the
-terms with $kx\leq g_0$ vanish. Hence
-\[
- F_\gamma(x)=\sum_{r=0}^{5}\sum_{b=0}^{53}c_{\gamma\jn r,b}
- \sum_{\substack{g_b/x<k\leq g_{b+1}/x\\ k\equiv r\pmodsix}}\frac1k .
-\]
-The lower bound of Lemma~\ref{lem:ap} with $L=6$, $A=g_b/x$ and
-$B=g_{b+1}/x$, together with $c\geq0$, $\log(1+y)\leq y$ for $y\geq0$,
-and $E_\gamma\geq0$, gives
-\begin{equation}\label{eq:tail}
- F_\gamma(x)\geq\sum_{r,b}c_{\gamma\jn r,b}
- \Bigl(\frac16\log\frac{g_{b+1}}{g_b}
- -\frac16\log\Bigl(1+\frac{6x}{g_b}\Bigr)\Bigr)
- \geq V_\gamma-xE_\gamma\geq V_\gamma-x_1E_\gamma .
-\end{equation}
-
-\emph{Rational logarithms.} For rational $y>1$ put
-$s=(y-1)/(y+1)\in(0,1)$ and $\ell(y)=2\sum_{j=0}^{29}s^{2j+1}/(2j+1)$.
-Then
-\[
- 0\leq\log y-\ell(y)=2\int_0^s\frac{t^{60}}{1-t^2}\,dt
- \leq\frac{2s^{61}}{61(1-s^2)}.
-\]
-Using these bounds for $\log(g_{b+1}/g_b)$ and $c\geq0$, the program
-computes rationals $V_\gamma^-\leq V_\gamma\leq V_\gamma^+$; $E_\gamma$
-is rational. It checks $V_\gamma^--x_1E_\gamma-1>0$ for the four values
-of $\gamma$ in exact arithmetic. Table~\ref{tab:tail} lists the results,
-with decimals rounded outward.
-
-\begin{table}[ht]
-\centering\footnotesize
-\begin{tabular}{c|c|c|c}
-$\gamma$ & $V_\gamma\in$ & $E_\gamma$ (exact) & $V_\gamma^--x_1E_\gamma-1\geq$\\
-\hline
-$1$ & $[1.008757863713504319,\ 1.008757863713504320]$ &
- $564156623381/6442450944$ & $0.000001000397278190$\\
-$2$ & $[1.221116740952808711,\ 1.221116740952808712]$ &
- $318232260905/3221225472$ & $0.211237511334417068$\\
-$3$ & $[1.128746579478093456,\ 1.128746579478093457]$ &
- $107202918283/1073741824$ & $0.118762529691931825$\\
-$6$ & $[1.260428018694485595,\ 1.260428018694485596]$ &
- $99593551913/1073741824$ & $0.251152646376214048$
-\end{tabular}
-\caption{The tail inequalities of Section~\ref{subsec:tail}.}
-\label{tab:tail}
-\end{table}
-
-So $F_\gamma(x)>1$ for $0<x<x_1$. Together with
-Section~\ref{subsec:finite}, $F_\gamma\geq1$ on $(0,1]$ for every
-$\gamma\mid6$.
-
-\subsection{Total mass; proofs of Theorem~\ref{thm:main} and
-Corollary~\ref{cor:onsets}}\label{subsec:mass}
-Let $n\geq1$. Group the $m\leq n$ by residue $r$ modulo $6$ and by bin:
-$m/n\in I_b$ if and only if $ng_b<m\leq ng_{b+1}$, and the terms with
-$m/n\leq g_0$ vanish. The upper bound of Lemma~\ref{lem:ap} with $L=6$,
-$A=ng_b$ and $B=ng_{b+1}$, which also holds when no member of the
-progression lies in $(A,B]$, gives
+\section{An explicit tail estimate}\label{sec:tail}
+Let $\B_1(u)=\{u\}-1/2$ and $\B_2(u)=\{u\}^2-\{u\}+1/6$.
+Then $|\B_1|\le1/2$, $|\B_2|\le1/6$, and $\B_2'=2\B_1$ away
+from integers; $\B_2$ is continuous at integers. For fixed $g$ put
+$e(r)=g\gcd(r,L/g)$ and define
 \begin{align*}
- \sum_{m=1}^n z_m
- &=\sum_{r=0}^{5}\sum_{b=0}^{53}c_{\gcd(r,6),b}
- \sum_{\substack{ng_b<m\leq ng_{b+1}\\ m\equiv r\pmodsix}}\frac1m\\*
- &\leq\sum_{r=0}^{5}\sum_{b=0}^{53}c_{\gcd(r,6),b}\Bigl(\frac1{ng_b}
- +\frac16\log\frac{g_{b+1}}{g_b}\Bigr)
- =V_1+\frac{E_1}{n},
+ F_\infty(g)&=\frac1L\sum_{j=1}^{T-1}\sum_{r=1}^L
+ c_{j,e(r)}\log\frac{j+1}{j},\\
+ h_j(x)&=\sum_{r=1}^L(c_{j-1,e(r)}-c_{j,e(r)})
+ \B_1\left(\frac{x-r}{L}\right),\\
+ \Psi_g&=\sum_{j=1}^T j\sup_x|h_j(x)|,\qquad
+ R_g=\sum_{j=1}^{T-1}\sum_{r=1}^L
+ c_{j,e(r)}\frac{L(j+1)^2}{6}.
 \end{align*}
-because $1\jn r=\gcd(r,6)$.
+In particular $F_\infty(1)=\tau$.
 
-\begin{proof}[Proof of Theorem~\ref{thm:main}]
-By Sections~\ref{subsec:finite} and~\ref{subsec:tail} the hypothesis of
-Lemma~\ref{lem:reduce} holds, so
-$\rho(n)\leq\sum_{m\leq n}z_m\leq V_1+E_1/n$ for every $n\geq1$. In
-exact rational arithmetic the program verifies that
-$V_1^+\leq10087578638/10^{10}$ and $E_1\leq875686331624/10^{10}$. The
-stated values of $V_1$ and $E_1$ are those of Table~\ref{tab:tail}.
+\begin{lemma}\label{lem:tail}
+For every positive integer $N$ and every $g\mid L$,
+\begin{equation}\label{eq:tail}
+ F(N,g)\ge F_\infty(g)-\frac{\Psi_g}{N}-\frac{R_g}{N^2}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Fix $j<T$ and $r\in\{1,\ldots,L\}$, and put
+$X=N/(j+1)$, $Y=N/j$, $a=(X-r)/L$, $b=(Y-r)/L$,
+$f(u)=1/(Lu+r)$. Since $a>-r/L\ge-1$, the integers $i\in(a,b]$
+correspond exactly to the positive integers $k=Li+r\in(X,Y]$.
+The pole of $f$ lies strictly to the left of $a$.
+Integration by parts on the intervals between consecutive integers,
+using the downward jumps of size $1$ of $\B_1$, gives
+\[
+ \sum_{a<i\le b}f(i)=\int_a^b f(u)\,du
+ +\B_1(a)f(a)-\B_1(b)f(b)+\int_a^b\B_1(u)f'(u)\,du.
+\]
+The convention $\B_1(\text{integer})=-1/2$ includes $b$ and excludes
+$a$ if either is integral. Here the integral is $L^{-1}\log(Y/X)$,
+$f(a)=1/X$, and $f(b)=1/Y$. A second integration by parts gives the
+following bound for the final integral $E$:
+\begin{align*}
+ |E|&\le\frac{|f'(a)|+|f'(b)|}{12}
+       +\frac1{12}\int_a^b|f''(u)|\,du\\
+ &=\frac{|f'(a)|}{6}=\frac{L}{6X^2}.
+\end{align*}
+Indeed $f'(u)=-L/(Lu+r)^2$ and $f''(u)=2L^2/(Lu+r)^3>0$, so the
+last integral is $|f'(a)|-|f'(b)|$.
+
+Multiply by $c_{j,e(r)}\ge0$ and sum over cells and residues. The
+main terms give $F_\infty(g)$ and the absolute remainders sum to at
+most $R_g/N^2$. The boundary contribution is
+\[
+ \frac1N\sum_{j=1}^{T-1}\sum_{r=1}^L c_{j,e(r)}
+ \left[(j+1)\B_1\left(\frac{N/(j+1)-r}{L}\right)
+       -j\B_1\left(\frac{N/j-r}{L}\right)\right].
+\]
+Shifting the index in the positive part, using $c_{0,d}=c_{T,d}=0$,
+turns this into $N^{-1}\sum_{j=1}^T jh_j(N/j)$. Its absolute value
+is at most $\Psi_g/N$, proving \eqref{eq:tail}.
 \end{proof}
 
-\begin{proof}[Proof of Corollary~\ref{cor:onsets}]
-The bound $1.0087578638+87.5686331624/n$ decreases in $n$. For
-$B\in\{1.0170,\,1.01\}$ the least $n$ with
-$1.0087578638+87.5686331624/n\leq B$ is
-$\lceil87.5686331624/(B-1.0087578638)\rceil$. Since
-$87.5686331624/0.0082421362=10624.50\ldots$ and
-$87.5686331624/0.0012421362=70498.41\ldots$, these are $10625$ and
-$70499$. The program confirms both values in exact rational arithmetic.
-\end{proof}
+\paragraph{Exact evaluation.}
+Each $h_j$ is $L$-periodic and affine on $(x_0,x_0+1)$ for integral
+$x_0$, with slope $L^{-1}\sum_r(c_{j-1,e(r)}-c_{j,e(r)})$.
+Its supremum in absolute value is the maximum over its value at $x_0$
+and its left limit at $x_0+1$, for $x_0=0,\ldots,L-1$.
+Thus $\Psi_g$ and $R_g$ are rational and computed exactly.
+The NumPy integer matrix calculation in \texttt{tail2.py} is safe:
+its entries, including the slope correction, have absolute value at
+most $(L^2+2L)1500031<2^{39}$, within signed 64-bit arithmetic.
+The independent Node calculation instead uses a recurrence. With
+$\delta_r=C_{j-1,e(r)}-C_{j,e(r)}$ and $H(x)=2LQh_j(x)$,
+\[
+ H(x+1)=H(x)+2\sum_r\delta_r-2L\delta_{x+1}.
+\]
+It checks both endpoints and periodic closure exactly with integers.
 
-\section{How to reproduce}\label{sec:repro}
-The directory \texttt{code/} of the deposit contains:
-\begin{itemize}
-\item \texttt{cert\_main.txt}: the certificate, printed in
- Appendix~\ref{app:cert}; its SHA-256 is\\
- {\small\texttt{361c296fad7662dadc53699aead4f2eb33fdbff7e0d18efd3971535acec8534e}};
-\item \texttt{verify.py}: the exact verifier, which alone carries the
- proof, and its output \texttt{verify\_output.txt};
-\item \texttt{crosscheck.py}: an independent check for concrete $n$, and
- its output \texttt{crosscheck\_output.txt};
-\item \texttt{mkcert.py}: the rounding step that produced the
- certificate from a floating-point solution (not part of the proof).
-\end{itemize}
+For logarithms, put $y=1/(2j+1)$ and
+\[
+ \ell_j=2\sum_{i=0}^{39}\frac{y^{2i+1}}{2i+1},\qquad
+ u_j=\ell_j+\frac{2y^{81}}{81(1-y^2)}.
+\]
+Integrating the geometric series for $1/(1-y^2)$ shows
+$\ell_j\le\log((j+1)/j)\le u_j$: every omitted positive term has
+denominator at least $81$. For $j\ge1$ the width is at most
+$1/(36\cdot3^{81})$. The sum of coefficients in any $F_\infty$ or
+$\tau$ calculation is at most $39\cdot1.500031<59$, so the total
+logarithm enclosure has width below $59/(36\cdot3^{81})$.
+Write $F^-_\infty(g)$ for the expression using $\ell_j$, and $\tau^+$
+for \eqref{eq:tauK} using $u_j$. All comparisons of these rational
+numbers are exact.
 
-\emph{Certificate format.} The first line, \texttt{6 4 1/10 1/10000},
-gives $L=6$, $P=4$, $\delta=1/10$ and $x_1$. Each further line
-\texttt{$\eta$ $b$ $C$} gives $C_{\eta,b}$, with bins indexed
-$0,\dots,53$; pairs that are not listed are zero. The file lists $67$
-distinct pairs, and the verifier rejects duplicates. Appendix~\ref{app:cert}
-prints the certificate.
-
-\emph{Commands.} Run the following from the directory containing
-\texttt{main.tex}; the programs need only the Python~3 standard library:
-\begingroup\footnotesize
-\begin{verbatim}
-python3 code/verify.py code/cert_main.txt > verify.rerun.txt
-diff code/verify_output.txt verify.rerun.txt
-python3 code/crosscheck.py code/cert_main.txt \
-  1 2 5 11 100 997 1000 5040 20011 > crosscheck.rerun.txt
-cmp code/crosscheck_output.txt crosscheck.rerun.txt
-\end{verbatim}
-\endgroup
-The verifier takes about $2$ CPU seconds and $72$~MiB of memory and ends
-with \texttt{RESULT OK}; only its last line, which reports the CPU time,
-may differ between machines. It checks the four tail inequalities
-(Table~\ref{tab:tail}); all $239\,980$ finite-range inequalities and the
-exact minimum (Section~\ref{subsec:finite}); the two theorem constants
-(Section~\ref{subsec:mass}); both onsets of Corollary~\ref{cor:onsets};
-and the overlap arithmetic of Remark~\ref{rem:combined}. As a negative
-control, lowering the single entry $C_{2,48}$ by $10^4$ makes the
-verifier print \texttt{FAIL finite range} and \texttt{RESULT FAIL}, with
-exact minimum $6442427387/6442450944=0.99999634\ldots$ at $(4/15,1)$.
-
-The cross-check takes about $0.5$ seconds and is an independent code
-path. For each given $n$ it builds the weights \eqref{eq:z} by exact
-rational bin lookup and tests $a\sum_k z_{ka}\geq1$ for every $a\leq n$
-directly, enclosing each term by integer floor and ceiling with
-denominator $2^{48}$. It also checks that the upper enclosure of
-$\sum_m z_m$ is at most $1.0087578638+87.5686331624/n$.
-Table~\ref{tab:cross} shows the results. For $n=5$ and $n=11$ the totals
-exceed $\rho(5)=1.0333\ldots$ and $\rho(11)=1.01709\ldots$, as they must.
-
+\section{Certificate values and conclusion}\label{sec:values}
+Table~\ref{tab:tail1} gives exact rational data at $g=1$; its column
+$m$ satisfies $F^-_\infty(1)-1\ge m$.
 \begin{table}[ht]
 \centering\small
-\begin{tabular}{r|c|c}
-$n$ & $\min_{a\leq n}a\sum_k z_{ka}\geq$ & $\sum_{m\leq n}z_m\leq$\\
-\hline
-$1$ & $1.000001000240445$ & $1.000001000240446$\\
-$2$ & $1.054504025727510$ & $1.054504025727511$\\
-$5$ & $1.000001000240445$ & $1.064258680849652$\\
-$11$ & $1.000001000240445$ & $1.031375302518033$\\
-$100$ & $1.000001000240445$ & $1.000001000367039$\\
-$997$ & $1.000001000085223$ & $1.009992335549399$\\
-$1000$ & $1.000001000085223$ & $1.009017157250768$\\
-$5040$ & $1.000001000085223$ & $1.008592039315766$\\
-$20011$ & $1.000001000085223$ & $1.008750262227068$
+\begin{tabular}{r|c|c|c|r}
+$L$ & $m$ & $\Psi_1$ & $R_1$ & $N_0$\\\hline
+12 & $4479665243/10^{12}$ & $16566037/750000$ & $1188294863/250000$ & 5185\\
+60 & $2711678024/10^{12}$ & $2254215137/60000000$ & $10493256427/100000$ & 16255\\
+420 & $1890528110/10^{12}$ & $3518369257/52500000$ & $232154535249/50000$ & 70483
 \end{tabular}
-\caption{Output of \texttt{crosscheck.py} (decimals rounded outward).}
-\label{tab:cross}
+\caption{Exact tail constants and retained sufficient onsets.}\label{tab:tail1}
 \end{table}
-
-\emph{How the certificate was found} (not part of the proof). A
-floating-point linear program, solved with the HiGHS solver through
-SciPy, minimized $V_1$ over nonnegative coefficients subject to the
-finite-range constraints of Section~\ref{subsec:finite} and the linear
-tail condition of Section~\ref{subsec:tail}. The program
-\texttt{mkcert.py} scaled the solution by $1+10^{-6}$, rounded each entry
-up to a multiple of $2^{-30}$, and dropped entries whose scaled value was
-below $10^{-12}$. Because this cutoff is applied after the rounding, the
-output is not literally an upward rounding of every entry. The LP script
-and its output are not included: the correctness of the certificate rests
-only on the exact check by \texttt{verify.py}.
-
-\section{Remarks}\label{sec:remarks}
-\begin{remark}[small $n$; an observation, not a theorem]\label{rem:small}
-An exhaustive computer search gives $\rho(5)=31/30$,
-$\rho(11)=4699/4620$, and $\rho(n)=1$ for every other $n\leq29$. In
-particular $\rho(n)=1$ for $12\leq n\leq29$, as the conjecture of
-Erd\H{o}s, Schinzel and Szekeres predicts. The search was run
-independently, with different programs, by the agent that found the
-certificate and by both referees (see the section on provenance). It is
-not part of the deposit, and nothing in this paper depends on it. In
-floating-point computations, the solver returned the optimal value $1.0$
-for the linear program of Remark~\ref{rem:lp} at $n=12,\dots,30$ and at
-$n=60$, $100$, $200$, $400$, $1000$, $2000$ and $5000$. These
-computations are not proofs. If $\rho(n)=1$ for all $n\geq12$, then the
-constant $1.0087578638$ in Theorem~\ref{thm:main} is not sharp.
-\end{remark}
-
-\begin{remark}[comparison with Chen's explicit bound]\label{rem:chen}
-Put $B(n)=1.0087578638+87.5686331624/n$, and let
-$B_C(n)=1.0170166+14.21/(n-58)$ be the bound \eqref{eq:chen}. For
-$n>58$, the function $n(n-58)(B(n)-B_C(n))$ is a quadratic polynomial in
-$n$ with negative leading coefficient $1.0087578638-1.0170166$. It is
-negative at $n=69$ and $n=8872$, and positive at $n=70$ and $n=8871$.
-Hence $B(n)<B_C(n)$ for $59\leq n\leq69$ and for all $n\geq8872$, while
-$B(n)>B_C(n)$ for $70\leq n\leq8871$. So Theorem~\ref{thm:main} improves
-\eqref{eq:chen} for every $n\geq8872$ (for $59\leq n\leq69$ both bounds
-exceed $2$), but not for $70\leq n\leq8871$.
-\end{remark}
-
-\begin{remark}[a bound for all $n\geq59$]\label{rem:combined}
-Combining Corollary~\ref{cor:onsets} with \eqref{eq:chen} gives
-$\rho(n)\leq1.0170+15/(n-58)$ for every $n\geq59$. For
-$59\leq n\leq47648$ this follows from \eqref{eq:chen}, because
+In this order the exact values of $mN_0^2-\Psi_1N_0-R_1$ are
 \[
- \frac{0.79}{n-58}\geq\frac{0.79}{47590}=0.0000166+\frac{3}{23795000000};
+ \frac{138313568659001}{120000000000},\qquad
+ \frac{12842678216509}{15000000000},\qquad
+ \frac{7574273319816137}{300000000000},
 \]
-for $n\geq10625$ it follows from Corollary~\ref{cor:onsets}. This bound
-has the same shape as \eqref{eq:chen}, with leading constant $1.0170$
-instead of $1.0170166$.
-\end{remark}
-
-\begin{remark}[limits of the method]\label{rem:limits}
-In \eqref{eq:tail} the tail costs $x_1E_1=0.00875686\ldots$ for
-$\gamma=1$, almost the whole excess $V_1-1=0.00875786\ldots$. Lowering
-the leading constant within this scheme needs a smaller $x_1$, which
-enlarges the finite check, or a sharper tail estimate that uses
-cancellation between adjacent bins. We have not pursued either. A proof
-of $\rho(n)\leq1+o(1)$ along these lines would need dual weights whose
-total mass tends to $1$ uniformly in $n$.
-\end{remark}
-
-\appendix
-\section{The certificate}\label{app:cert}
-The $55$ points of $G$ in increasing order, $g_0,\dots,g_{54}$:
-\begin{center}
-\parbox{0.92\textwidth}{\small\raggedright
-$1/10$, $4/39$, $3/29$, $2/19$, $3/28$, $4/37$, $1/9$, $4/35$, $3/26$, $2/17$, $3/25$, $4/33$, $1/8$, $4/31$, $3/23$, $2/15$, $3/22$, $4/29$, $1/7$, $4/27$, $3/20$, $2/13$, $3/19$, $4/25$, $1/6$, $4/23$, $3/17$, $2/11$, $3/16$, $4/21$, $1/5$, $4/19$, $3/14$, $2/9$, $3/13$, $4/17$, $1/4$, $4/15$, $3/11$, $2/7$, $3/10$, $4/13$, $1/3$, $4/11$, $3/8$, $2/5$, $3/7$, $4/9$, $1/2$, $4/7$, $3/5$, $2/3$, $3/4$, $4/5$, $1$.}
-\end{center}
-Table~\ref{tab:cert} lists every nonzero $C_{\eta,b}$; the coefficients
-are $c_{\eta,b}=C_{\eta,b}/2^{30}$. Bins that are not listed have all
-four entries equal to zero, and an empty cell means zero. The table is
-generated from \texttt{code/cert\_main.txt}.
-
+all positive. The corrected $L=420$ values are used throughout.
+For every divisor $g>1$ simultaneously, Table~\ref{tab:tailg} gives
+$F^-_\infty(g)-1\ge m_*$, $\Psi_g\le P_*$ and $R_g\le R_*$.
+These bounds check the errors as well as the limiting margin.
 \begin{table}[ht]
-\centering\footnotesize
-\begin{tabular}{r|c|r|r|r|r}
-$b$ & $I_b$ & $C_{1,b}$ & $C_{2,b}$ & $C_{3,b}$ & $C_{6,b}$\\
-\hline
-2 & $(3/29,\,2/19]$ &  &  & 50643 &  \\
-3 & $(2/19,\,3/28]$ &  & 20154050 & 50643 &  \\
-5 & $(4/37,\,1/9]$ &  & 9768029 &  &  \\
-6 & $(1/9,\,4/35]$ &  &  & 4658048 &  \\
-9 & $(2/17,\,3/25]$ &  & 8323658 &  &  \\
-10 & $(3/25,\,4/33]$ &  &  & 22116440 &  \\
-14 & $(3/23,\,2/15]$ &  &  & 61359920 &  \\
-15 & $(2/15,\,3/22]$ & 55180898 &  & 12973452 &  \\
-17 & $(4/29,\,1/7]$ &  & 64493909 &  &  \\
-18 & $(1/7,\,4/27]$ & 9910099 &  &  & 19444119 \\
-22 & $(3/19,\,4/25]$ &  &  & 45106545 &  \\
-23 & $(4/25,\,1/6]$ & 24103401 &  &  & 11334220 \\
-26 & $(3/17,\,2/11]$ &  &  & 123858647 & 5705519 \\
-27 & $(2/11,\,3/16]$ &  & 31148760 & 63505349 &  \\
-28 & $(3/16,\,4/21]$ &  &  & 26854466 &  \\
-29 & $(4/21,\,1/5]$ &  &  & 26854466 &  \\
-32 & $(3/14,\,2/9]$ &  & 25444426 &  &  \\
-33 & $(2/9,\,3/13]$ &  &  &  & 5996100 \\
-34 & $(3/13,\,4/17]$ &  &  & 111272515 &  \\
-35 & $(4/17,\,1/4]$ &  & 46095729 & 111272515 &  \\
-36 & $(1/4,\,4/15]$ &  & 51129122 & 39888725 &  \\
-37 & $(4/15,\,3/11]$ & 24420072 &  &  &  \\
-38 & $(3/11,\,2/7]$ &  &  & 141968178 & 8060998 \\
-39 & $(2/7,\,3/10]$ &  & 121397974 & 91920816 &  \\
-41 & $(4/13,\,1/3]$ &  &  & 85440949 &  \\
-42 & $(1/3,\,4/11]$ &  &  & 142445358 &  \\
-43 & $(4/11,\,3/8]$ &  & 4111939 & 208794678 &  \\
-44 & $(3/8,\,2/5]$ &  & 40398029 &  &  \\
-45 & $(2/5,\,3/7]$ &  & 98292472 &  &  \\
-46 & $(3/7,\,4/9]$ &  & 98292472 & 168295214 &  \\
-47 & $(4/9,\,1/2]$ &  &  & 198025509 &  \\
-48 & $(1/2,\,4/7]$ & 1073742898 & 1153520347 & 1073742898 & 1073742898 \\
-49 & $(4/7,\,3/5]$ & 1073742898 & 1168970128 & 1073742898 & 1173837621 \\
-50 & $(3/5,\,2/3]$ & 1073742898 & 1411766076 & 1375392373 & 1375392373 \\
-51 & $(2/3,\,3/4]$ & 1073742898 & 2147485796 & 1522831080 & 2250326526 \\
-52 & $(3/4,\,4/5]$ & 1073742898 & 2199508655 & 1490948173 & 2349946970 \\
-53 & $(4/5,\,1]$ & 1073742898 & 2264530152 & 1643220683 & 2640265779 \\
+\centering\small
+\begin{tabular}{r|c|r|r|c}
+$L$ & $m_*$ & $P_*$ & $R_*$ & $10^{12}(m_*N_0^2-P_*N_0-R_*)$\\\hline
+12 & $33442881402/10^{12}$ & 17 & 5473 & 805467948259683450\\
+60 & $21435519688/10^{12}$ & 26 & 118639 & 5122531725449792200\\
+420 & $15172074849/10^{12}$ & 49 & 5068429 & 66850545939558828361
 \end{tabular}
-\caption{The certificate: all $67$ nonzero entries.}
-\label{tab:cert}
+\caption{Conservative exact bounds for all $g>1$.}\label{tab:tailg}
 \end{table}
+Because $\Psi_g,R_g\ge0$, the expression
+$F^-_\infty(g)-1-\Psi_g/N-R_g/N^2$ is nondecreasing for $N>0$.
+The positive comparisons at $N_0$ therefore prove $F(N,g)\ge1$ for
+all $N\ge N_0$ and all $g$. Each $N_0<100000$, so this overlaps the
+finite check of Section~\ref{sec:finite}. There is no uncovered positive
+integer $N$.
 
-\section*{Provenance and verification status}
-The theorem, the certificate and the programs \texttt{verify.py} and
-\texttt{crosscheck.py} were found and written by a Claude Opus~5.5 agent
-(Anthropic) on 2026-10-12. The first version checked the finite range in
-floating point. Two isolated cross-vendor referees (GPT-6 Astra, OpenAI)
-reviewed it. Both found only repairable issues and asked for the same two
-substantive repairs: the floating-point check relied on rounding
-assumptions that were not justified, and one decimal value of $V_1$ had
-been printed rounded down. The certificate was kept unchanged. The
-verifier was rewritten in exact integer and rational arithmetic, all
-printed decimals are now rounded outward, and the theorem constants are
-compared exactly; these are the programs published here. The referees
-also asked that statements about floating-point LP experiments be
-limited to the grids actually tested, and one referee asked that the
-certificate conventions be stated; both requests are met here. A repair-confirmation
-review by one of the referees found all points of both reports addressed. It asked for one
-further correction, to the sentence bounding the stored prefix sums
-(Section~\ref{subsec:finite}), and the corrected sentence is used here.
-Thus both referee reports returned the verdict PASS-WITH-REPAIRS, and all
-requested repairs have been made. The repair confirmation also
-returned PASS-WITH-REPAIRS (for the one correction just described,
-which has not been re-reviewed); in it the referee re-verified the
-certificate exactly with an independent program. Each referee recomputed the
-finite-range check with an independent JavaScript implementation and
-obtained the same integer lower bound and the same exact minimizer. Both
-confirmed the small values of Remark~\ref{rem:small} by exhaustive
-search. Separately, a Claude verifier agent checked the certificate in exact
-rational arithmetic, first with the first version of the report and again
-on the files of this deposit; both checks passed, and its check of the
-final text asked only for wording corrections, which are made here. The
-literature search of Section~\ref{sec:related} was a bounded search on
-12 October 2026. The present text was prepared by the Claude agent that
-found the result, from the refereed report. No formal (Lean)
-verification has been carried out.
+The objective calculation gives the upward-rounded rational decimals
+in Table~\ref{tab:objectives}; the exact $K$ values appear in the theorem.
+\begin{table}[ht]
+\centering
+\begin{tabular}{r|c|c|c}
+$L$ & $\tau\le\tau^+\le$ & exact $K$ (decimal) & headline bound\\\hline
+420 & $1.001890528110611$ & $4162.909154$ & $1.00189053+4162.91/n$\\
+60 & $1.002711678024969$ & $638.003685$ & $1.00271168+638.004/n$\\
+12 & $1.004479665243758$ & $133.852416$ & $1.00447967+133.853/n$
+\end{tabular}
+\caption{Every displayed upper bound is rounded upward.}\label{tab:objectives}
+\end{table}
+The gaps between the headline leading constants and the displayed
+bounds for $\tau^+$ are respectively
+$0.000000001889389$, $0.000000001975031$, and $0.000000004756242$.
+The headline $1/n$ coefficients exceed $K$ by $0.000846$, $0.000315$,
+and $0.000584$. These are positive exact decimals. For each integer
+$n\ge1$, \eqref{eq:z} now satisfies every constraint \eqref{eq:dual},
+and \eqref{eq:mass} proves Theorem~\ref{thm:main}.
+
+\section{Exact comparisons with earlier bounds}\label{sec:comparison}
+\begin{remark}[the bound from version 1]
+Version 1 proves $\rho(n)\le B_0(n)=1.0087578638+87.5686331624/n$
+for every integer $n\ge1$. Denote the three displayed theorem
+bounds by $B_{12},B_{60},B_{420}$. Table~\ref{tab:crossings} states all
+pairwise comparisons of these four functions. In each row, the bound
+in the second column is strictly smaller precisely for integers $n$
+at least the final-column value; it is strictly larger at every smaller
+positive integer. There is no integer equality.
+\end{remark}
+\begin{table}[ht]
+\centering
+\begin{tabular}{c|c|c|r}
+old & new & exact real crossing & first integer with new $<$ old\\\hline
+$B_0$ & $B_{12}$ & $77140611396/7130323$ & 10819\\
+$B_0$ & $B_{60}$ & $2752176834188/30230919$ & 91039\\
+$B_0$ & $B_{420}$ & $20376706834188/34336669$ & 593439\\
+$B_{12}$ & $B_{60}$ & $50415100000/176799$ & 285155\\
+$B_{12}$ & $B_{420}$ & $201452850000/129457$ & 1556138\\
+$B_{60}$ & $B_{420}$ & $6408920000/1493$ & 4292646
+\end{tabular}
+\caption{Exact comparisons of the published decimal bounds.}\label{tab:crossings}
+\end{table}
+To justify the table, write $B_i(n)=a_i+b_i/n$. In every row
+$a_{\rm old}>a_{\rm new}$ and $b_{\rm new}>b_{\rm old}$, and
+\[
+ B_{\rm new}(n)<B_{\rm old}(n)
+ \quad\Longleftrightarrow\quad
+ n>\frac{b_{\rm new}-b_{\rm old}}{a_{\rm old}-a_{\rm new}}.
+\]
+The displayed reduced rational crossings and their integer floors
+were computed exactly. Thus the smallest of these four bounds is
+$B_0$ for $1\le n\le10818$, $B_{12}$ for $10819\le n\le285154$,
+$B_{60}$ for $285155\le n\le4292645$, and $B_{420}$ for
+$n\ge4292646$. These comparisons concern the stated decimal
+inequalities, not any unpublished sharpening of their constants.
+
+For completeness Table~\ref{tab:chen} compares each with Chen's
+explicit function $B_C$ on its domain $n\ge59$. Outside the intervals
+listed, the bound in the first column is strictly larger than $B_C$;
+there is no integer equality.
+\begin{table}[ht]
+\centering
+\begin{tabular}{c|l}
+bound & integers $n\ge59$ for which it is strictly below $B_C(n)$\\\hline
+$B_0$ & $59\le n\le69$ or $n\ge8872$\\
+$B_{12}$ & $59\le n\le64$ or $n\ge9537$\\
+$B_{60}$ & $n=59$ or $n\ge43606$\\
+$B_{420}$ & $n\ge274275$
+\end{tabular}
+\caption{Comparison with Chen (1996).}\label{tab:chen}
+\end{table}
+Indeed $n(n-58)(B_i(n)-B_C(n))$ is the concave quadratic
+\[
+ (a_i-1.0170166)n(n-58)+b_i(n-58)-14.21n.
+\]
+Exact opposite signs at the adjacent endpoints in the table locate
+its two real roots; for $B_{420}$ the lower root lies in $(58,59)$.
+A concave quadratic is positive between its roots and negative
+outside. The accompanying audit records all endpoint signs as exact
+fractions. This proves every stated comparison.
+
+\begin{remark}[small values]
+The exhaustive searches reported with version 1 found $\rho(5)=31/30$,
+$\rho(11)=4699/4620$, and $\rho(n)=1$ for every other $n\le29$.
+This remains an observation from that version, not a theorem or a new
+computation in this version; its search programs are not deposited.
+None of the present proof depends on it. The values at $5$ and $11$
+also occur in the literature cited above.
+\end{remark}
+
+\section{Reproduction and verification status}\label{sec:repro}
+The certificate files are \texttt{code/v2/cert\_L420.json},
+\texttt{cert\_L60.json}, and \texttt{cert\_L12.json}. Their fields
+\texttt{L}, \texttt{T0}, \texttt{Q}, \texttt{D}, \texttt{C} mean
+$L$, $T=40$, $Q=10^6$, the ordered divisor list, and
+\texttt{C[j-1][i]}$=C_{j,D_i}$ (zero-based column index $i$).
+Their respective numbers of nonzero entries are $282$, $167$, and $99$.
+All other entries are explicit zeros. The certificate arrays are
+unchanged from those reviewed.
+
+Run \texttt{sh code/v2/run.sh} from the bundle directory. It compiles
+\texttt{check.c}, then invokes \texttt{verify.py} for each certificate
+with $N_1=10^7$. Requirements are a C compiler supporting signed
+\texttt{\_\_int128}, a platform with 64-bit \texttt{long}, Python 3,
+and NumPy. No optimizer is required. The tail calculation uses exact
+rational logarithm bounds and integer arrays. Its floating-point
+fields and the C minimum-margin displays are supplementary diagnostic
+images only. The final verified inequality uses upward decimal
+rounding of the exact rational values of $\tau^+$ and $K$.
+The expected-output notes distinguish predictions for that run from
+outputs actually produced in this preparation environment.
+
+An independent exact calculation is supplied in \texttt{audit.mjs}.
+Run \texttt{node code/v2/audit.mjs}; its default finite limit is
+$100000$. The saved \texttt{audit-output.json} records that run,
+the exact tail values, directed objective decimals, pairwise bound
+comparisons, and resource use. This is an independent implementation,
+not an execution of the C/Python files. The preparation environment
+had Node but no C compiler, Python, or TeX installation. A later
+independent check compiled \texttt{check.c} and ran \texttt{verify.py}
+on all three certificates up to $N=10^7$; its output equals the block in
+\texttt{code/v2/expected-output.md}. The supplied \texttt{main-v1.pdf} is
+the archived nine-page version 1, not this manuscript. The version 1
+programs and certificate remain unchanged in \texttt{code/v1/}.
+
+The certificate proof received two independent reviews with the
+verdict PASS-WITH-REPAIRS and a separate exact verifier check.
+The reviews requested documentary repairs: correcting the two
+$L=420$ tail entries while retaining onset $70483$; restoring four C
+and five Python string escapes damaged in source storage; and printing
+certified bounds with upward rounding. The two independently repaired
+source copies agree byte for byte. The deposited C and tail sources
+are those copies. The Python wrapper additionally has the output-only
+change recorded in \texttt{printing.patch}, and an internal provenance
+tag was removed from a comment. The feasibility tests, certificate
+arrays, tail inequalities, and verification decision are unchanged.
+The original verifier check used the same C source with an alternative
+C compiler; the independent reviews also replayed the full finite
+range in exact integer implementations. The present Node run provides
+a further, shorter exact check with complete tail overlap. No formal
+proof-assistant verification is claimed.
+
+The arrays were found by floating-point linear-programming searches
+followed by rational rounding and feasibility checks. These searches
+and any floating-point sanity checks are supplementary; the proof is
+the exact certificate verification described above. The periodic-dual
+method suggests limit linear programs as a possible subject for
+further study.
 
 \begin{thebibliography}{9}
 \bibitem{EP542}
 T. F. Bloom, \emph{Erd\H{o}s Problems}, Problem 542,
-\url{https://www.erdosproblems.com/542}, and its discussion thread
-\url{https://www.erdosproblems.com/forum/thread/542}, accessed
-12 October 2026.
+\url{https://www.erdosproblems.com/542}, and discussion
+\url{https://www.erdosproblems.com/forum/thread/542},
+accessed 12 October 2026.
 \bibitem{Ch96}
 Y.-G. Chen, \emph{On a problem of P. Erd\H{o}s},
 Acta Scientiarum Mathematicarum (Szeged) \textbf{62} (1996), 101--114.
@@ -699,7 +537,18 @@ Acta Scientiarum Mathematicarum (Szeged) \textbf{63} (1997), 369--379.
 \url{https://acta.hu/download.phtml?id=2393}.
 \bibitem{We}
 A. Weingartner, \emph{The Schinzel--Szekeres function},
-arXiv:2310.13038 (2023; version~2, 13 June 2025).
+Research in Number Theory \textbf{11}, 63 (2025);
+arXiv:2310.13038, version 2, 13 June 2025.
 \url{https://arxiv.org/abs/2310.13038}.
+\bibitem{SM}
+\emph{Sub-Markov chain certificates for weighted antichain bounds},
+research note, 15 April 2026,
+\url{https://www.ulam.ai/research/markov-chain-erdos.pdf}.
+
+\bibitem{V1}
+H. Chen, \emph{An explicit upper bound for reciprocal sums of sets
+with large pairwise least common multiples}, version 1,
+12 October 2026, Zenodo.
+\url{https://doi.org/10.5281/zenodo.23311400}.
 \end{thebibliography}
 \end{document}

@@ -1,38 +1,11 @@
-<p>For a positive integer n let &rho;(n) be the maximum of &sum;<sub>a&isin;A</sub> 1/a over all sets
-A &sube; {1,&hellip;,n} such that lcm(a,b) &gt; n for all distinct a, b &isin; A (Erd&#337;s Problem #542).
-We prove that &rho;(n) &le; 1.0087578638 + 87.5686331624/n for every integer n &ge; 1. In particular
-&rho;(n) &le; 1.0170 for n &ge; 10625 and &rho;(n) &le; 1.01 for n &ge; 70499; these are the least onsets
-that follow from the displayed constants.</p>
-
-<p>The proof uses weak linear-programming duality. If A is such a set, the sets of multiples of its elements
-are pairwise disjoint, so nonnegative weights z<sub>m</sub> that put mass at least 1/a on the multiples of
-every a &le; n bound &rho;(n) by &sum; z<sub>m</sub>. We take z<sub>m</sub> = c<sub>gcd(m,6)</sub>(m/n)/m
-with four step functions on (1/10, 1]. Because 6 is squarefree, the dual constraints for all n at once
-reduce to inequalities that do not involve n. A certificate of 67 dyadic rationals reduces them to
-239&thinsp;980 finite inequalities and four tail inequalities. A short Python program (standard library
-only, about 2 CPU seconds) checks all of them in exact integer and rational arithmetic. The theorem does
-not prove the conjecture &rho;(n) &le; 1 + o(1), and the constant 1.0087578638 is not claimed to be
-sharp.</p>
-
-<p><b>Literature.</b> As n &rarr; &infin; the bound improves the leading constant 1.0170166 of
-Y.-G. Chen, <i>On a problem of P. Erd&#337;s</i>, Acta Sci. Math. (Szeged) 62 (1996), 101&ndash;114,
-Theorem 2. That is the strongest bound we located in a literature search of 12 October 2026. Chen's
-explicit form 1.0170166 + 14.21/(n &minus; 58), valid for n &ge; 59, remains smaller for
-70 &le; n &le; 8871. Weighted counting over disjoint sets of multiples already appears in Chen's paper.
-The contribution of this note is the family of weights, which depend on gcd(m,6), and the exact
-certificate. The search
-was bounded and not exhaustive: one citation index was rate-limited and could not be used, another did not
-resolve Chen's 1996 paper, so its forward citations could not be traced there, and the community chat
-archive was searched only in part.</p>
-
-<p><b>Provenance and verification status.</b> The theorem, the certificate and the verification programs
-were found by a Claude Opus 5.5 agent (Anthropic). Two isolated cross-vendor referees (GPT-6 Astra, OpenAI)
-reviewed the proof. In the first round they required repairs: an exact integer and rational verifier
-replaced a floating-point check, and decimals are now rounded outward. Both referee reports returned
-PASS-WITH-REPAIRS, and all requested repairs have been made. One referee carried out the repair
-confirmation, re-verified the certificate exactly with an independent program, and again returned
-PASS-WITH-REPAIRS with a single wording correction, now applied (not re-reviewed). Each referee recomputed
-the finite check with an independent implementation and found the same minimum. A separate Claude verifier
-checked the certificate exactly, against the first version of the report and again on the final files;
-both checks passed. No Lean formalisation.
-Code and certificate: https://github.com/chy4pro/automath-papers/tree/main/erdos542</p>
+<p><b>Version 2, 13 October 2026; supersedes version 1.</b></p>
+<p>For a positive integer n, let &rho;(n) be the maximum of &sum;<sub>a&isin;A</sub> 1/a over sets A &sube; {1,&hellip;,n} such that lcm(a,b) &gt; n for distinct members. This version proves, for every integer n &ge; 1, all three inequalities:</p>
+<ul>
+<li>&rho;(n) &le; 1.00189053 + 4162.91/n, with modulus 420 and exact pre-rounding coefficient K = 2081454577/500000;</li>
+<li>&rho;(n) &le; 1.00271168 + 638.004/n, with modulus 60 and K = 127600737/200000;</li>
+<li>&rho;(n) &le; 1.00447967 + 133.853/n, with modulus 12 and K = 2091444/15625.</li>
+</ul>
+<p>The proof uses nonnegative weights on pairwise disjoint sets of multiples. Three arrays of rational weights are certified by directed integer finite checks and an Euler&ndash;Maclaurin tail estimate with an explicit remainder. The corrected modulus-420 tail values are &Psi;<sub>1</sub> = 3518369257/52500000 and R<sub>1</sub> = 232154535249/50000; the sufficient onset remains 70483. The conjecture &rho;(n) &le; 1 + o(1) is not proved, and no general limit-LP theorem is claimed.</p>
+<p><b>Comparison.</b> As an improvement of the asymptotic leading constant, this improves the strongest bound we located in a literature search of 12 October 2026, including our own version 1 and Y.-G. Chen, <i>On a problem of P. Erd&#337;s</i>, Acta Sci. Math. (Szeged) 62 (1996), 101&ndash;114. Weighted counting over disjoint multiple sets already appears in Chen's paper; the contribution here is the specific certificates and their numerical costs. The search was bounded, not exhaustive: a citation index was rate-limited, another did not resolve Chen's 1996 record, and community discussion archives were only partly searchable. No priority claim is made.</p>
+<p>Version 1 proves B<sub>0</sub>(n) = 1.0087578638 + 87.5686331624/n as an upper bound. The new displayed bounds improve B<sub>0</sub> precisely for n &ge; 10819 (modulus 12), n &ge; 91039 (modulus 60), and n &ge; 593439 (modulus 420). The smallest of the four displayed bounds is version 1 through n = 10818, modulus 12 for 10819&ndash;285154, modulus 60 for 285155&ndash;4292645, and modulus 420 from 4292646 onward. The paper supplies exact rational crossover calculations and comparisons with Chen's finite-n bound.</p>
+<p><b>Files and verification.</b> The version 2 manuscript is main.tex. main.pdf is the version 2 paper; main-v1.pdf is the archived nine-page version 1. The original code is preserved in code/v1/. The new certificates, C/Python verifier, run script, expected-output notes, and output-rounding diff are in code/v2/. Two independent reviews returned PASS-WITH-REPAIRS and a separate exact verifier check passed. The documentary repairs have been incorporated. The two repaired source sets agree byte for byte; only certified-output formatting and a private header comment changed thereafter. An independent check compiled the C verifier and ran the Python driver on all three certificates up to N = 10^7, with output equal to the recorded expected output. An independent Node audit was actually run on 4200000 finite constraints, all 42 tails, and 336 direct checks, with every check passing and complete finite/tail overlap. Floating-point diagnostic displays and search experiments are supplementary. No formal proof-assistant verification is claimed.</p>

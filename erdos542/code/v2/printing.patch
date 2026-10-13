@@ -1,0 +1,27 @@
+--- verify.py (mechanically repaired, private tag removed)
++++ verify.py (version 2)
+@@ -4,6 +4,14 @@
+ # cases for all N <= N1 and g | L, and (b) tail2's N_tail_max <= N1 (Euler-Maclaurin tail covers N >= N_tail).
+ import sys, json, subprocess
+ from tail2 import analyze
++from fractions import Fraction
++
++def upward_decimal(value, places):
++    value = Fraction(value)
++    scale = 10**places
++    units = -((-value.numerator * scale) // value.denominator)
++    return f"{units // scale}.{units % scale:0{places}d}"
++
+ fn=sys.argv[1]; N1=int(sys.argv[2]) if len(sys.argv)>2 else 10**7
+ d=json.load(open(fn)); L,T0,Q,D,C=d["L"],d["T0"],d["Q"],d["D"],d["C"]
+ assert all(isinstance(x,int) and x>=0 for row in C for x in row) and len(C)==T0-1 and all(len(r)==len(D) for r in C)
+@@ -15,5 +23,7 @@
+ t=analyze(fn)
+ ok = nviol==0 and namb==0 and t["N_tail_max"]<=N1
+ print(f"L={L} T0={T0}: exact check N<={N1}: nviol={nviol} namb={namb}; tail valid for N>={t['N_tail_max']}")
+-print(f"  tau_upper={t['tau_upper']:.10f}  K_c={t['K_c_exact']} (= {t['K_c']:.6f})")
+-print("  VERIFIED: rho(n) <= %.10f + %.6f/n for all n>=1" % (t["tau_upper"], t["K_c"]) if ok else "  NOT VERIFIED")
++tau_display = upward_decimal(t["tau_upper_exact"], 15)
++K_display = upward_decimal(t["K_c_exact"], 6)
++print(f"  tau_upper <= {tau_display} (rounded upward); K_c={t['K_c_exact']} <= {K_display}")
++print(f"  VERIFIED: rho(n) <= {tau_display} + {K_display}/n for all n>=1" if ok else "  NOT VERIFIED")

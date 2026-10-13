@@ -1,43 +1,36 @@
 # An explicit upper bound for reciprocal sums of sets with large pairwise least common multiples
 
-For n ≥ 1 let ρ(n) be the maximum of Σ_{a∈A} 1/a over all sets A ⊆ {1,…,n} in which every two distinct
-elements have least common multiple greater than n (Erdős Problem #542). This note proves
-ρ(n) ≤ 1.0087578638 + 87.5686331624/n for every integer n ≥ 1. In particular ρ(n) ≤ 1.0170 for n ≥ 10625
-and ρ(n) ≤ 1.01 for n ≥ 70499. As n → ∞ this improves the leading constant 1.0170166 of Y.-G. Chen (1996),
-the strongest bound we located in a literature search of 12 October 2026. For 70 ≤ n ≤ 8871, Chen's explicit
-bound 1.0170166 + 14.21/(n − 58) remains smaller. The proof is weak LP duality with dual weights that depend
-on m/n and on gcd(m,6). It is certified by 67 dyadic rationals checked in exact integer and rational
-arithmetic. The conjecture ρ(n) ≤ 1 + o(1) is not proved, and the constant is not claimed to be sharp.
+**Version 2, 13 October 2026; supersedes version 1.** Prepared for a new version of the same record; this bundle has not been uploaded or pushed during preparation.
 
-- Paper: [`main.pdf`](main.pdf) (source [`main.tex`](main.tex), 9 pages)
-- DOI: [10.5281/zenodo.23311400](https://doi.org/10.5281/zenodo.23311400)
-- Certificate: [`code/cert_main.txt`](code/cert_main.txt) (67 nonzero entries, also printed in Appendix A of
-  the paper; SHA-256 `361c296fad7662dadc53699aead4f2eb33fdbff7e0d18efd3971535acec8534e`)
-- Exact verifier: [`code/verify.py`](code/verify.py) (Python 3 standard library; integers and
-  `fractions.Fraction` only), output [`code/verify_output.txt`](code/verify_output.txt).
-  Independent cross-check for concrete n: [`code/crosscheck.py`](code/crosscheck.py), output
-  [`code/crosscheck_output.txt`](code/crosscheck_output.txt).
-  The rounding step that produced the certificate from a floating-point LP solution is
-  [`code/mkcert.py`](code/mkcert.py). It is not part of the proof, and it needs NumPy and the LP output,
-  which is not included.
-- Reproduce, from this directory:
-  - `python3 code/verify.py code/cert_main.txt` takes about 2 CPU s and 72 MiB and ends with `RESULT OK`.
-    It reproduces the stored output except for the last line, which reports the CPU time.
-  - `python3 code/crosscheck.py code/cert_main.txt 1 2 5 11 100 997 1000 5040 20011` takes about 0.5 s
-    and reproduces the stored output byte for byte, ending with `CROSSCHECK OK`.
-  - `SOURCE_DATE_EPOCH=1791763200 FORCE_SOURCE_DATE=1 latexmk -pdf main.tex` rebuilds `main.pdf`.
-    With TeX Live 2026 the result is byte-identical.
-- Verification status: the result was found by a Claude Opus 5.5 agent (Anthropic). Two cross-vendor referees
-  (GPT-6 Astra, OpenAI) reviewed it. The first round required repairs: an exact-arithmetic verifier replaced
-  a floating-point check, and decimals are now rounded outward. Both referee reports returned
-  PASS-WITH-REPAIRS, and all requested repairs have been made. One referee carried out the repair
-  confirmation, re-verified the certificate exactly with an independent program, and again returned
-  PASS-WITH-REPAIRS with a single wording correction, now applied (not re-reviewed). Each referee recomputed
-  the finite check with an independent implementation. A separate Claude verifier checked the certificate
-  exactly, against the first version of the report and again on the final files; both checks passed.
-  Literature: bounded search, 12 October 2026; not exhaustive (one citation index was rate-limited, another
-  did not resolve Chen's 1996 paper, and the community chat archive was searched only in part).
-  No Lean formalisation.
-- Grade: small result (an improved explicit constant for a known bound).
+For every integer n ≥ 1, let ρ(n) be the maximum of Σ(1/a) over A ⊆ {1,…,n} with lcm(a,b) > n for distinct members. This version proves all three bounds:
 
-`SHA256SUMS` lists the published files (paper, code, this README and the Zenodo description).
+| Modulus | Bound for every n ≥ 1 | Exact coefficient K before rounding |
+|---|---|---|
+| 420 | ρ(n) ≤ 1.00189053 + 4162.91/n | 2081454577/500000 |
+| 60 | ρ(n) ≤ 1.00271168 + 638.004/n | 127600737/200000 |
+| 12 | ρ(n) ≤ 1.00447967 + 133.853/n | 2091444/15625 |
+
+The leading constant improves the strongest bound we located in a literature search of 12 October 2026, including our own version 1 and Chen (1996). This was a bounded search, not a priority determination. The contribution is three specific periodic weight certificates and their numerical costs; weighted counting over disjoint multiple sets is prior methodology. The conjecture ρ(n) ≤ 1 + o(1) is not proved. No general limit-LP theorem is stated.
+
+- Version 2 manuscript: [`main.tex`](main.tex). Build with `latexmk -pdf main.tex`.
+- Version 2 paper: [`main.pdf`](main.pdf), 8 pages, built from `main.tex` with pdfTeX 1.40.29 (TeX Live 2026).
+- Archived version 1: [`main-v1.pdf`](main-v1.pdf), 9 pages. This is the earlier published PDF, not version 2. Its code and certificate are preserved byte for byte in [`code/v1/`](code/v1/).
+- Published: version 2 [10.5281/zenodo.23328540](https://doi.org/10.5281/zenodo.23328540) (13 October 2026); version 1 [10.5281/zenodo.23311400](https://doi.org/10.5281/zenodo.23311400); all versions [10.5281/zenodo.23311399](https://doi.org/10.5281/zenodo.23311399).
+- Version 2 certificates: [`cert_L420.json`](code/v2/cert_L420.json), [`cert_L60.json`](code/v2/cert_L60.json), [`cert_L12.json`](code/v2/cert_L12.json), with 282, 167 and 99 nonzero integer numerators respectively; all denominators are 1000000.
+- C/Python verifier: [`check.c`](code/v2/check.c), [`verify.py`](code/v2/verify.py), [`tail2.py`](code/v2/tail2.py). Run `sh code/v2/run.sh`. Requires a C compiler with signed 128-bit integers, 64-bit `long`, Python 3, and NumPy. No solver is required. An independent check compiled `check.c` and ran `verify.py` on all three certificates up to N = 10^7; the output equals the block in `code/v2/expected-output.md`.
+- Independent exact Node audit: [`audit.mjs`](code/v2/audit.mjs), actual output [`audit-output.json`](code/v2/audit-output.json). Run `node --single-threaded code/v2/audit.mjs`. The default finite range is 100000 and overlaps every tail. All 4200000 finite pairs, 42 tails and 336 direct checks passed. No floating-point decision is used.
+- [`Expected output and repairs`](code/v2/expected-output.md) distinguishes the pending C/Python replay from checks actually performed, records source agreement and the four C/five Python escape repairs, and explains [`printing.patch`](code/v2/printing.patch). Certified output is now rounded upward from exact rational strings; feasibility logic is unchanged.
+- [`zenodo_description.html`](zenodo_description.html) is prepared deposit metadata. [`SHA256SUMS`](SHA256SUMS) covers all deposited files except itself.
+
+The corrected L=420 tail values are Ψ₁ = 3518369257/52500000 and R₁ = 232154535249/50000, retaining onset 70483. The onsets for L=60 and 12 remain 16255 and 5185. Two independent proof reviews returned PASS-WITH-REPAIRS, and a separate exact verifier check passed. The documentary repairs are incorporated; the updated C/Python wrapper has not been executed in this preparation environment. Floating-point experiments are supplementary. No formal proof-assistant verification is claimed.
+
+Version 1 remains the valid bound B₀(n) = 1.0087578638 + 87.5686331624/n. Each new displayed bound is strictly smaller than B₀ precisely for n ≥ 10819 (L=12), n ≥ 91039 (L=60), and n ≥ 593439 (L=420), respectively. The manuscript gives exact rational crossings for every pair, and comparisons with Chen's bound. The smallest of the four displayed bounds is:
+
+| Integer range | Smallest bound |
+|---|---|
+| 1–10818 | version 1 |
+| 10819–285154 | L=12 |
+| 285155–4292645 | L=60 |
+| n ≥ 4292646 | L=420 |
+
+The literature search retained access limits: one citation index was rate-limited, another did not resolve Chen's 1996 record, and community discussion archives were searched only in part. This remains a small result: an improved explicit constant for a known bound.

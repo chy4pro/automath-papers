@@ -32,12 +32,13 @@ qualitative q(1 + O(log log q/log q)). Each bound beats the trivial 2q + log₂q
 
 ## Erdős Problem #542 — explicit upper bound for reciprocal sums of lcm-separated sets (small result)
 
-**Claim.** If A ⊆ {1,…,n} and lcm(a,b) > n for all distinct a, b ∈ A, then Σ_{a∈A} 1/a ≤ 1.0087578638 + 87.5686331624/n
-for every n ≥ 1 (leading constant below Chen's 1.0170166 from 1996). Weak LP duality with weights depending on m/n and
-gcd(m,6); 67-entry dyadic certificate checked in exact arithmetic. The conjecture ρ(n) ≤ 1 + o(1) is not proved.
+**Claim (version 2).** If A ⊆ {1,…,n} and lcm(a,b) > n for all distinct a, b ∈ A, then Σ_{a∈A} 1/a ≤ 1.00189053 + 4162.91/n
+for every n ≥ 1 (periodic weak-duality certificate at modulus 420, exact check to 10^7 plus a proved tail; also
+1.00271168 + 638.004/n and 1.00447967 + 133.853/n at moduli 60 and 12). Version 1 proved 1.0087578638 + 87.5686331624/n
+(leading constant below Chen's 1.0170166 from 1996). The conjecture ρ(n) ≤ 1 + o(1) is not proved.
 
-- Paper and code: [`erdos542/`](erdos542/) — DOI [10.5281/zenodo.23311400](https://doi.org/10.5281/zenodo.23311400)
-- Status: two cross-vendor referees (PASS-WITH-REPAIRS, repairs applied and confirmed), verifier reproduction; bounded literature search; no Lean
+- Paper and code: [`erdos542/`](erdos542/) — version 2 DOI [10.5281/zenodo.23328540](https://doi.org/10.5281/zenodo.23328540), version 1 [10.5281/zenodo.23311400](https://doi.org/10.5281/zenodo.23311400), all versions [10.5281/zenodo.23311399](https://doi.org/10.5281/zenodo.23311399)
+- Status: version 2 — two cross-vendor referees (PASS-WITH-REPAIRS, documentary repairs applied), exact verifier replay, transcription check; bounded literature search; no Lean
 
 ## Erdős–Graham–Ruzsa–Straus 1975, Theorem 4 — density interpretation (small result)
 
